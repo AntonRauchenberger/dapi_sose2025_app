@@ -5,6 +5,7 @@ export default function Header() {
     const styles = StyleSheet.create({
         container: {
             height: 100,
+            marginBottom: 25,
         },
         background: {
             height: "80%",
