@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import constants from "../consts";
+import RoutesSlider from "@/components/Tabs/map/routesSlider";
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
@@ -77,6 +78,9 @@ export default function Map() {
                         />
                     </View>
                 )}
+            </View>
+            <View style={{ height: 300, zIndex: 10 }}>
+                <RoutesSlider />
             </View>
         </View>
     );
