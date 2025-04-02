@@ -1,45 +1,231 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    Touchable,
+} from "react-native";
 import Swiper from "react-native-swiper";
+import constants from "@/app/consts";
+import MapView from "react-native-maps";
 
 export default function RoutesSlider() {
+    const [isMapFullScreen, setIsMapFullScreen] = useState(false);
+
     const styles = StyleSheet.create({
         wrapper: {},
-        slide1: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#9DD6EB",
+        slide: {
+            height: "100%",
+            backgroundColor: constants.COMPLEMENTARY_COLOR,
+            width: "97%",
+            margin: "auto",
+            borderRadius: 15,
+            borderWidth: 2,
+            borderColor: constants.FONT_COLOR,
+            padding: 15,
         },
-        slide2: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#97CAE5",
+        headerContainer: {
+            marginBottom: 10,
         },
-        slide3: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#92BBD9",
+        header: {
+            color: constants.FONT_COLOR,
+            fontSize: 20,
+            fontWeight: "600",
         },
-        text: {
-            color: "#fff",
-            fontSize: 30,
-            fontWeight: "bold",
+        content: {
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+        },
+        map: {
+            width: 120,
+            height: 108,
+            overflow: "hidden",
+            borderRadius: 10,
         },
     });
 
     return (
         <View style={{ flex: 1, height: 300 }}>
-            <Swiper style={styles.wrapper} showsButtons={true}>
-                <View style={styles.slide1}>
-                    <Text style={styles.text}>Hello Swiper</Text>
+            <Swiper
+                style={styles.wrapper}
+                autoplay={true}
+                autoplayTimeout={20}
+                paginationStyle={{ transform: "translateY(45px)" }}
+                activeDot={
+                    <View
+                        style={{
+                            backgroundColor: constants.PRIMARY_COLOR,
+                            width: 8,
+                            height: 8,
+                            borderRadius: 4,
+                            marginLeft: 3,
+                            marginRight: 3,
+                            marginTop: 3,
+                            marginBottom: 3,
+                        }}
+                    />
+                }
+            >
+                <View style={styles.slide}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.header}>Route #1 (02.04.2025)</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <View>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Länge:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    4 km
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Dauer:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    33 min
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Ø Geschwindigkeit:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    7 km/h
+                                </Text>
+                            </Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => setIsMapFullScreen(!isMapFullScreen)}
+                            disabled={isMapFullScreen}
+                        >
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: 49.0029,
+                                    longitude: 12.0957,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={styles.slide2}>
-                    <Text style={styles.text}>Beautiful</Text>
+                <View style={styles.slide}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.header}>Route #2 (03.04.2025)</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <View>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Länge:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    42 km
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Dauer:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    1h 33 min
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Ø Geschwindigkeit:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    5 km/h
+                                </Text>
+                            </Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => setIsMapFullScreen(!isMapFullScreen)}
+                            disabled={isMapFullScreen}
+                        >
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: 59.0029,
+                                    longitude: 32.0957,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={styles.slide3}>
-                    <Text style={styles.text}>And simple</Text>
+                <View style={styles.slide}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.header}>Route #3 (10.04.2025)</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <View>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Länge:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    2 km
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Dauer:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    10 min
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.FONT_COLOR }}>
+                                Ø Geschwindigkeit:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.SECCONDARY_COLOR,
+                                    }}
+                                >
+                                    6.5 km/h
+                                </Text>
+                            </Text>
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => setIsMapFullScreen(!isMapFullScreen)}
+                            disabled={isMapFullScreen}
+                        >
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: 29.0029,
+                                    longitude: 32.0957,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Swiper>
         </View>

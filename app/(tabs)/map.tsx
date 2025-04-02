@@ -79,7 +79,7 @@ export default function Map() {
                     </View>
                 )}
             </View>
-            <View style={{ height: 300, zIndex: 10 }}>
+            <View style={{ height: 180, zIndex: 10, marginTop: 14 }}>
                 <RoutesSlider />
             </View>
         </View>
