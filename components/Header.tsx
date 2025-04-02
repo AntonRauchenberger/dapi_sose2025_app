@@ -23,7 +23,7 @@ export default function Header() {
             transform: "translateY(-30px)",
         },
         trackerText: {
-            color: "white",
+            color: constants.FONT_COLOR,
         },
     });
 
