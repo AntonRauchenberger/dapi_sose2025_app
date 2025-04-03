@@ -5,6 +5,7 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import constants from "../consts";
 import RoutesSlider from "@/components/Tabs/map/routesSlider";
+import RecordButton from "@/components/Tabs/map/RecordButton";
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
@@ -79,8 +80,25 @@ export default function Map() {
                     </View>
                 )}
             </View>
-            <View style={{ height: 180, zIndex: 10, marginTop: 14 }}>
+            <View
+                style={{
+                    height: 180,
+                    zIndex: 10,
+                    marginTop: 14,
+                    marginBottom: 25,
+                }}
+            >
                 <RoutesSlider />
+            </View>
+            <View
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: 35,
+                }}
+            >
+                <RecordButton />
             </View>
         </View>
     );
