@@ -14,22 +14,21 @@ export default function RoutesSlider() {
     const [isMapFullScreen, setIsMapFullScreen] = useState(false);
 
     const styles = StyleSheet.create({
-        wrapper: {},
         slide: {
             height: "100%",
-            backgroundColor: constants.COMPLEMENTARY_COLOR,
+            backgroundColor: constants.BACKGROUND_COLOR,
             width: "97%",
             margin: "auto",
             borderRadius: 15,
             borderWidth: 2,
-            borderColor: constants.FONT_COLOR,
-            padding: 15,
+            borderColor: constants.BACKGROUND_COLOR,
+            padding: 12,
         },
         headerContainer: {
             marginBottom: 10,
         },
         header: {
-            color: constants.FONT_COLOR,
+            color: constants.TEXT_COLOR,
             fontSize: 20,
             fontWeight: "600",
         },
@@ -40,7 +39,7 @@ export default function RoutesSlider() {
         },
         map: {
             width: 120,
-            height: 108,
+            height: 115,
             overflow: "hidden",
             borderRadius: 10,
         },
@@ -49,7 +48,6 @@ export default function RoutesSlider() {
     return (
         <View style={{ flex: 1, height: 300 }}>
             <Swiper
-                style={styles.wrapper}
                 autoplay={true}
                 autoplayTimeout={20}
                 paginationStyle={{ transform: "translateY(45px)" }}
@@ -68,66 +66,73 @@ export default function RoutesSlider() {
                     />
                 }
             >
-                <View style={styles.slide}>
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.header}>Route #1 (02.04.2025)</Text>
-                    </View>
-                    <View style={styles.content}>
-                        <View>
-                            <Text style={{ color: constants.FONT_COLOR }}>
-                                Länge:{" "}
-                                <Text
-                                    style={{
-                                        color: constants.SECCONDARY_COLOR,
-                                    }}
-                                >
-                                    4 km
-                                </Text>
-                            </Text>
-                            <Text style={{ color: constants.FONT_COLOR }}>
-                                Dauer:{" "}
-                                <Text
-                                    style={{
-                                        color: constants.SECCONDARY_COLOR,
-                                    }}
-                                >
-                                    33 min
-                                </Text>
-                            </Text>
-                            <Text style={{ color: constants.FONT_COLOR }}>
-                                Ø Geschwindigkeit:{" "}
-                                <Text
-                                    style={{
-                                        color: constants.SECCONDARY_COLOR,
-                                    }}
-                                >
-                                    7 km/h
-                                </Text>
+                <View style={constants.SHADOW_STYLE}>
+                    <View style={styles.slide}>
+                        <View style={styles.headerContainer}>
+                            <Text style={styles.header}>
+                                Route #1 (02.04.2025)
                             </Text>
                         </View>
-                        <TouchableOpacity
-                            onPress={() => setIsMapFullScreen(!isMapFullScreen)}
-                            disabled={isMapFullScreen}
-                        >
-                            <MapView
-                                style={styles.map}
-                                initialRegion={{
-                                    latitude: 49.0029,
-                                    longitude: 12.0957,
-                                    latitudeDelta: 0.0922,
-                                    longitudeDelta: 0.0421,
-                                }}
-                            />
-                        </TouchableOpacity>
+                        <View style={styles.content}>
+                            <View>
+                                <Text style={{ color: constants.TEXT_COLOR }}>
+                                    Länge:{" "}
+                                    <Text
+                                        style={{
+                                            color: constants.SECCONDARY_COLOR,
+                                        }}
+                                    >
+                                        4 km
+                                    </Text>
+                                </Text>
+                                <Text style={{ color: constants.TEXT_COLOR }}>
+                                    Dauer:{" "}
+                                    <Text
+                                        style={{
+                                            color: constants.SECCONDARY_COLOR,
+                                        }}
+                                    >
+                                        33 min
+                                    </Text>
+                                </Text>
+                                <Text style={{ color: constants.TEXT_COLOR }}>
+                                    Ø Geschwindigkeit:{" "}
+                                    <Text
+                                        style={{
+                                            color: constants.SECCONDARY_COLOR,
+                                        }}
+                                    >
+                                        7 km/h
+                                    </Text>
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setIsMapFullScreen(!isMapFullScreen)
+                                }
+                                disabled={isMapFullScreen}
+                            >
+                                <MapView
+                                    style={styles.map}
+                                    initialRegion={{
+                                        latitude: 49.0029,
+                                        longitude: 12.0957,
+                                        latitudeDelta: 0.0922,
+                                        longitudeDelta: 0.0421,
+                                    }}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
+
                 <View style={styles.slide}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.header}>Route #2 (03.04.2025)</Text>
                     </View>
                     <View style={styles.content}>
                         <View>
-                            <Text style={{ color: constants.FONT_COLOR }}>
+                            <Text style={{ color: constants.TEXT_COLOR }}>
                                 Länge:{" "}
                                 <Text
                                     style={{
@@ -137,7 +142,7 @@ export default function RoutesSlider() {
                                     42 km
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.FONT_COLOR }}>
+                            <Text style={{ color: constants.TEXT_COLOR }}>
                                 Dauer:{" "}
                                 <Text
                                     style={{
@@ -147,7 +152,7 @@ export default function RoutesSlider() {
                                     1h 33 min
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.FONT_COLOR }}>
+                            <Text style={{ color: constants.TEXT_COLOR }}>
                                 Ø Geschwindigkeit:{" "}
                                 <Text
                                     style={{
@@ -174,13 +179,14 @@ export default function RoutesSlider() {
                         </TouchableOpacity>
                     </View>
                 </View>
+
                 <View style={styles.slide}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.header}>Route #3 (10.04.2025)</Text>
                     </View>
                     <View style={styles.content}>
                         <View>
-                            <Text style={{ color: constants.FONT_COLOR }}>
+                            <Text style={{ color: constants.TEXT_COLOR }}>
                                 Länge:{" "}
                                 <Text
                                     style={{
@@ -190,7 +196,7 @@ export default function RoutesSlider() {
                                     2 km
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.FONT_COLOR }}>
+                            <Text style={{ color: constants.TEXT_COLOR }}>
                                 Dauer:{" "}
                                 <Text
                                     style={{
@@ -200,7 +206,7 @@ export default function RoutesSlider() {
                                     10 min
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.FONT_COLOR }}>
+                            <Text style={{ color: constants.TEXT_COLOR }}>
                                 Ø Geschwindigkeit:{" "}
                                 <Text
                                     style={{

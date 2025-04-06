@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import Header from "@/components/Header";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -25,14 +25,28 @@ export default function Map() {
     }, []);
 
     const styles = StyleSheet.create({
+        headline: {
+            fontSize: 19,
+            fontWeight: "500",
+            color: constants.TEXT_COLOR,
+            width: "95%",
+            margin: "auto",
+        },
+        descText: {
+            fontSize: 12,
+            opacity: 0.4,
+            width: "95%",
+            margin: "auto",
+            marginBottom: 4,
+        },
         mapContainer: {
             width: "97%",
             height: 230,
             margin: "auto",
             borderRadius: 15,
             overflow: "hidden",
-            borderWidth: 2,
-            borderColor: constants.FONT_COLOR,
+            marginBottom: 9,
+            padding: 1,
         },
         map: {
             width: "100%",
@@ -51,41 +65,51 @@ export default function Map() {
     return (
         <View style={{ backgroundColor: constants.FONT_COLOR }}>
             <Header />
-            <View style={styles.mapContainer}>
-                {userLocation ? (
-                    <MapView
-                        style={styles.map}
-                        initialRegion={{
-                            latitude: userLocation?.coords?.latitude || 49.0029,
-                            longitude:
-                                userLocation?.coords?.longitude || 12.0957,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        }}
-                    >
-                        <Marker
-                            coordinate={{
-                                latitude: userLocation?.coords?.latitude,
-                                longitude: userLocation?.coords?.longitude,
+            <Text style={styles.headline}>Hunde-Tracker</Text>
+            <Text style={styles.descText}>
+                Der Standort deines Hundes und dein Eigener.
+            </Text>
+            <View style={constants.SHADOW_STYLE}>
+                <View style={styles.mapContainer}>
+                    {userLocation ? (
+                        <MapView
+                            style={styles.map}
+                            initialRegion={{
+                                latitude:
+                                    userLocation?.coords?.latitude || 49.0029,
+                                longitude:
+                                    userLocation?.coords?.longitude || 12.0957,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
                             }}
-                            title={"Dein Standort"}
-                        />
-                    </MapView>
-                ) : (
-                    <View style={styles.mapLoadingScreen}>
-                        <ActivityIndicator
-                            size={"small"}
-                            color={constants.PRIMARY_COLOR}
-                        />
-                    </View>
-                )}
+                        >
+                            <Marker
+                                coordinate={{
+                                    latitude: userLocation?.coords?.latitude,
+                                    longitude: userLocation?.coords?.longitude,
+                                }}
+                                title={"Dein Standort"}
+                            />
+                        </MapView>
+                    ) : (
+                        <View style={styles.mapLoadingScreen}>
+                            <ActivityIndicator
+                                size={"small"}
+                                color={constants.PRIMARY_COLOR}
+                            />
+                        </View>
+                    )}
+                </View>
             </View>
+            <Text style={styles.headline}>Gassi-Routen</Text>
+            <Text style={styles.descText}>
+                Deine Gassi-Routen der letzten Woche.
+            </Text>
             <View
                 style={{
                     height: 180,
                     zIndex: 10,
-                    marginTop: 14,
-                    marginBottom: 25,
+                    marginBottom: 5,
                 }}
             >
                 <RoutesSlider />
@@ -95,7 +119,7 @@ export default function Map() {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: 35,
+                    marginTop: 21,
                 }}
             >
                 <RecordButton />

@@ -13,7 +13,7 @@ import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import { useState, useRef, useEffect } from "react";
 import LottieView from "lottie-react-native";
-import particles from "@/assets/animations/particles.json"; // Passe den Pfad ggf. an
+import particles from "@/assets/animations/particles.json";
 
 export default function RecordButton() {
     const [isReccording, setIsReccording] = useState(false);
@@ -21,12 +21,17 @@ export default function RecordButton() {
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const particleRef = useRef(null);
 
+    const saveRoute = () => {
+        // TODO
+    };
+
     const handleClick = () => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         setIsReccording(!isReccording);
         if (isReccording) {
             setFinishedRoute(true);
-            particleRef.current?.play(); // Partikel starten
+            particleRef.current?.play();
+            saveRoute();
             setTimeout(() => {
                 setFinishedRoute(false);
             }, 1500);
@@ -85,7 +90,7 @@ export default function RecordButton() {
             zIndex: 1,
         },
         buttonText: {
-            marginTop: 3,
+            marginTop: 2,
             color: constants.PRIMARY_COLOR,
             fontWeight: "500",
         },
@@ -93,44 +98,45 @@ export default function RecordButton() {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={handleClick}
-                activeOpacity={0.9}
-            >
-                {/* Partikel-Explosion */}
-                <LottieView
-                    ref={particleRef}
-                    source={particles}
-                    autoPlay={false}
-                    loop={false}
-                    style={styles.lottie}
-                />
-
-                {finishedRoute ? (
-                    <Feather
-                        name="check"
-                        size={40}
-                        color={constants.PRIMARY_COLOR}
+            <View style={constants.SHADOW_STYLE}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleClick}
+                    activeOpacity={0.9}
+                >
+                    <LottieView
+                        ref={particleRef}
+                        source={particles}
+                        autoPlay={false}
+                        loop={false}
+                        style={styles.lottie}
                     />
-                ) : isReccording ? (
-                    <Animated.View
-                        style={{ transform: [{ scale: scaleAnim }] }}
-                    >
-                        <FontAwesome5
-                            name="route"
-                            size={30}
+
+                    {finishedRoute ? (
+                        <Feather
+                            name="check"
+                            size={40}
                             color={constants.PRIMARY_COLOR}
                         />
-                    </Animated.View>
-                ) : (
-                    <Foundation
-                        name="guide-dog"
-                        size={60}
-                        color={constants.PRIMARY_COLOR}
-                    />
-                )}
-            </TouchableOpacity>
+                    ) : isReccording ? (
+                        <Animated.View
+                            style={{ transform: [{ scale: scaleAnim }] }}
+                        >
+                            <FontAwesome5
+                                name="route"
+                                size={30}
+                                color={constants.PRIMARY_COLOR}
+                            />
+                        </Animated.View>
+                    ) : (
+                        <Foundation
+                            name="guide-dog"
+                            size={60}
+                            color={constants.PRIMARY_COLOR}
+                        />
+                    )}
+                </TouchableOpacity>
+            </View>
             <Text style={styles.buttonText}>
                 {finishedRoute
                     ? "Route wurde gespeichert"
