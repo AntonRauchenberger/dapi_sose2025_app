@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Text, Image } from "react-native";
 import Header from "@/components/Header";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -9,6 +9,8 @@ import RecordButton from "@/components/Tabs/map/RecordButton";
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
+    const [dogLocation, setDogLocation] = useState<any>(null);
+    const [dogName, setDogName] = useState<string>("Findus");
 
     useEffect(() => {
         async function getCurrentLocation() {
@@ -60,6 +62,16 @@ export default function Map() {
             justifyContent: "center",
             alignItems: "center",
         },
+        marker: {
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            overflow: "hidden",
+            backgroundColor: constants.COMPLEMENTARY_COLOR,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+        },
     });
 
     return (
@@ -90,6 +102,25 @@ export default function Map() {
                                 }}
                                 title={"Dein Standort"}
                             />
+                            <Marker
+                                coordinate={{
+                                    latitude:
+                                        dogLocation?.coords?.latitude ??
+                                        49.0029,
+                                    longitude:
+                                        dogLocation?.coords?.longitude ??
+                                        12.0957,
+                                }}
+                                title={dogName}
+                                style={styles.marker}
+                            >
+                                <View style={styles.marker}>
+                                    <Image
+                                        source={require("../../assets/images/dog_example.jpg")}
+                                        style={{ width: 40, height: 40 }}
+                                    />
+                                </View>
+                            </Marker>
                         </MapView>
                     ) : (
                         <View style={styles.mapLoadingScreen}>
