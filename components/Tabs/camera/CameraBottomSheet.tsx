@@ -1,13 +1,21 @@
 import constants from "@/app/consts";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
 
-export const CameraBottomSheet = () => {
+export const CameraBottomSheet = ({ isGaleryMode = true }) => {
     const [dogName, setDogName] = useState("Findus");
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const modalizeRef = useRef<Modalize>(null);
+
+    useEffect(() => {
+        if (!isGaleryMode) {
+            modalizeRef.current?.close();
+        } else {
+            modalizeRef.current?.open();
+        }
+    }, [isGaleryMode]);
 
     const styles = StyleSheet.create({
         content: {
@@ -74,7 +82,7 @@ export const CameraBottomSheet = () => {
                     source={require("../../../assets/images/dog_example.jpg")}
                     style={styles.image}
                 />
-                <Text style={styles.imageDesc}>Happy Fin, 06. April 2025</Text>
+                <Text style={styles.imageDesc}>Happy Fin, 6. April 2025</Text>
             </View>
         </Modalize>
     );

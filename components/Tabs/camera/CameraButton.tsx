@@ -14,7 +14,7 @@ import LottieView from "lottie-react-native";
 import particles from "@/assets/animations/particles.json";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-export default function CameraButton() {
+export default function CameraButton({ setIsGaleryMode }) {
     const [isLoading, setIsLoading] = useState(false);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
@@ -25,6 +25,7 @@ export default function CameraButton() {
         setTimeout(() => {
             setIsLoading(false);
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            setIsGaleryMode(false);
         }, 2000);
     };
 
