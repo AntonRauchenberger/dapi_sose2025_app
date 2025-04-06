@@ -22,6 +22,10 @@ export default function CameraButton() {
 
     const getImage = () => {
         // TODO
+        setTimeout(() => {
+            setIsLoading(false);
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }, 2000);
     };
 
     const handleClick = () => {

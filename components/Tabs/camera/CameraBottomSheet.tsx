@@ -1,36 +1,81 @@
-import React, { useCallback, useMemo, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import constants from "@/app/consts";
+import React, { useRef, useState } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { Modalize } from "react-native-modalize";
+import * as Haptics from "expo-haptics";
 
-export default function CameraBottomSheet() {
-    // ref
-    const bottomSheetRef = useRef<BottomSheet>(null);
-
-    // callbacks
-    const handleSheetChanges = useCallback((index: number) => {
-        console.log("handleSheetChanges", index);
-    }, []);
+export const CameraBottomSheet = () => {
+    const [dogName, setDogName] = useState("Findus");
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const modalizeRef = useRef<Modalize>(null);
 
     const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: "grey",
+        content: {
+            paddingTop: modalIsOpen ? 40 : 10,
         },
-        contentContainer: {
-            flex: 1,
-            padding: 36,
-            alignItems: "center",
+        headline: {
+            fontSize: 19,
+            fontWeight: "500",
+            color: constants.TEXT_COLOR,
+            width: "95%",
+            margin: "auto",
+        },
+        descText: {
+            fontSize: 12,
+            opacity: 0.4,
+            width: "95%",
+            margin: "auto",
+            marginBottom: 4,
+        },
+        image: {
+            width: "95%",
+            height: 400,
+            margin: "auto",
+            borderRadius: 15,
+            marginBottom: 8,
+        },
+        imageDesc: {
+            fontSize: 13,
+            opacity: 0.7,
+            width: "95%",
+            margin: "auto",
+            marginBottom: 4,
+            textAlign: "right",
+            fontStyle: "italic",
         },
     });
 
     return (
-        <GestureHandlerRootView style={styles.container}>
-            <BottomSheet ref={bottomSheetRef} onChange={handleSheetChanges}>
-                <BottomSheetView style={styles.contentContainer}>
-                    <Text>Awesome 🎉</Text>
-                </BottomSheetView>
-            </BottomSheet>
-        </GestureHandlerRootView>
+        <Modalize
+            ref={modalizeRef}
+            alwaysOpen={200}
+            modalHeight={800}
+            handleStyle={{
+                backgroundColor: constants.PRIMARY_COLOR,
+            }}
+            onPositionChange={(position) => {
+                Haptics.notificationAsync(
+                    Haptics.NotificationFeedbackType.Success
+                );
+
+                position === "top"
+                    ? setModalIsOpen(true)
+                    : setModalIsOpen(false);
+            }}
+            withOverlay={false}
+            modalStyle={{ backgroundColor: "#f7f7f7" }}
+        >
+            <View style={styles.content}>
+                <Text style={styles.headline}>Bilder</Text>
+                <Text style={[styles.descText, { marginBottom: 10 }]}>
+                    Deine gespeicherte Bilder von {dogName}.
+                </Text>
+                <Image
+                    source={require("../../../assets/images/dog_example.jpg")}
+                    style={styles.image}
+                />
+                <Text style={styles.imageDesc}>Happy Fin, 06. April 2025</Text>
+            </View>
+        </Modalize>
     );
-}
+};
