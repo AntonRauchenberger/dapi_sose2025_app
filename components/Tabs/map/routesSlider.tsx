@@ -70,7 +70,7 @@ export default function RoutesSlider() {
                     <View style={styles.slide}>
                         <View style={styles.headerContainer}>
                             <Text style={styles.header}>
-                                Route #1 (02.04.2025)
+                                Route #1 (2. April 2025)
                             </Text>
                         </View>
                         <View style={styles.content}>
@@ -128,7 +128,9 @@ export default function RoutesSlider() {
 
                 <View style={styles.slide}>
                     <View style={styles.headerContainer}>
-                        <Text style={styles.header}>Route #2 (03.04.2025)</Text>
+                        <Text style={styles.header}>
+                            Route #2 (3. April 2025)
+                        </Text>
                     </View>
                     <View style={styles.content}>
                         <View>
@@ -182,7 +184,9 @@ export default function RoutesSlider() {
 
                 <View style={styles.slide}>
                     <View style={styles.headerContainer}>
-                        <Text style={styles.header}>Route #3 (10.04.2025)</Text>
+                        <Text style={styles.header}>
+                            Route #3 (10. April 2025)
+                        </Text>
                     </View>
                     <View style={styles.content}>
                         <View>
