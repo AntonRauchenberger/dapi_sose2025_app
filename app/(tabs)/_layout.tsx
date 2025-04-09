@@ -21,7 +21,7 @@ export default function TabsLayout() {
                         />
                     ),
                     headerShown: false,
-                    tabBarLabel: "Feed",
+                    tabBarLabel: "Start",
                 }}
             />
             <Tabs.Screen
