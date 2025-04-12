@@ -8,6 +8,7 @@ export default function TabsLayout() {
             screenOptions={{
                 tabBarActiveTintColor: constants.PRIMARY_COLOR,
                 tabBarStyle: { backgroundColor: constants.BACKGROUND_COLOR },
+                headerShown: false,
             }}
         >
             <Tabs.Screen
@@ -21,7 +22,7 @@ export default function TabsLayout() {
                         />
                     ),
                     headerShown: false,
-                    tabBarLabel: "Feed",
+                    tabBarLabel: "Start",
                 }}
             />
             <Tabs.Screen
@@ -68,22 +69,6 @@ export default function TabsLayout() {
                     ),
                     headerShown: false,
                     tabBarLabel: "Camera",
-                }}
-            />
-            <Tabs.Screen
-                name="account"
-                options={{
-                    tabBarIcon: ({ focused, color }) => (
-                        <Ionicons
-                            name={
-                                focused ? "settings-sharp" : "settings-outline"
-                            }
-                            size={30}
-                            color={color}
-                        />
-                    ),
-                    headerShown: false,
-                    tabBarLabel: "Account",
                 }}
             />
         </Tabs>

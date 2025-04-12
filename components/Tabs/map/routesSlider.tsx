@@ -16,30 +16,32 @@ export default function RoutesSlider() {
     const styles = StyleSheet.create({
         slide: {
             height: "100%",
-            backgroundColor: constants.BACKGROUND_COLOR,
             width: "97%",
             margin: "auto",
             borderRadius: 15,
             borderWidth: 2,
             borderColor: constants.BACKGROUND_COLOR,
-            padding: 12,
+            padding: 10,
         },
         headerContainer: {
-            marginBottom: 10,
+            borderBottomColor: constants.BACKGROUND_COLOR,
+            borderBottomWidth: 2,
         },
         header: {
             color: constants.TEXT_COLOR,
             fontSize: 20,
             fontWeight: "600",
+            marginBottom: 5,
         },
         content: {
             flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
+            marginTop: 5,
         },
         map: {
             width: 120,
-            height: 115,
+            height: 117,
             overflow: "hidden",
             borderRadius: 10,
         },
