@@ -3,9 +3,7 @@ import constants from "@/app/consts";
 import { useState } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-export default function Header() {
-    const [dogName, setDogName] = useState("Findus");
-
+export default function Header({ dogName, image }) {
     const styles = StyleSheet.create({
         iconContainer: {
             transform: "translateY(10px)",
@@ -46,13 +44,10 @@ export default function Header() {
                         />
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.text}>Findus</Text>
+                <Text style={styles.text}>{dogName}</Text>
             </View>
 
-            <Image
-                source={require("../../../assets/images/dog_example.jpg")}
-                style={styles.image}
-            />
+            <Image source={{ uri: image }} style={styles.image} />
         </View>
     );
 }
