@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import constants from "@/app/consts";
-import { useState } from "react";
+import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function Header({ dogName, image }) {
+    const router = useRouter();
+
     const styles = StyleSheet.create({
         iconContainer: {
             transform: "translateY(10px)",
@@ -36,7 +38,10 @@ export default function Header({ dogName, image }) {
         <View>
             <View style={styles.textContainer}>
                 <View style={styles.iconContainer}>
-                    <TouchableOpacity activeOpacity={0.8}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => router.push("/Routes/EditUserProfile")}
+                    >
                         <MaterialCommunityIcons
                             name="account-circle"
                             size={50}

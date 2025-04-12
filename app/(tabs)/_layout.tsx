@@ -71,22 +71,6 @@ export default function TabsLayout() {
                     tabBarLabel: "Camera",
                 }}
             />
-            <Tabs.Screen
-                name="account"
-                options={{
-                    tabBarIcon: ({ focused, color }) => (
-                        <Ionicons
-                            name={
-                                focused ? "settings-sharp" : "settings-outline"
-                            }
-                            size={30}
-                            color={color}
-                        />
-                    ),
-                    headerShown: false,
-                    tabBarLabel: "Account",
-                }}
-            />
         </Tabs>
     );
 }

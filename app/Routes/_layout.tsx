@@ -9,6 +9,12 @@ export default function RoutesLayout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="EditUserProfile"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     );
 }
