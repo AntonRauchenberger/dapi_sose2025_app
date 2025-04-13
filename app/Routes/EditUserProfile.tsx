@@ -14,9 +14,11 @@ import constants from "../consts";
 import { useRouter } from "expo-router";
 import Dialog from "react-native-dialog";
 import * as Haptics from "expo-haptics";
+import { useSession } from "@/lib/Authentification/ctx";
 
 export default function EditUserProfile() {
     const router = useRouter();
+    const { signOut } = useSession();
     const [profile, setProfile] = useState({
         name: "Toni Rauchenberger",
         email: "admin@gmail.com",
@@ -28,10 +30,6 @@ export default function EditUserProfile() {
     }, []);
 
     const loadProfile = async () => {
-        // TODO
-    };
-
-    const signOut = () => {
         // TODO
     };
 
@@ -115,6 +113,7 @@ export default function EditUserProfile() {
                         );
                         setDialogVisible(false);
                         signOut();
+                        router.navigate("/start");
                     }}
                 />
             </Dialog.Container>
