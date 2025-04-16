@@ -7,6 +7,7 @@ import {
     TextInput,
     Keyboard,
     Image,
+    KeyboardAvoidingView,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import constants from "@/app/consts";
@@ -16,8 +17,15 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { useSession } from "@/lib/Authentification/ctx";
+import Dialog from "react-native-dialog";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignUpSlider() {
+    const { signIn } = useSession();
+    const [showDialog, setShowDialog] = useState(false);
+    const [inEdit, setInEdit] = useState(false);
     const [userData, setUserData] = useState({
         name: "",
         email: "",
@@ -47,6 +55,30 @@ export default function SignUpSlider() {
         }
     };
 
+    const saveProfile = async () => {
+        try {
+            await AsyncStorage.setItem("dogProfile", JSON.stringify(dogData));
+            await AsyncStorage.setItem("userProfile", JSON.stringify(userData));
+        } catch (err) {
+            console.error("Fehler beim Speichern:", err);
+        }
+    };
+
+    const register = async () => {
+        const checkEmptyFields = (data: any) => {
+            return Object.values(data).some((value) => value === "");
+        };
+
+        if (checkEmptyFields(userData) || checkEmptyFields(dogData)) {
+            setShowDialog(true);
+            return;
+        }
+
+        signIn();
+        await saveProfile();
+        router.replace("/");
+    };
+
     const styles = StyleSheet.create({
         wrapper: {
             display: "flex",
@@ -62,7 +94,6 @@ export default function SignUpSlider() {
             borderRadius: 15,
             padding: 20,
             backgroundColor: "#facfe5",
-            top: "60%",
         },
         header: {
             fontSize: 30,
@@ -99,7 +130,7 @@ export default function SignUpSlider() {
             width: 290,
             height: 200,
             borderRadius: 10,
-            marginBottom: 20,
+            marginBottom: 12,
         },
         imagePlaceholder: {
             width: 290,
@@ -108,7 +139,20 @@ export default function SignUpSlider() {
             backgroundColor: constants.BACKGROUND_COLOR,
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: 20,
+            marginBottom: 12,
+        },
+        button: {
+            padding: 15,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 8,
+        },
+        buttonText: {
+            color: constants.FONT_COLOR,
+            fontSize: 16,
+            fontWeight: "600",
         },
     });
 
@@ -133,6 +177,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -153,6 +199,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -173,6 +221,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -193,6 +243,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
         </View>
@@ -219,6 +271,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -239,6 +293,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -259,6 +315,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -279,6 +337,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -299,6 +359,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -319,6 +381,8 @@ export default function SignUpSlider() {
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
+                    onFocus={() => setInEdit(true)}
+                    onBlur={() => setInEdit(false)}
                 />
             </View>
         </View>
@@ -333,7 +397,7 @@ export default function SignUpSlider() {
                     { display: "flex", flexDirection: "column" },
                 ]}
             >
-                <TouchableOpacity onPress={pickImage} activeOpacity={0.9}>
+                <TouchableOpacity onPress={pickImage} activeOpacity={0.7}>
                     {dogData.image ? (
                         <Image
                             source={{ uri: dogData.image }}
@@ -365,41 +429,90 @@ export default function SignUpSlider() {
                         returnKeyType="done"
                         onSubmitEditing={Keyboard.dismiss}
                         style={styles.input}
+                        onFocus={() => setInEdit(true)}
+                        onBlur={() => setInEdit(false)}
                     />
                 </View>
             </View>
+            <TouchableOpacity
+                style={[
+                    styles.button,
+                    { backgroundColor: constants.COMPLEMENTARY_COLOR },
+                ]}
+                onPress={register}
+            >
+                <Text style={styles.buttonText}>Registrieren</Text>
+            </TouchableOpacity>
         </View>
     );
 
     return (
-        <View style={styles.wrapper}>
-            <Swiper
-                loop={false}
-                activeDot={
-                    <View
-                        style={{
-                            backgroundColor: constants.TEXT_COLOR,
-                            width: 8,
-                            height: 8,
-                            borderRadius: 4,
-                            marginLeft: 3,
-                            marginRight: 3,
-                            marginTop: 3,
-                            marginBottom: 3,
+        <KeyboardAvoidingView style={{ flex: 1 }}>
+            <View style={styles.wrapper}>
+                <Swiper
+                    loop={false}
+                    paginationStyle={{
+                        marginBottom: 10,
+                    }}
+                    activeDot={
+                        <View
+                            style={{
+                                backgroundColor: constants.TEXT_COLOR,
+                                width: 8,
+                                height: 8,
+                                borderRadius: 4,
+                                marginLeft: 3,
+                                marginRight: 3,
+                                marginTop: 3,
+                                marginBottom: 3,
+                            }}
+                        />
+                    }
+                >
+                    <View style={constants.SHADOW_STYLE}>
+                        <View
+                            style={[
+                                styles.slide,
+                                { marginTop: inEdit ? 85 : 240 },
+                            ]}
+                        >
+                            {userDataSlide}
+                        </View>
+                    </View>
+                    <View style={constants.SHADOW_STYLE}>
+                        <View
+                            style={[
+                                styles.slide,
+                                { marginTop: inEdit ? 28 : 185 },
+                            ]}
+                        >
+                            {dogDataSlide}
+                        </View>
+                    </View>
+                    <View style={constants.SHADOW_STYLE}>
+                        <View
+                            style={[
+                                styles.slide,
+                                { marginTop: inEdit ? 37 : 195 },
+                            ]}
+                        >
+                            {finalSlide}
+                        </View>
+                    </View>
+                </Swiper>
+                <Dialog.Container visible={showDialog}>
+                    <Dialog.Title>Fehlende Eingaben</Dialog.Title>
+                    <Dialog.Description>
+                        Du hast noch nicht alle Felder ausgefüllt.
+                    </Dialog.Description>
+                    <Dialog.Button
+                        label="Okay"
+                        onPress={() => {
+                            setShowDialog(false);
                         }}
                     />
-                }
-            >
-                <View style={constants.SHADOW_STYLE}>
-                    <View style={styles.slide}>{userDataSlide}</View>
-                </View>
-                <View style={constants.SHADOW_STYLE}>
-                    <View style={styles.slide}>{dogDataSlide}</View>
-                </View>
-                <View style={constants.SHADOW_STYLE}>
-                    <View style={styles.slide}>{finalSlide}</View>
-                </View>
-            </Swiper>
-        </View>
+                </Dialog.Container>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
