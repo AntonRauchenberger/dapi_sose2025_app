@@ -7,11 +7,8 @@ import {
     Keyboard,
     TouchableOpacity,
 } from "react-native";
-import { useSession } from "@/lib/Authentification/ctx";
 import constants from "./consts";
-import { useState } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import Feather from "@expo/vector-icons/Feather";
+import SignUpSlider from "@/components/Authentification/SignUpSlider";
 
 export default function SignUp() {
     const styles = StyleSheet.create({
@@ -28,6 +25,7 @@ export default function SignUp() {
     return (
         <View style={styles.wrapper}>
             <Text>Sign Up</Text>
+            <SignUpSlider />
         </View>
     );
 }
