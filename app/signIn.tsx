@@ -10,6 +10,8 @@ import {
 import { useSession } from "@/lib/Authentification/ctx";
 import constants from "./consts";
 import { useState } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function SignIn() {
     const { signIn } = useSession();
@@ -29,7 +31,7 @@ export default function SignIn() {
             fontSize: 30,
             fontWeight: "600",
             color: constants.TEXT_COLOR,
-            marginBottom: 10,
+            marginBottom: 25,
         },
         labelContainer: {
             width: "80%",
@@ -41,87 +43,135 @@ export default function SignIn() {
             fontWeight: "500",
         },
         input: {
-            borderColor: "#ccc",
-            borderWidth: 1,
             borderRadius: 10,
             padding: 10,
             marginBottom: 12,
-            backgroundColor: "#fff",
-            width: "80%",
+            backgroundColor: "#facfe5",
             height: 45,
-        },
-        buttonContainer: {
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            gap: 15,
+            borderBottomStartRadius: 0,
+            borderTopStartRadius: 0,
+            width: 265,
+            paddingLeft: 0,
         },
         button: {
             padding: 15,
-            width: 140,
+            width: "80%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 8,
+            marginTop: 20,
         },
         buttonText: {
             color: constants.FONT_COLOR,
             fontSize: 16,
             fontWeight: "600",
         },
+        imageContainer: {
+            marginBottom: 30,
+        },
+        inputContainer: {
+            width: "80%",
+            display: "flex",
+            flexDirection: "row",
+        },
+        inputIconContainer: {
+            backgroundColor: "#facfe5",
+            borderRadius: 10,
+            borderBottomEndRadius: 0,
+            borderTopEndRadius: 0,
+            padding: 10,
+            marginBottom: 12,
+            height: 45,
+        },
+        registerTextContainer: {
+            marginTop: 10,
+            overflow: "visible",
+            display: "flex",
+            flexDirection: "row",
+            gap: 5,
+        },
+        registerText: {
+            color: constants.TEXT_COLOR,
+            overflow: "visible",
+        },
+        registerButton: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "visible",
+        },
+        registerButtonText: {
+            color: constants.PRIMARY_COLOR,
+        },
     });
 
     return (
         <View style={styles.wrapper}>
-            <Text style={styles.header}>Anmelden</Text>
-            <View style={styles.labelContainer}>
-                <Text style={styles.label}>E-Mail</Text>
+            <View style={styles.imageContainer}>
+                <Ionicons
+                    name="paw-outline"
+                    size={120}
+                    color={constants.TEXT_COLOR}
+                />
             </View>
-            <TextInput
-                placeholder="Eingeben ..."
-                placeholderTextColor={"lightgrey"}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-                style={styles.input}
-            />
-            <View style={styles.labelContainer}>
-                <Text style={styles.label}>Passwort</Text>
+            <Text style={styles.header}>Login</Text>
+            <View style={styles.inputContainer}>
+                <View style={styles.inputIconContainer}>
+                    <Feather
+                        name="mail"
+                        size={24}
+                        color={constants.TEXT_COLOR}
+                    />
+                </View>
+                <TextInput
+                    placeholder="Email"
+                    placeholderTextColor={constants.SECCONDARY_COLOR}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    returnKeyType="done"
+                    onSubmitEditing={Keyboard.dismiss}
+                    style={styles.input}
+                />
             </View>
-            <TextInput
-                placeholder="Eingeben ..."
-                placeholderTextColor={"lightgrey"}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                returnKeyType="done"
-                onSubmitEditing={Keyboard.dismiss}
-                style={styles.input}
-                textContentType="password"
-            />
-            <View style={styles.buttonContainer}>
+            <View style={styles.inputContainer}>
+                <View style={styles.inputIconContainer}>
+                    <Feather
+                        name="lock"
+                        size={24}
+                        color={constants.TEXT_COLOR}
+                    />
+                </View>
+                <TextInput
+                    placeholder="Passwort"
+                    placeholderTextColor={constants.SECCONDARY_COLOR}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
+                    returnKeyType="done"
+                    onSubmitEditing={Keyboard.dismiss}
+                    style={styles.input}
+                    textContentType="password"
+                />
+            </View>
+            <TouchableOpacity
+                style={[
+                    styles.button,
+                    { backgroundColor: constants.COMPLEMENTARY_COLOR },
+                ]}
+                onPress={() => {
+                    signIn();
+                    router.replace("/");
+                }}
+            >
+                <Text style={styles.buttonText}>Anmelden</Text>
+            </TouchableOpacity>
+            <View style={styles.registerTextContainer}>
+                <Text style={styles.registerText}>Noch keinen Account?</Text>
                 <TouchableOpacity
-                    style={[
-                        styles.button,
-                        { backgroundColor: constants.SECCONDARY_COLOR },
-                    ]}
-                    onPress={() => {
-                        // TODO
-                    }}
+                    style={styles.registerButton}
+                    onPress={() => router.navigate("/signUp")}
                 >
-                    <Text style={styles.buttonText}>Registrieren</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.button,
-                        { backgroundColor: constants.COMPLEMENTARY_COLOR },
-                    ]}
-                    onPress={() => {
-                        signIn();
-                        router.replace("/");
-                    }}
-                >
-                    <Text style={styles.buttonText}>Anmelden</Text>
+                    <Text style={styles.registerButtonText}>Registrieren</Text>
                 </TouchableOpacity>
             </View>
         </View>
