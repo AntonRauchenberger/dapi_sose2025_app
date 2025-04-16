@@ -34,8 +34,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         <AuthContext.Provider
             value={{
                 signIn: () => {
-                    // Perform sign-in logic here
-                    setSession("xxx");
+                    setSession("loggedIn");
                 },
                 signOut: () => {
                     setSession(null);

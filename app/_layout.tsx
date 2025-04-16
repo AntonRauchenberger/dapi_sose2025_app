@@ -4,10 +4,13 @@ import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import constants from "./consts";
 import { SessionProvider } from "@/lib/Authentification/ctx";
+import Firebase from "@/lib/Firebase/Firebase";
 
 LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
+    Firebase.init();
+
     return (
         <SessionProvider>
             <GestureHandlerRootView>

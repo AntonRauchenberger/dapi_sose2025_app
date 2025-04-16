@@ -12,11 +12,28 @@ import constants from "./consts";
 import { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
+import Dialog from "react-native-dialog";
+import Firebase from "@/lib/Firebase/Firebase";
 
 export default function SignIn() {
     const { signIn } = useSession();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showDialog, setShowDialog] = useState(false);
+    const [showErrorDialog, setShowErrorDialog] = useState(false);
+
+    const login = async () => {
+        if (email === "" || password === "") {
+            setShowDialog(true);
+            return;
+        }
+        if (await Firebase.login(email, password)) {
+            signIn();
+            router.navigate("/(tabs)");
+        } else {
+            setShowErrorDialog(true);
+        }
+    };
 
     const styles = StyleSheet.create({
         wrapper: {
@@ -159,8 +176,7 @@ export default function SignIn() {
                     { backgroundColor: constants.COMPLEMENTARY_COLOR },
                 ]}
                 onPress={() => {
-                    signIn();
-                    router.replace("/");
+                    login();
                 }}
             >
                 <Text style={styles.buttonText}>Anmelden</Text>
@@ -174,6 +190,30 @@ export default function SignIn() {
                     <Text style={styles.registerButtonText}>Registrieren</Text>
                 </TouchableOpacity>
             </View>
+            <Dialog.Container visible={showDialog}>
+                <Dialog.Title>Fehlende Eingaben</Dialog.Title>
+                <Dialog.Description>
+                    Du hast noch nicht alle Felder ausgefüllt.
+                </Dialog.Description>
+                <Dialog.Button
+                    label="Okay"
+                    onPress={() => {
+                        setShowDialog(false);
+                    }}
+                />
+            </Dialog.Container>
+            <Dialog.Container visible={showErrorDialog}>
+                <Dialog.Title>Falsche Eingaben</Dialog.Title>
+                <Dialog.Description>
+                    Du hast nicht alle Felder richtig ausgefüllt.
+                </Dialog.Description>
+                <Dialog.Button
+                    label="Okay"
+                    onPress={() => {
+                        setShowErrorDialog(false);
+                    }}
+                />
+            </Dialog.Container>
         </View>
     );
 }

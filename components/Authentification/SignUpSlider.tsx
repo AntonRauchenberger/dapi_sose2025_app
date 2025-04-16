@@ -21,10 +21,12 @@ import { router } from "expo-router";
 import { useSession } from "@/lib/Authentification/ctx";
 import Dialog from "react-native-dialog";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Firebase from "@/lib/Firebase/Firebase";
 
 export default function SignUpSlider() {
     const { signIn } = useSession();
     const [showDialog, setShowDialog] = useState(false);
+    const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [inEdit, setInEdit] = useState(false);
     const [userData, setUserData] = useState({
         name: "",
@@ -74,9 +76,13 @@ export default function SignUpSlider() {
             return;
         }
 
-        signIn();
-        await saveProfile();
-        router.replace("/");
+        if (await Firebase.register(userData.email, userData.password)) {
+            signIn();
+            await saveProfile();
+            router.replace("/");
+        } else {
+            setShowErrorDialog(true);
+        }
     };
 
     const styles = StyleSheet.create({
@@ -509,6 +515,18 @@ export default function SignUpSlider() {
                         label="Okay"
                         onPress={() => {
                             setShowDialog(false);
+                        }}
+                    />
+                </Dialog.Container>
+                <Dialog.Container visible={showErrorDialog}>
+                    <Dialog.Title>Falsche Eingaben</Dialog.Title>
+                    <Dialog.Description>
+                        Du hast nicht alle Felder richtig ausgefüllt.
+                    </Dialog.Description>
+                    <Dialog.Button
+                        label="Okay"
+                        onPress={() => {
+                            setShowErrorDialog(false);
                         }}
                     />
                 </Dialog.Container>
