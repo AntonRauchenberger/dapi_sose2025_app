@@ -1,0 +1,43 @@
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+export default class DogService {
+    static async saveDogProfile(Firebase: any, dogData: any) {
+        try {
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
+
+            const userDocRef = doc(Firebase.db, "dogs", user.uid);
+            await setDoc(userDocRef, dogData);
+            AsyncStorage.setItem("dogProfile", JSON.stringify(dogData));
+        } catch (error) {
+            console.error("Error saving dog data: ", error);
+            throw error;
+        }
+    }
+
+    static async loadDogData(Firebase: any) {
+        try {
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
+
+            const userDocRef = doc(Firebase.db, "dogs", user.uid);
+            const docSnap = await getDoc(userDocRef);
+
+            if (docSnap.exists()) {
+                const dogData = docSnap.data();
+                await AsyncStorage.setItem(
+                    "dogProfile",
+                    JSON.stringify(dogData)
+                );
+                return dogData;
+            } else {
+                console.warn("No dog data found for this user.");
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching dog data: ", error);
+            throw error;
+        }
+    }
+}

@@ -1,13 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import firebaseConfig from "./firebaseConfig";
 
 export default class Firebase {
-    static db;
+    static db: any;
+    static auth: any;
 
     static init() {
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         Firebase.db = getFirestore(app);
+        Firebase.auth = getAuth(app);
     }
 }

@@ -1,8 +1,32 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import constants from "@/app/consts";
+import { Redirect, Stack } from "expo-router";
+import { useSession } from "@/lib/Authentification/ctx";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function TabsLayout() {
+    const { session, isLoading } = useSession();
+
+    if (isLoading) {
+        return (
+            <View
+                style={{
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator />
+            </View>
+        );
+    }
+
+    if (!session) {
+        return <Redirect href="/start" />;
+    }
+
     return (
         <Tabs
             screenOptions={{

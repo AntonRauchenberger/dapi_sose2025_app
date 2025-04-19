@@ -17,9 +17,16 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import constants from "../consts";
 import { useRouter } from "expo-router";
+import DogService from "@/lib/Services/DogService";
+import Firebase from "@/lib/Firebase/Firebase";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function EditDogProfile() {
     const router = useRouter();
+    const [inEdit, setInEdit] = useState(false);
     const [profile, setProfile] = useState({
         birthdate: "",
         breed: "",
@@ -49,6 +56,7 @@ export default function EditDogProfile() {
     const saveProfile = async () => {
         try {
             await AsyncStorage.setItem("dogProfile", JSON.stringify(profile));
+            await DogService.saveDogProfile(Firebase, profile);
             router.replace("/(tabs)");
         } catch (err) {
             console.error("Fehler beim Speichern:", err);
@@ -78,14 +86,6 @@ export default function EditDogProfile() {
             marginBottom: 20,
             color: constants.TEXT_COLOR,
         },
-        input: {
-            borderColor: "#ccc",
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 10,
-            marginBottom: 12,
-            backgroundColor: "#fff",
-        },
         image: {
             width: "100%",
             height: 200,
@@ -100,6 +100,41 @@ export default function EditDogProfile() {
             justifyContent: "center",
             alignItems: "center",
             marginBottom: 20,
+        },
+        labelContainer: {
+            width: "80%",
+        },
+        label: {
+            color: constants.TEXT_COLOR,
+            marginBottom: 5,
+            fontSize: 17,
+            fontWeight: "500",
+        },
+        input: {
+            borderRadius: 10,
+            padding: 10,
+            marginBottom: 12,
+            backgroundColor: constants.BACKGROUND_COLOR,
+            height: 45,
+            borderBottomStartRadius: 0,
+            borderTopStartRadius: 0,
+            width: 305,
+            paddingLeft: 0,
+        },
+        inputContainer: {
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            marginBottom: 7,
+        },
+        inputIconContainer: {
+            backgroundColor: constants.BACKGROUND_COLOR,
+            borderRadius: 10,
+            borderBottomEndRadius: 0,
+            borderTopEndRadius: 0,
+            padding: 10,
+            marginBottom: 12,
+            height: 45,
         },
     });
 
@@ -136,137 +171,163 @@ export default function EditDogProfile() {
                         color={constants.COMPLEMENTARY_COLOR}
                     />
 
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Name
-                    </Text>
-                    <TextInput
-                        placeholder="Eingeben ..."
-                        placeholderTextColor={"lightgrey"}
-                        value={profile.name}
-                        onChangeText={(text) =>
-                            setProfile({ ...profile, name: text })
-                        }
-                        returnKeyType="done"
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.input}
-                    />
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Geburtsdatum
-                    </Text>
-                    <TextInput
-                        placeholder="Eingeben ..."
-                        placeholderTextColor={"lightgrey"}
-                        value={profile.birthdate}
-                        onChangeText={(text) =>
-                            setProfile({ ...profile, birthdate: text })
-                        }
-                        returnKeyType="done"
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.input}
-                    />
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Rasse
-                    </Text>
-                    <TextInput
-                        placeholder="Eingeben ..."
-                        placeholderTextColor={"lightgrey"}
-                        value={profile.breed}
-                        onChangeText={(text) =>
-                            setProfile({ ...profile, breed: text })
-                        }
-                        returnKeyType="done"
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.input}
-                    />
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Geschlecht
-                    </Text>
-                    <View
-                        style={{
-                            borderColor: "#ccc",
-                            borderWidth: 1,
-                            borderRadius: 8,
-                            marginBottom: 12,
-                            backgroundColor: "#fff",
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={() =>
+                    <View style={[styles.inputContainer, { marginTop: 24 }]}>
+                        <View style={styles.inputIconContainer}>
+                            <MaterialCommunityIcons
+                                name="dog"
+                                size={24}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Name"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
+                                setProfile({ ...profile, name: text })
+                            }
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.name}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputIconContainer}>
+                            <FontAwesome
+                                name="birthday-cake"
+                                size={22}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Geburtsdatum"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
+                                setProfile({ ...profile, birthdate: text })
+                            }
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.birthdate}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputIconContainer}>
+                            <FontAwesome
+                                name="transgender"
+                                size={24}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Geschlecht (männlich/weiblich)"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
                                 setProfile({
                                     ...profile,
-                                    gender:
-                                        profile.gender === "männlich"
-                                            ? "weiblich"
-                                            : "männlich",
+                                    gender: text.toLowerCase(),
                                 })
                             }
-                            style={{ padding: 12 }}
-                        >
-                            <Text style={{ color: "#333" }}>
-                                {profile.gender
-                                    ? profile.gender
-                                    : "Geschlecht wählen"}
-                            </Text>
-                        </TouchableOpacity>
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.gender}
+                        />
                     </View>
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Gewicht (in kg)
-                    </Text>
-                    <TextInput
-                        placeholder="Eingeben ..."
-                        placeholderTextColor={"lightgrey"}
-                        value={profile.weight}
-                        keyboardType="number-pad"
-                        onChangeText={(text) =>
-                            setProfile({ ...profile, weight: text })
-                        }
-                        returnKeyType="done"
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.input}
-                    />
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Größe (in cm)
-                    </Text>
-                    <TextInput
-                        placeholder="Eingeben ..."
-                        placeholderTextColor={"lightgrey"}
-                        value={profile.height}
-                        keyboardType="number-pad"
-                        onChangeText={(text) =>
-                            setProfile({ ...profile, height: text })
-                        }
-                        returnKeyType="done"
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.input}
-                    />
-                    <Text
-                        style={{ color: constants.TEXT_COLOR, marginBottom: 5 }}
-                    >
-                        Fun-Fact
-                    </Text>
-                    <TextInput
-                        placeholder="Fun-Fact"
-                        placeholderTextColor={"lightgrey"}
-                        value={profile.funfact}
-                        onChangeText={(text) =>
-                            setProfile({ ...profile, funfact: text })
-                        }
-                        returnKeyType="done"
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.input}
-                    />
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputIconContainer}>
+                            <MaterialCommunityIcons
+                                name="weight-lifter"
+                                size={24}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Gewicht (in kg)"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
+                                setProfile({ ...profile, weight: text })
+                            }
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.weight}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputIconContainer}>
+                            <MaterialIcons
+                                name="height"
+                                size={24}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Größe (in cm)"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
+                                setProfile({ ...profile, height: text })
+                            }
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.height}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputIconContainer}>
+                            <FontAwesome6
+                                name="hotdog"
+                                size={24}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Rasse"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
+                                setProfile({ ...profile, breed: text })
+                            }
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.breed}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputIconContainer}>
+                            <MaterialIcons
+                                name="history-edu"
+                                size={24}
+                                color={constants.TEXT_COLOR}
+                            />
+                        </View>
+                        <TextInput
+                            placeholder="Fun-Fact"
+                            placeholderTextColor={constants.SECCONDARY_COLOR}
+                            onChangeText={(text) =>
+                                setProfile({ ...profile, funfact: text })
+                            }
+                            returnKeyType="done"
+                            onSubmitEditing={Keyboard.dismiss}
+                            style={styles.input}
+                            onFocus={() => setInEdit(true)}
+                            onBlur={() => setInEdit(false)}
+                            value={profile.funfact}
+                        />
+                    </View>
                 </ScrollView>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
