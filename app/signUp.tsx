@@ -1,13 +1,4 @@
-import { useState } from "react";
-import { router } from "expo-router";
-import {
-    Text,
-    View,
-    StyleSheet,
-    TextInput,
-    Keyboard,
-    TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import constants from "./consts";
 import SignUpSlider from "@/components/Authentification/SignUpSlider";
 
