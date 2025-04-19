@@ -20,8 +20,8 @@ import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useSession } from "@/lib/Authentification/ctx";
 import Dialog from "react-native-dialog";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "@/lib/Firebase/Firebase";
+import AuthentificationService from "@/lib/Services/AuthentificationService";
 
 export default function SignUpSlider() {
     const { signIn } = useSession();
@@ -57,15 +57,6 @@ export default function SignUpSlider() {
         }
     };
 
-    const saveProfile = async () => {
-        try {
-            await AsyncStorage.setItem("dogProfile", JSON.stringify(dogData));
-            await AsyncStorage.setItem("userProfile", JSON.stringify(userData));
-        } catch (err) {
-            console.error("Fehler beim Speichern:", err);
-        }
-    };
-
     const register = async () => {
         const checkEmptyFields = (data: any) => {
             return Object.values(data).some((value) => value === "");
@@ -76,9 +67,14 @@ export default function SignUpSlider() {
             return;
         }
 
-        if (await Firebase.register(userData.email, userData.password)) {
+        if (
+            (await AuthentificationService.register(
+                Firebase,
+                userData,
+                dogData
+            )) === true
+        ) {
             signIn();
-            await saveProfile();
             router.replace("/");
         } else {
             setShowErrorDialog(true);
@@ -176,7 +172,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Name"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={userData.name}
                     onChangeText={(text) =>
                         setUserData({ ...userData, name: text })
                     }
@@ -198,9 +193,8 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Email"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={userData.email}
                     onChangeText={(text) =>
-                        setUserData({ ...userData, email: text })
+                        setUserData({ ...userData, email: text.toLowerCase() })
                     }
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
@@ -220,7 +214,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Passwort"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={userData.password}
                     onChangeText={(text) =>
                         setUserData({ ...userData, password: text })
                     }
@@ -229,6 +222,7 @@ export default function SignUpSlider() {
                     style={styles.input}
                     onFocus={() => setInEdit(true)}
                     onBlur={() => setInEdit(false)}
+                    secureTextEntry={true}
                 />
             </View>
             <View style={styles.inputContainer}>
@@ -242,7 +236,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Passwort wiederholen"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={userData.repeatedPassword}
                     onChangeText={(text) =>
                         setUserData({ ...userData, repeatedPassword: text })
                     }
@@ -251,6 +244,7 @@ export default function SignUpSlider() {
                     style={styles.input}
                     onFocus={() => setInEdit(true)}
                     onBlur={() => setInEdit(false)}
+                    secureTextEntry={true}
                 />
             </View>
         </View>
@@ -270,7 +264,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Name"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={dogData.name}
                     onChangeText={(text) =>
                         setDogData({ ...dogData, name: text })
                     }
@@ -292,7 +285,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Geburtsdatum"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={dogData.birthdate}
                     onChangeText={(text) =>
                         setDogData({ ...dogData, birthdate: text })
                     }
@@ -314,9 +306,8 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Geschlecht (männlich/weiblich)"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={dogData.gender}
                     onChangeText={(text) =>
-                        setDogData({ ...dogData, gender: text })
+                        setDogData({ ...dogData, gender: text.toLowerCase() })
                     }
                     returnKeyType="done"
                     onSubmitEditing={Keyboard.dismiss}
@@ -336,7 +327,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Gewicht (in kg)"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={dogData.weight}
                     onChangeText={(text) =>
                         setDogData({ ...dogData, weight: text })
                     }
@@ -358,7 +348,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Größe (in cm)"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={dogData.height}
                     onChangeText={(text) =>
                         setDogData({ ...dogData, height: text })
                     }
@@ -380,7 +369,6 @@ export default function SignUpSlider() {
                 <TextInput
                     placeholder="Rasse"
                     placeholderTextColor={constants.SECCONDARY_COLOR}
-                    value={dogData.breed}
                     onChangeText={(text) =>
                         setDogData({ ...dogData, breed: text })
                     }
@@ -428,7 +416,6 @@ export default function SignUpSlider() {
                     <TextInput
                         placeholder="Fun-Fact"
                         placeholderTextColor={constants.SECCONDARY_COLOR}
-                        value={dogData.funfact}
                         onChangeText={(text) =>
                             setDogData({ ...dogData, funfact: text })
                         }
@@ -519,9 +506,10 @@ export default function SignUpSlider() {
                     />
                 </Dialog.Container>
                 <Dialog.Container visible={showErrorDialog}>
-                    <Dialog.Title>Falsche Eingaben</Dialog.Title>
+                    <Dialog.Title>Falsche Anmelde-Eingaben</Dialog.Title>
                     <Dialog.Description>
-                        Du hast nicht alle Felder richtig ausgefüllt.
+                        Deine Daten sind falsch oder das Passwort ist zu
+                        schwach.
                     </Dialog.Description>
                     <Dialog.Button
                         label="Okay"

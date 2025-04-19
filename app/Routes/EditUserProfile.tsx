@@ -15,13 +15,14 @@ import { useRouter } from "expo-router";
 import Dialog from "react-native-dialog";
 import * as Haptics from "expo-haptics";
 import { useSession } from "@/lib/Authentification/ctx";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditUserProfile() {
     const router = useRouter();
     const { signOut } = useSession();
     const [profile, setProfile] = useState({
-        name: "Toni Rauchenberger",
-        email: "admin@gmail.com",
+        name: "",
+        email: "",
     });
     const [dialogVisible, setDialogVisible] = useState(false);
 
@@ -30,7 +31,12 @@ export default function EditUserProfile() {
     }, []);
 
     const loadProfile = async () => {
-        // TODO
+        const userDataString = await AsyncStorage.getItem("userProfile");
+        if (userDataString) {
+            const userData = JSON.parse(userDataString);
+            console.log(userData);
+            setProfile({ name: userData.name, email: userData.email });
+        }
     };
 
     const styles = StyleSheet.create({

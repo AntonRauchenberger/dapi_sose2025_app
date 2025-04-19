@@ -14,6 +14,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 import Dialog from "react-native-dialog";
 import Firebase from "@/lib/Firebase/Firebase";
+import AuthentificationService from "@/lib/Services/AuthentificationService";
+import DogService from "@/lib/Services/DogService";
 
 export default function SignIn() {
     const { signIn } = useSession();
@@ -27,7 +29,11 @@ export default function SignIn() {
             setShowDialog(true);
             return;
         }
-        if (await Firebase.login(email, password)) {
+        if (
+            (await AuthentificationService.login(Firebase, email, password)) ===
+            true
+        ) {
+            await DogService.loadDogData(Firebase);
             signIn();
             router.navigate("/(tabs)");
         } else {
@@ -168,6 +174,7 @@ export default function SignIn() {
                     onSubmitEditing={Keyboard.dismiss}
                     style={styles.input}
                     textContentType="password"
+                    secureTextEntry={true}
                 />
             </View>
             <TouchableOpacity

@@ -17,6 +17,8 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import constants from "../consts";
 import { useRouter } from "expo-router";
+import DogService from "@/lib/Services/DogService";
+import Firebase from "@/lib/Firebase/Firebase";
 
 export default function EditDogProfile() {
     const router = useRouter();
@@ -49,6 +51,7 @@ export default function EditDogProfile() {
     const saveProfile = async () => {
         try {
             await AsyncStorage.setItem("dogProfile", JSON.stringify(profile));
+            await DogService.saveDogProfile(Firebase, profile);
             router.replace("/(tabs)");
         } catch (err) {
             console.error("Fehler beim Speichern:", err);
