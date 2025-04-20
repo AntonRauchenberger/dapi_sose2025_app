@@ -1,9 +1,16 @@
-import React, { useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Animated } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    Animated,
+} from "react-native";
 import constants from "@/app/consts";
+import { router } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import React, { useEffect, useRef } from "react";
 
-export default function Header() {
+export default function LiveTracker() {
     const fadeAnim = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
@@ -24,41 +31,41 @@ export default function Header() {
     }, [fadeAnim]);
 
     const styles = StyleSheet.create({
-        container: {
-            height: 100,
-            marginBottom: 21,
-        },
-        background: {
-            height: "80%",
-            backgroundColor: constants.BACKGROUND_COLOR,
-        },
         tracker: {
-            backgroundColor: constants.TEXT_COLOR,
-            width: "89%",
+            width: "97%",
             margin: "auto",
             height: 60,
             display: "flex",
-            flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 15,
-            transform: "translateY(-30px)",
-            gap: 8,
+            borderWidth: 3,
+            borderColor: constants.TEXT_COLOR,
+            marginTop: 10,
         },
         trackerText: {
-            color: constants.FONT_COLOR,
+            color: constants.TEXT_COLOR,
+        },
+        trackerContainer: {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
         },
     });
 
     return (
-        <View style={styles.container}>
-            <View style={styles.background}></View>
-            <View style={styles.tracker}>
+        <TouchableOpacity
+            style={styles.tracker}
+            activeOpacity={0.8}
+            onPress={() => router.navigate("/(tabs)/map")}
+        >
+            <View style={styles.trackerContainer}>
                 <Animated.View style={{ opacity: fadeAnim }}>
                     <FontAwesome6
                         name="map-location-dot"
                         size={24}
-                        color={constants.FONT_COLOR}
+                        color={constants.TEXT_COLOR}
                     />
                 </Animated.View>
                 <Text style={styles.trackerText}>
@@ -66,6 +73,6 @@ export default function Header() {
                     entfernt
                 </Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }

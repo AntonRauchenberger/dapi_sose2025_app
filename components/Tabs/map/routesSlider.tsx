@@ -56,7 +56,7 @@ export default function RoutesSlider() {
                 activeDot={
                     <View
                         style={{
-                            backgroundColor: constants.PRIMARY_COLOR,
+                            backgroundColor: constants.TEXT_COLOR,
                             width: 8,
                             height: 8,
                             borderRadius: 4,

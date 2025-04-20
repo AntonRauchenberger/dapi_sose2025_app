@@ -77,7 +77,7 @@ export default function RecordButton() {
             justifyContent: "center",
             alignItems: "center",
             borderWidth: 4,
-            borderColor: constants.PRIMARY_COLOR,
+            borderColor: constants.TEXT_COLOR,
             position: "relative",
             overflow: "hidden",
         },
@@ -91,7 +91,7 @@ export default function RecordButton() {
         },
         buttonText: {
             marginTop: 2,
-            color: constants.PRIMARY_COLOR,
+            color: constants.TEXT_COLOR,
             fontWeight: "500",
         },
     });
@@ -116,7 +116,7 @@ export default function RecordButton() {
                         <Feather
                             name="check"
                             size={40}
-                            color={constants.PRIMARY_COLOR}
+                            color={constants.TEXT_COLOR}
                         />
                     ) : isReccording ? (
                         <Animated.View
@@ -125,14 +125,14 @@ export default function RecordButton() {
                             <FontAwesome5
                                 name="route"
                                 size={30}
-                                color={constants.PRIMARY_COLOR}
+                                color={constants.TEXT_COLOR}
                             />
                         </Animated.View>
                     ) : (
                         <Foundation
                             name="guide-dog"
                             size={60}
-                            color={constants.PRIMARY_COLOR}
+                            color={constants.TEXT_COLOR}
                         />
                     )}
                 </TouchableOpacity>

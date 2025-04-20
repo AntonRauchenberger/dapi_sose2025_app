@@ -126,7 +126,7 @@ export default function Map() {
                         <View style={styles.mapLoadingScreen}>
                             <ActivityIndicator
                                 size={"small"}
-                                color={constants.PRIMARY_COLOR}
+                                color={constants.TEXT_COLOR}
                             />
                         </View>
                     )}

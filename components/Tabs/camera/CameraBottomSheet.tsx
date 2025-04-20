@@ -59,7 +59,7 @@ export const CameraBottomSheet = ({ isGaleryMode = true }) => {
             alwaysOpen={200}
             modalHeight={800}
             handleStyle={{
-                backgroundColor: constants.PRIMARY_COLOR,
+                backgroundColor: constants.TEXT_COLOR,
             }}
             onPositionChange={(position) => {
                 Haptics.notificationAsync(
