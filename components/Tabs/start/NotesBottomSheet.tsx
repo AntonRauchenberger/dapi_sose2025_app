@@ -12,8 +12,7 @@ import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const NotesBottomSheet = ({ isGaleryMode = true }) => {
-    const [dogName, setDogName] = useState("Findus");
+export const NotesBottomSheet = ({ isGaleryMode = true, dogName }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [notes, setNotes] = useState<string | null>();
     const modalizeRef = useRef<Modalize>(null);
@@ -114,9 +113,9 @@ export const NotesBottomSheet = ({ isGaleryMode = true }) => {
                         onChangeText={handleNotesInput}
                         value={notes || ""}
                         style={styles.textInput}
-                        onSubmitEditing={Keyboard.dismiss}
-                        returnKeyType="done"
-                        blurOnSubmit={true}
+                        returnKeyType="default"
+                        blurOnSubmit={false}
+                        editable={modalIsOpen}
                     />
                 </View>
             </TouchableWithoutFeedback>

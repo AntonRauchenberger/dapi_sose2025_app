@@ -93,7 +93,7 @@ export default function CameraButton({ setIsGaleryMode }) {
             justifyContent: "center",
             alignItems: "center",
             borderWidth: 4,
-            borderColor: constants.PRIMARY_COLOR,
+            borderColor: constants.TEXT_COLOR,
             position: "relative",
             overflow: "hidden",
         },
@@ -107,7 +107,7 @@ export default function CameraButton({ setIsGaleryMode }) {
         },
         buttonText: {
             marginTop: 2,
-            color: constants.PRIMARY_COLOR,
+            color: constants.TEXT_COLOR,
             fontWeight: "500",
         },
     });
@@ -140,14 +140,14 @@ export default function CameraButton({ setIsGaleryMode }) {
                             <FontAwesome6
                                 name="dog"
                                 size={30}
-                                color={constants.PRIMARY_COLOR}
+                                color={constants.TEXT_COLOR}
                             />
                         </Animated.View>
                     ) : (
                         <FontAwesome
                             name="camera-retro"
                             size={45}
-                            color={constants.PRIMARY_COLOR}
+                            color={constants.TEXT_COLOR}
                         />
                     )}
                 </TouchableOpacity>
