@@ -41,7 +41,6 @@ export default function LiveTracker() {
             borderRadius: 15,
             borderWidth: 3,
             borderColor: constants.TEXT_COLOR,
-            marginTop: 10,
         },
         trackerText: {
             color: constants.TEXT_COLOR,

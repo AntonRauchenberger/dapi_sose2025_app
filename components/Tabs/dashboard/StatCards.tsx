@@ -51,7 +51,7 @@ export default function StatCards() {
     });
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, constants.SHADOW_STYLE]}>
             <View style={[styles.row, { marginBottom: 15 }]}>
                 <TouchableOpacity
                     style={styles.card}
@@ -65,7 +65,7 @@ export default function StatCards() {
                         </Text>
                     </Text>
                     <Text style={styles.value}>
-                        {20}{" "}
+                        {7}{" "}
                         <View
                             style={{ transform: "translate3d(-2px, 3px, 0px)" }}
                         >
@@ -84,7 +84,7 @@ export default function StatCards() {
                 >
                     <Text style={styles.header}>Gemachte Fotos</Text>
                     <Text style={styles.value}>
-                        {20}{" "}
+                        {21}{" "}
                         <View
                             style={{ transform: "translate3d(-2px, 3px, 0px)" }}
                         >

@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Touchable,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 import constants from "@/app/consts";
 import MapView from "react-native-maps";
@@ -20,11 +14,11 @@ export default function RoutesSlider() {
             margin: "auto",
             borderRadius: 15,
             borderWidth: 2,
-            borderColor: constants.BACKGROUND_COLOR,
+            borderColor: constants.TEXT_COLOR,
             padding: 10,
         },
         headerContainer: {
-            borderBottomColor: constants.BACKGROUND_COLOR,
+            borderBottomColor: constants.TEXT_COLOR,
             borderBottomWidth: 2,
         },
         header: {
@@ -68,63 +62,59 @@ export default function RoutesSlider() {
                     />
                 }
             >
-                <View style={constants.SHADOW_STYLE}>
-                    <View style={styles.slide}>
-                        <View style={styles.headerContainer}>
-                            <Text style={styles.header}>
-                                Route #1 (2. April 2025)
+                <View style={styles.slide}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.header}>
+                            Route #1 (2. April 2025)
+                        </Text>
+                    </View>
+                    <View style={styles.content}>
+                        <View>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
+                                Länge:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.TEXT_COLOR,
+                                    }}
+                                >
+                                    4 km
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
+                                Dauer:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.TEXT_COLOR,
+                                    }}
+                                >
+                                    33 min
+                                </Text>
+                            </Text>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
+                                Ø Geschwindigkeit:{" "}
+                                <Text
+                                    style={{
+                                        color: constants.TEXT_COLOR,
+                                    }}
+                                >
+                                    7 km/h
+                                </Text>
                             </Text>
                         </View>
-                        <View style={styles.content}>
-                            <View>
-                                <Text style={{ color: constants.TEXT_COLOR }}>
-                                    Länge:{" "}
-                                    <Text
-                                        style={{
-                                            color: constants.SECCONDARY_COLOR,
-                                        }}
-                                    >
-                                        4 km
-                                    </Text>
-                                </Text>
-                                <Text style={{ color: constants.TEXT_COLOR }}>
-                                    Dauer:{" "}
-                                    <Text
-                                        style={{
-                                            color: constants.SECCONDARY_COLOR,
-                                        }}
-                                    >
-                                        33 min
-                                    </Text>
-                                </Text>
-                                <Text style={{ color: constants.TEXT_COLOR }}>
-                                    Ø Geschwindigkeit:{" "}
-                                    <Text
-                                        style={{
-                                            color: constants.SECCONDARY_COLOR,
-                                        }}
-                                    >
-                                        7 km/h
-                                    </Text>
-                                </Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    setIsMapFullScreen(!isMapFullScreen)
-                                }
-                                disabled={isMapFullScreen}
-                            >
-                                <MapView
-                                    style={styles.map}
-                                    initialRegion={{
-                                        latitude: 49.0029,
-                                        longitude: 12.0957,
-                                        latitudeDelta: 0.0922,
-                                        longitudeDelta: 0.0421,
-                                    }}
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity
+                            onPress={() => setIsMapFullScreen(!isMapFullScreen)}
+                            disabled={isMapFullScreen}
+                        >
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: 49.0029,
+                                    longitude: 12.0957,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -136,31 +126,31 @@ export default function RoutesSlider() {
                     </View>
                     <View style={styles.content}>
                         <View>
-                            <Text style={{ color: constants.TEXT_COLOR }}>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
                                 Länge:{" "}
                                 <Text
                                     style={{
-                                        color: constants.SECCONDARY_COLOR,
+                                        color: constants.TEXT_COLOR,
                                     }}
                                 >
                                     42 km
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.TEXT_COLOR }}>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
                                 Dauer:{" "}
                                 <Text
                                     style={{
-                                        color: constants.SECCONDARY_COLOR,
+                                        color: constants.TEXT_COLOR,
                                     }}
                                 >
                                     1h 33 min
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.TEXT_COLOR }}>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
                                 Ø Geschwindigkeit:{" "}
                                 <Text
                                     style={{
-                                        color: constants.SECCONDARY_COLOR,
+                                        color: constants.TEXT_COLOR,
                                     }}
                                 >
                                     5 km/h
@@ -192,31 +182,31 @@ export default function RoutesSlider() {
                     </View>
                     <View style={styles.content}>
                         <View>
-                            <Text style={{ color: constants.TEXT_COLOR }}>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
                                 Länge:{" "}
                                 <Text
                                     style={{
-                                        color: constants.SECCONDARY_COLOR,
+                                        color: constants.TEXT_COLOR,
                                     }}
                                 >
                                     2 km
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.TEXT_COLOR }}>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
                                 Dauer:{" "}
                                 <Text
                                     style={{
-                                        color: constants.SECCONDARY_COLOR,
+                                        color: constants.TEXT_COLOR,
                                     }}
                                 >
                                     10 min
                                 </Text>
                             </Text>
-                            <Text style={{ color: constants.TEXT_COLOR }}>
+                            <Text style={{ color: constants.SECCONDARY_COLOR }}>
                                 Ø Geschwindigkeit:{" "}
                                 <Text
                                     style={{
-                                        color: constants.SECCONDARY_COLOR,
+                                        color: constants.TEXT_COLOR,
                                     }}
                                 >
                                     6.5 km/h
