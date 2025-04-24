@@ -114,7 +114,7 @@ export default function Index() {
                     </Text>
                 </View>
             </View>
-            <NotesBottomSheet />
+            <NotesBottomSheet dogName={profile.name} />
         </View>
     );
 }
