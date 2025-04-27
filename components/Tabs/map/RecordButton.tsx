@@ -21,12 +21,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import Firebase from "@/lib/Firebase/Firebase";
 import { doc, setDoc } from "firebase/firestore";
+import Dialog from "react-native-dialog";
 
 export default function RecordButton() {
     const [isReccording, setIsReccording] = useState(false);
     const [finishedRoute, setFinishedRoute] = useState(false);
     const [poopButtonEnabled, setPoopButtonEnabled] = useState(true);
     const [pooped, setPooped] = useState(false);
+    const [showErrorDialog, setShowErrorDialog] = useState(false);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const particleRef = useRef(null);
 
@@ -217,9 +219,12 @@ export default function RecordButton() {
                             opacity: poopButtonEnabled ? 1 : 0.75,
                         },
                     ]}
-                    onPress={handlePoopButton}
+                    onPress={
+                        poopButtonEnabled
+                            ? handlePoopButton
+                            : () => setShowErrorDialog(true)
+                    }
                     activeOpacity={0.9}
-                    disabled={!poopButtonEnabled}
                 >
                     {pooped ? (
                         <MaterialCommunityIcons
@@ -230,7 +235,7 @@ export default function RecordButton() {
                     ) : (
                         <FontAwesome6
                             name="poop"
-                            size={24}
+                            size={22}
                             color={constants.TEXT_COLOR}
                         />
                     )}
@@ -284,6 +289,19 @@ export default function RecordButton() {
                         : "Route starten"}
                 </Text>
             </View>
+
+            <Dialog.Container visible={showErrorDialog}>
+                <Dialog.Title>Fähigkeit noch nicht bereit!</Dialog.Title>
+                <Dialog.Description>
+                    Du kannst nur einmal am Tag poop plazieren.
+                </Dialog.Description>
+                <Dialog.Button
+                    label="Okay"
+                    onPress={() => {
+                        setShowErrorDialog(false);
+                    }}
+                />
+            </Dialog.Container>
         </View>
     );
 }
