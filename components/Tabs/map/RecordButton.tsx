@@ -18,10 +18,8 @@ import particles from "@/assets/animations/particles.json";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Location from "expo-location";
-import Firebase from "@/lib/Firebase/Firebase";
-import { doc, setDoc } from "firebase/firestore";
 import Dialog from "react-native-dialog";
+import PoopService from "@/lib/Services/PoopService";
 
 export default function RecordButton() {
     const [isReccording, setIsReccording] = useState(false);
@@ -43,50 +41,6 @@ export default function RecordButton() {
         // TODO
     };
 
-    const savePoop = async () => {
-        async function getCurrentLocation() {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                return;
-            }
-            const location = await Location.getCurrentPositionAsync({});
-            return {
-                latitude: location?.coords?.latitude,
-                longitude: location?.coords?.longitude,
-            };
-        }
-        const savePoopMarkerList = async (list: []) => {
-            try {
-                const jsonValue = JSON.stringify(list);
-
-                // firestore
-                const user = Firebase.auth?.currentUser;
-                if (!user) throw new Error("no user logged in");
-                const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-                await setDoc(userPoopRef, list);
-
-                // async storage
-                await AsyncStorage.setItem("poopMarkerList", jsonValue);
-            } catch (e) {
-                console.error("Fehler beim Speichern:", e);
-            }
-        };
-        const getPoopMarkerList = async () => {
-            try {
-                const jsonValue = await AsyncStorage.getItem("poopMarkerList");
-                return jsonValue != null ? JSON.parse(jsonValue) : [];
-            } catch (e) {
-                console.error("Fehler beim Laden:", e);
-                return [];
-            }
-        };
-
-        const currentLocation = await getCurrentLocation();
-        const poopMarkerList = await getPoopMarkerList();
-        poopMarkerList.push(currentLocation);
-        await savePoopMarkerList(poopMarkerList);
-    };
-
     const handleClick = () => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         setIsReccording(!isReccording);
@@ -104,9 +58,7 @@ export default function RecordButton() {
         playSound();
         setPooped(true);
 
-        savePoop();
-        await savePoop();
-        await AsyncStorage.setItem("lastPoopTime", Date.now().toString());
+        await PoopService.savePoop();
 
         setTimeout(() => {
             setPooped(false);
