@@ -2,28 +2,31 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View, ActivityIndicator, Text, Image } from "react-native";
 import Header from "@/components/Header";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import constants from "../consts";
 import RoutesSlider from "@/components/Tabs/map/routesSlider";
 import RecordButton from "@/components/Tabs/map/RecordButton";
+import LocationService from "@/lib/Services/LocationService";
+import PoopService from "@/lib/Services/PoopService";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
+    const [poopMarkers, setPoopMarkers] = useState<any>(null);
     const [dogLocation, setDogLocation] = useState<any>(null);
     const [dogName, setDogName] = useState<string>("Findus");
 
     useEffect(() => {
-        async function getCurrentLocation() {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                return;
-            }
+        async function handle() {
+            const uLocation = await LocationService.getCurrentUserLocation();
+            setUserLocation(uLocation);
 
-            let location = await Location.getCurrentPositionAsync({});
-            setUserLocation(location);
+            const pMarkers = await PoopService.getPoopMarkerList();
+            setPoopMarkers(pMarkers);
+
+            await PoopService.synchronizePoopData();
         }
 
-        getCurrentLocation();
+        handle();
     }, []);
 
     const styles = StyleSheet.create({
@@ -62,10 +65,21 @@ export default function Map() {
             justifyContent: "center",
             alignItems: "center",
         },
-        marker: {
+        dogMarker: {
             width: 40,
             height: 40,
             borderRadius: 20,
+            overflow: "hidden",
+            backgroundColor: constants.COMPLEMENTARY_COLOR,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 2,
+        },
+        poopMarker: {
+            width: 25,
+            height: 25,
+            borderRadius: 13,
             overflow: "hidden",
             backgroundColor: constants.COMPLEMENTARY_COLOR,
             display: "flex",
@@ -83,22 +97,20 @@ export default function Map() {
             </Text>
             <View style={constants.SHADOW_STYLE}>
                 <View style={styles.mapContainer}>
-                    {userLocation ? (
+                    {userLocation && poopMarkers ? (
                         <MapView
                             style={styles.map}
                             initialRegion={{
-                                latitude:
-                                    userLocation?.coords?.latitude || 49.0029,
-                                longitude:
-                                    userLocation?.coords?.longitude || 12.0957,
+                                latitude: userLocation?.latitude || 49.0029,
+                                longitude: userLocation?.longitude || 12.0957,
                                 latitudeDelta: 0.0922,
                                 longitudeDelta: 0.0421,
                             }}
                         >
                             <Marker
                                 coordinate={{
-                                    latitude: userLocation?.coords?.latitude,
-                                    longitude: userLocation?.coords?.longitude,
+                                    latitude: userLocation?.latitude,
+                                    longitude: userLocation?.longitude,
                                 }}
                                 title={"Dein Standort"}
                             />
@@ -112,15 +124,37 @@ export default function Map() {
                                         12.0957,
                                 }}
                                 title={dogName}
-                                style={styles.marker}
+                                style={styles.dogMarker}
                             >
-                                <View style={styles.marker}>
+                                <View style={styles.dogMarker}>
                                     <Image
                                         source={require("../../assets/images/dog_example.jpg")}
                                         style={{ width: 40, height: 40 }}
                                     />
                                 </View>
                             </Marker>
+                            {poopMarkers.map((location: any) => {
+                                if (location?.latitude && location?.longitude) {
+                                    return (
+                                        <Marker
+                                            coordinate={{
+                                                latitude: location.latitude,
+                                                longitude: location.longitude,
+                                            }}
+                                            title={"Poop"}
+                                            style={styles.poopMarker}
+                                        >
+                                            <View style={styles.poopMarker}>
+                                                <FontAwesome6
+                                                    name="poop"
+                                                    size={14}
+                                                    color={constants.TEXT_COLOR}
+                                                />
+                                            </View>
+                                        </Marker>
+                                    );
+                                }
+                            })}
                         </MapView>
                     ) : (
                         <View style={styles.mapLoadingScreen}>
