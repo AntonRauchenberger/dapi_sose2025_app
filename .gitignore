@@ -39,3 +39,4 @@ app-example
 
 .env
 firebaseConfig.tsx
+secureConsts.tsx

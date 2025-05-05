@@ -9,14 +9,22 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import Dialog from "react-native-dialog";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import ImageService from "@/lib/Services/ImageService";
 
 export default function Camera() {
     const [isGaleryMode, setIsGaleryMode] = useState(true);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [signature, setSignature] = useState("");
+    const [imageUri, setImageUri] = useState<string | null>(null);
 
-    const downloadImage = () => {
-        // TODO
+    const downloadImage = async () => {
+        if (!imageUri) {
+            alert("Kein Bild zum Herunterladen vorhanden.");
+            return;
+        }
+        await ImageService.downloadImage(imageUri);
         setIsGaleryMode(true);
     };
 
@@ -75,12 +83,15 @@ export default function Camera() {
         >
             <Header />
             <View style={{ marginTop: isGaleryMode ? 180 : 75 }}>
-                {isGaleryMode ? (
-                    <CameraButton setIsGaleryMode={setIsGaleryMode} />
+                {isGaleryMode || !imageUri ? (
+                    <CameraButton
+                        setIsGaleryMode={setIsGaleryMode}
+                        setImageUri={setImageUri}
+                    />
                 ) : (
                     <View>
                         <Image
-                            source={require("../../assets/images/dog_example.jpg")}
+                            source={{ uri: imageUri }}
                             style={styles.image}
                         />
                         <View style={styles.buttonsContainer}>

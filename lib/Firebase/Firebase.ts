@@ -7,7 +7,6 @@ export default class Firebase {
     static auth: any;
     static app: any;
 
-    // TODO Fix Firebase error
     static init() {
         if (!Firebase.app) {
             Firebase.app = initializeApp(firebaseConfig);
