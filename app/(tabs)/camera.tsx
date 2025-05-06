@@ -9,8 +9,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import Dialog from "react-native-dialog";
-import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
 import ImageService from "@/lib/Services/ImageService";
 
 export default function Camera() {
@@ -18,6 +16,7 @@ export default function Camera() {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [signature, setSignature] = useState("");
     const [imageUri, setImageUri] = useState<string | null>(null);
+    const [reload, setReload] = useState(false);
 
     const downloadImage = async () => {
         if (!imageUri) {
@@ -28,10 +27,15 @@ export default function Camera() {
         setIsGaleryMode(true);
     };
 
-    const saveImage = (signature: string) => {
-        // TODO
-        console.log("Signatur:", signature);
+    const saveImage = async (signature: string) => {
+        if (!imageUri) {
+            alert("Kein Bild zum Speichern vorhanden.");
+            return;
+        }
+        await ImageService.saveImage(imageUri, signature);
         setIsGaleryMode(true);
+        setSignature("");
+        setReload(true);
     };
 
     const handleClicks = (type: string) => {
@@ -129,7 +133,11 @@ export default function Camera() {
                     </View>
                 )}
             </View>
-            <CameraBottomSheet isGaleryMode={isGaleryMode} />
+            <CameraBottomSheet
+                isGaleryMode={isGaleryMode}
+                reload={reload}
+                setReload={setReload}
+            />
             <Dialog.Container visible={dialogVisible}>
                 <Dialog.Title>Bild-Unterschrift</Dialog.Title>
                 <Dialog.Description>

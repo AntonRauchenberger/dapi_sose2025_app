@@ -1,13 +1,34 @@
 import constants from "@/app/consts";
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
+import ImageService from "@/lib/Services/ImageService";
 
-export const CameraBottomSheet = ({ isGaleryMode = true }) => {
+export const CameraBottomSheet = ({
+    isGaleryMode = true,
+    reload = false,
+    setReload,
+}) => {
     const [dogName, setDogName] = useState("Findus");
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const modalizeRef = useRef<Modalize>(null);
+    const [savedImages, setSavedImages] = useState([]);
+
+    useEffect(() => {
+        ImageService.getSavedImages().then((images) => {
+            setSavedImages(images);
+        });
+    }, []);
+
+    useEffect(() => {
+        if (reload) {
+            ImageService.getSavedImages().then((images) => {
+                setSavedImages(images);
+            });
+            setReload(false);
+        }
+    }, [reload]);
 
     useEffect(() => {
         if (!isGaleryMode) {
@@ -73,17 +94,29 @@ export const CameraBottomSheet = ({ isGaleryMode = true }) => {
             withOverlay={false}
             modalStyle={{ backgroundColor: "#f7f7f7" }}
         >
-            <View style={styles.content}>
+            <ScrollView style={styles.content}>
                 <Text style={styles.headline}>Bilder</Text>
                 <Text style={[styles.descText, { marginBottom: 10 }]}>
                     Deine gespeicherte Bilder von {dogName}.
                 </Text>
-                <Image
-                    source={require("../../../assets/images/dog_example.jpg")}
-                    style={styles.image}
-                />
-                <Text style={styles.imageDesc}>Happy Fin, 6. April 2025</Text>
-            </View>
+                <View style={{ marginBottom: 50 }}>
+                    {savedImages.length > 0 &&
+                        savedImages.map((image, index) => (
+                            <>
+                                <Image
+                                    key={index}
+                                    source={{ uri: image.uri }}
+                                    style={styles.image}
+                                />
+                                <Text style={styles.imageDesc}>
+                                    {image.signature
+                                        ? image.signature
+                                        : "Unbekannt"}
+                                </Text>
+                            </>
+                        ))}
+                </View>
+            </ScrollView>
         </Modalize>
     );
 };

@@ -36,7 +36,74 @@ export default class ImageService {
     }
 
     static async saveImage(imageUri: string, signature: string) {
-        // TODO
+        try {
+            // AsyncStorage
+            const storedImages = await AsyncStorage.getItem("savedImages");
+            const images = Array.isArray(JSON.parse(storedImages))
+                ? JSON.parse(storedImages)
+                : [];
+
+            const newImage = { uri: imageUri, signature };
+            images.push(newImage);
+
+            await AsyncStorage.setItem("savedImages", JSON.stringify(images));
+
+            // Firebase
+            const db = Firebase.db;
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
+
+            const userImagesRef = doc(db, "images", userId);
+            const userImagesDoc = await getDoc(userImagesRef);
+
+            let firebaseImages = [];
+            if (userImagesDoc.exists()) {
+                const data = userImagesDoc.data();
+                firebaseImages = Array.isArray(data.images) ? data.images : [];
+            }
+
+            firebaseImages.push(newImage);
+            await setDoc(userImagesRef, { images: firebaseImages });
+        } catch (error) {
+            console.error("Fehler beim Speichern des Bildes:", error);
+            alert("Fehler beim Speichern des Bildes.");
+        }
+    }
+
+    static async getSavedImages() {
+        try {
+            // First tryo to load images from AsyncStorage
+            const storedImages = await AsyncStorage.getItem("savedImages");
+            if (storedImages) {
+                return JSON.parse(storedImages);
+            }
+
+            // If no images in AsyncStorage, load from Firebase
+            const db = Firebase.db;
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
+
+            const userImagesRef = doc(db, "images", userId);
+            const userImagesDoc = await getDoc(userImagesRef);
+
+            if (userImagesDoc.exists()) {
+                const firebaseImages = userImagesDoc.data().images || [];
+                await AsyncStorage.setItem(
+                    "savedImages",
+                    JSON.stringify(firebaseImages)
+                );
+                return firebaseImages;
+            }
+
+            return [];
+        } catch (error) {
+            console.error("Fehler beim Laden der gespeicherten Bilder:", error);
+            return [];
+        }
     }
 
     static async getImageFromServer() {
