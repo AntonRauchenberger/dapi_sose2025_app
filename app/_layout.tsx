@@ -6,6 +6,7 @@ import constants from "./consts";
 import { SessionProvider } from "@/lib/Authentification/ctx";
 import Firebase from "@/lib/Firebase/Firebase";
 import { DogLocationProvider } from "@/lib/Providers/LocationProvider";
+import AlarmNotification from "@/components/AlarmNotification";
 
 LogBox.ignoreAllLogs(true);
 
@@ -15,6 +16,7 @@ export default function RootLayout() {
     return (
         <DogLocationProvider>
             <SessionProvider>
+                <AlarmNotification />
                 <GestureHandlerRootView>
                     <StatusBar style="dark" />
                     <Stack>
