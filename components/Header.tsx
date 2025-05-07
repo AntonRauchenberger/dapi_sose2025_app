@@ -1,10 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Animated } from "react-native";
 import constants from "@/app/consts";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useDogLocation } from "@/lib/Providers/LocationProvider";
+import LocationService from "@/lib/Services/LocationService";
 
 export default function Header() {
     const fadeAnim = useRef(new Animated.Value(1)).current;
+    const { dogLocation } = useDogLocation();
+    const [distance, setDistance] = useState<number>(0);
 
     useEffect(() => {
         Animated.loop(
@@ -22,6 +26,25 @@ export default function Header() {
             ])
         ).start();
     }, [fadeAnim]);
+
+    useEffect(() => {
+        async function handle() {
+            if (dogLocation) {
+                const userLocation =
+                    await LocationService.getCurrentUserLocation();
+                if (!userLocation) {
+                    return;
+                }
+                const dDistance = LocationService.getDistanceBetweenLocations(
+                    userLocation,
+                    dogLocation
+                );
+                setDistance(dDistance);
+            }
+        }
+
+        handle();
+    }, [dogLocation]);
 
     const styles = StyleSheet.create({
         container: {
@@ -62,8 +85,8 @@ export default function Header() {
                     />
                 </Animated.View>
                 <Text style={styles.trackerText}>
-                    <Text style={{ fontWeight: "bold" }}>{2} km</Text> von dir
-                    entfernt
+                    <Text style={{ fontWeight: "bold" }}>{distance} km</Text>{" "}
+                    von dir entfernt
                 </Text>
             </View>
         </View>
