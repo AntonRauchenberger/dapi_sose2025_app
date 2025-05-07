@@ -97,7 +97,7 @@ export const CameraBottomSheet = ({
             <ScrollView style={styles.content}>
                 <Text style={styles.headline}>Bilder</Text>
                 <Text style={[styles.descText, { marginBottom: 10 }]}>
-                    Deine gespeicherte Bilder von {dogName}.
+                    Deine gespeicherten Bilder von {dogName}.
                 </Text>
                 <View style={{ marginBottom: 50 }}>
                     {savedImages.length > 0 &&

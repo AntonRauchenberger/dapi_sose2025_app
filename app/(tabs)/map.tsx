@@ -8,12 +8,13 @@ import RecordButton from "@/components/Tabs/map/RecordButton";
 import LocationService from "@/lib/Services/LocationService";
 import PoopService from "@/lib/Services/PoopService";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useDogLocation } from "@/lib/Providers/LocationProvider";
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
     const [poopMarkers, setPoopMarkers] = useState<any>(null);
-    const [dogLocation, setDogLocation] = useState<any>(null);
     const [dogName, setDogName] = useState<string>("Findus");
+    const { dogLocation, isLoading, refreshDogLocation } = useDogLocation();
 
     useEffect(() => {
         async function handle() {
@@ -22,8 +23,6 @@ export default function Map() {
 
             const pMarkers = await PoopService.getPoopMarkerList();
             setPoopMarkers(pMarkers);
-
-            await PoopService.synchronizePoopData();
         }
 
         handle();
@@ -97,7 +96,7 @@ export default function Map() {
             </Text>
             <View style={constants.SHADOW_STYLE}>
                 <View style={styles.mapContainer}>
-                    {userLocation && poopMarkers ? (
+                    {userLocation && poopMarkers && !isLoading ? (
                         <MapView
                             style={styles.map}
                             initialRegion={{
@@ -116,12 +115,9 @@ export default function Map() {
                             />
                             <Marker
                                 coordinate={{
-                                    latitude:
-                                        dogLocation?.coords?.latitude ??
-                                        49.0029,
+                                    latitude: dogLocation?.latitude ?? 49.0029,
                                     longitude:
-                                        dogLocation?.coords?.longitude ??
-                                        12.0957,
+                                        dogLocation?.longitude ?? 12.0957,
                                 }}
                                 title={dogName}
                                 style={styles.dogMarker}
