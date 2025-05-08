@@ -20,6 +20,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Dialog from "react-native-dialog";
 import PoopService from "@/lib/Services/PoopService";
+import RouteService from "@/lib/Services/RouteService";
 
 export default function RecordButton() {
     const [isReccording, setIsReccording] = useState(false);
@@ -37,21 +38,31 @@ export default function RecordButton() {
         await sound.playAsync();
     };
 
-    const saveRoute = () => {
-        // TODO
+    const startRoute = async () => {
+        setIsReccording(true);
+        const success = await RouteService.startRoute();
+        if (!success) {
+            setIsReccording(false);
+        }
+    };
+
+    const stopRoute = async () => {
+        setFinishedRoute(true);
+        particleRef.current?.play();
+        await RouteService.stopRoute();
+        setTimeout(() => {
+            setFinishedRoute(false);
+        }, 1500);
+        setIsReccording(!isReccording);
     };
 
     const handleClick = () => {
-        // TODO save route && refresh route slider
+        // TODO refresh route slider
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        setIsReccording(!isReccording);
         if (isReccording) {
-            setFinishedRoute(true);
-            particleRef.current?.play();
-            saveRoute();
-            setTimeout(() => {
-                setFinishedRoute(false);
-            }, 1500);
+            stopRoute();
+        } else {
+            startRoute();
         }
     };
 
