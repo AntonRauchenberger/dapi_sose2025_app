@@ -40,4 +40,19 @@ export default class DogService {
             throw error;
         }
     }
+
+    static async getDogName() {
+        try {
+            const dogProfile = await AsyncStorage.getItem("dogProfile");
+            if (dogProfile) {
+                const parsedProfile = JSON.parse(dogProfile);
+                return parsedProfile.name || "Unknown Dog";
+            } else {
+                return "Unknown Dog";
+            }
+        } catch (error) {
+            console.error("Error retrieving dog name: ", error);
+            return "Unknown Dog";
+        }
+    }
 }

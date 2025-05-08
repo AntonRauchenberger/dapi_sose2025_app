@@ -42,6 +42,7 @@ export default function RecordButton() {
     };
 
     const handleClick = () => {
+        // TODO save route && refresh route slider
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         setIsReccording(!isReccording);
         if (isReccording) {
@@ -55,6 +56,7 @@ export default function RecordButton() {
     };
 
     const handlePoopButton = async () => {
+        // TODO refresh map
         playSound();
         setPooped(true);
 

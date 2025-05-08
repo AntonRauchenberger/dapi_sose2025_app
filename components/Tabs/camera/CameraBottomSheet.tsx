@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
 import ImageService from "@/lib/Services/ImageService";
+import DogService from "@/lib/Services/DogService";
 
 export const CameraBottomSheet = ({
     isGaleryMode = true,
@@ -18,6 +19,10 @@ export const CameraBottomSheet = ({
     useEffect(() => {
         ImageService.getSavedImages().then((images) => {
             setSavedImages(images);
+        });
+
+        DogService.getDogName().then((name) => {
+            setDogName(name);
         });
     }, []);
 
