@@ -1,4 +1,4 @@
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "../Firebase/Firebase";
 import secureConstants from "@/app/secureConsts";
@@ -43,7 +43,7 @@ export default class RouteService {
                 alert("Fehler beim Starten der Route. " + errorData.error);
                 return false;
             }
-            return true;
+            return routeId;
         } catch (err) {
             console.error("Fehler beim Starten der Route: " + err);
             alert("Fehler beim Starten der Route.. " + err);
@@ -63,22 +63,27 @@ export default class RouteService {
             const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
 
             const userRoutesRef = doc(db, "routes", userId);
-            const userRoutesDoc = await getDoc(userRoutesRef);
-
-            let firebaseRoutes = [];
-            if (userRoutesDoc.exists()) {
-                const data = userRoutesDoc.data();
-                firebaseRoutes = Array.isArray(data.images) ? data.images : [];
-            }
-
-            firebaseRoutes.push(routeData);
-            await setDoc(userRoutesRef, { routes: firebaseRoutes });
+            await updateDoc(userRoutesRef, {
+                routes: arrayUnion(routeData),
+            });
 
             // AsyncStorage
             const storedRoutes = await AsyncStorage.getItem("savedRoutes");
-            const routes = Array.isArray(JSON.parse(storedRoutes))
-                ? JSON.parse(storedRoutes)
-                : [];
+
+            let routes: any[] = [];
+
+            if (storedRoutes) {
+                try {
+                    const parsed = JSON.parse(storedRoutes);
+                    if (Array.isArray(parsed)) {
+                        routes = parsed;
+                    }
+                } catch (e) {
+                    console.warn(
+                        "Konnte gespeicherte Routen nicht parsen. Überschreibe."
+                    );
+                }
+            }
 
             routes.push(routeData);
 
@@ -89,7 +94,7 @@ export default class RouteService {
         }
     }
 
-    static async stopRoute() {
+    static async stopRoute(routeId: string) {
         try {
             // TODO remove
             // const userId = Firebase.auth?.currentUser?.uid;
@@ -97,10 +102,6 @@ export default class RouteService {
             //     throw new Error("Benutzer nicht authentifiziert.");
             // }
             const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
-
-            const routeId = RouteService.simpleHash(
-                new Date().toISOString() + userId
-            );
 
             const apiUrl =
                 secureConstants.SERVER_URL +
@@ -124,6 +125,8 @@ export default class RouteService {
                 distance: data.distance,
                 avgSpeed: data.avgSpeed,
                 duration: data.duration,
+                startDate: data.startDate,
+                routeId: routeId,
             };
 
             await RouteService.saveRoute(routeData);
@@ -133,5 +136,26 @@ export default class RouteService {
             alert("Fehler beim Stoppen der Route. " + err);
             return false;
         }
+    }
+
+    static async getRoutes() {
+        const storedRoutes = await AsyncStorage.getItem("savedRoutes");
+
+        let routes: any[] = [];
+
+        if (storedRoutes) {
+            try {
+                const parsed = JSON.parse(storedRoutes);
+                if (Array.isArray(parsed)) {
+                    routes = parsed;
+                }
+            } catch (e) {
+                console.warn(
+                    "Konnte gespeicherte Routen nicht parsen. Überschreibe."
+                );
+            }
+        }
+
+        return routes;
     }
 }

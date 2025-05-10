@@ -18,6 +18,7 @@ export default function Map() {
     const { dogLocation } = useDogLocation();
     const [dogProfile, setDogProfile] = useState<any>(null);
     const [initialRegion, setInitialRegion] = useState<any>(null);
+    const [reloadSlider, setReloadSlider] = useState(false);
 
     useEffect(() => {
         async function handle() {
@@ -245,7 +246,10 @@ export default function Map() {
                     marginBottom: 5,
                 }}
             >
-                <RoutesSlider />
+                <RoutesSlider
+                    reloadSlider={reloadSlider}
+                    setReloadSlider={setReloadSlider}
+                />
             </View>
             <View
                 style={{
@@ -255,7 +259,7 @@ export default function Map() {
                     marginTop: 21,
                 }}
             >
-                <RecordButton />
+                <RecordButton setReloadSlider={setReloadSlider} />
             </View>
         </View>
     );

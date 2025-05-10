@@ -22,12 +22,13 @@ import Dialog from "react-native-dialog";
 import PoopService from "@/lib/Services/PoopService";
 import RouteService from "@/lib/Services/RouteService";
 
-export default function RecordButton() {
+export default function RecordButton({ setReloadSlider }) {
     const [isReccording, setIsReccording] = useState(false);
     const [finishedRoute, setFinishedRoute] = useState(false);
     const [poopButtonEnabled, setPoopButtonEnabled] = useState(true);
     const [pooped, setPooped] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
+    const [currentRouteId, setCurrentRouteId] = useState<string | null>(null);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const particleRef = useRef(null);
 
@@ -40,16 +41,21 @@ export default function RecordButton() {
 
     const startRoute = async () => {
         setIsReccording(true);
-        const success = await RouteService.startRoute();
-        if (!success) {
+        const routeId = await RouteService.startRoute();
+        if (!routeId) {
             setIsReccording(false);
+        } else {
+            setCurrentRouteId(routeId);
         }
     };
 
     const stopRoute = async () => {
         setFinishedRoute(true);
         particleRef.current?.play();
-        await RouteService.stopRoute();
+        if (currentRouteId) {
+            await RouteService.stopRoute(currentRouteId);
+            setReloadSlider(true);
+        }
         setTimeout(() => {
             setFinishedRoute(false);
         }, 1500);

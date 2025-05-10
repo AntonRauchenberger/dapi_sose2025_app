@@ -52,6 +52,14 @@ export default function RootLayout() {
                                 }}
                             />
                             <Stack.Screen
+                                name="RouteRoute"
+                                options={{
+                                    headerBackTitle: "Zurück",
+                                    title: "Route",
+                                    headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
                                 name="signIn"
                                 options={{
                                     headerShown: false,
