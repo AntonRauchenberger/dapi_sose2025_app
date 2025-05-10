@@ -8,10 +8,14 @@ import {
 import constants from "@/app/consts";
 import { router } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDogLocation } from "@/lib/Providers/LocationProvider";
+import LocationService from "@/lib/Services/LocationService";
 
 export default function LiveTracker() {
     const fadeAnim = useRef(new Animated.Value(1)).current;
+    const { dogLocation } = useDogLocation();
+    const [distance, setDistance] = useState<number>(0);
 
     useEffect(() => {
         Animated.loop(
@@ -29,6 +33,25 @@ export default function LiveTracker() {
             ])
         ).start();
     }, [fadeAnim]);
+
+    useEffect(() => {
+        async function handle() {
+            if (dogLocation) {
+                const userLocation =
+                    await LocationService.getCurrentUserLocation();
+                if (!userLocation) {
+                    return;
+                }
+                const dDistance = LocationService.getDistanceBetweenLocations(
+                    userLocation,
+                    dogLocation
+                );
+                setDistance(dDistance);
+            }
+        }
+
+        handle();
+    }, [dogLocation]);
 
     const styles = StyleSheet.create({
         tracker: {
@@ -68,8 +91,8 @@ export default function LiveTracker() {
                     />
                 </Animated.View>
                 <Text style={styles.trackerText}>
-                    <Text style={{ fontWeight: "bold" }}>{2} km</Text> von dir
-                    entfernt
+                    <Text style={{ fontWeight: "bold" }}>{distance} km</Text>{" "}
+                    von dir entfernt
                 </Text>
             </View>
         </TouchableOpacity>

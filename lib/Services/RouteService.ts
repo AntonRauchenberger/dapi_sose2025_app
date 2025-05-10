@@ -55,10 +55,12 @@ export default class RouteService {
         try {
             // Firebase
             const db = Firebase.db;
-            const userId = Firebase.auth?.currentUser?.uid;
-            if (!userId) {
-                throw new Error("Benutzer nicht authentifiziert.");
-            }
+            // TODO remove comments
+            // const userId = Firebase.auth?.currentUser?.uid;
+            // if (!userId) {
+            //     throw new Error("Benutzer nicht authentifiziert.");
+            // }
+            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
 
             const userRoutesRef = doc(db, "routes", userId);
             const userRoutesDoc = await getDoc(userRoutesRef);
