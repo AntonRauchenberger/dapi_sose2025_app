@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, Pressable } from "react-native";
 import Header from "@/components/Header";
 import constants from "../consts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CameraButton from "@/components/Tabs/camera/CameraButton";
 import { CameraBottomSheet } from "@/components/Tabs/camera/CameraBottomSheet";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -10,13 +10,20 @@ import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import Dialog from "react-native-dialog";
 import ImageService from "@/lib/Services/ImageService";
+import { useImageContext } from "@/lib/Providers/ImageProvider";
 
 export default function Camera() {
-    const [isGaleryMode, setIsGaleryMode] = useState(true);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [signature, setSignature] = useState("");
-    const [imageUri, setImageUri] = useState<string | null>(null);
     const [reload, setReload] = useState(false);
+    const {
+        isGaleryMode,
+        setIsGaleryMode,
+        imageUri,
+        setImageUri,
+        showCamera,
+        setShowCamera,
+    } = useImageContext();
 
     const downloadImage = async () => {
         if (!imageUri) {
@@ -91,6 +98,7 @@ export default function Camera() {
                     <CameraButton
                         setIsGaleryMode={setIsGaleryMode}
                         setImageUri={setImageUri}
+                        setShowCamera={setShowCamera}
                     />
                 ) : (
                     <View>

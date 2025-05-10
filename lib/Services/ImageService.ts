@@ -18,14 +18,29 @@ export default class ImageService {
                 imageUri.split("/").pop()?.split("?")[0] || "bild.jpg";
             const localUri = FileSystem.documentDirectory + fileName;
 
-            const downloadResult = await FileSystem.downloadAsync(
-                imageUri,
-                localUri
-            );
+            if (imageUri.startsWith("http")) {
+                const downloadResult = await FileSystem.downloadAsync(
+                    imageUri,
+                    localUri
+                );
 
-            const asset = await MediaLibrary.createAssetAsync(
-                downloadResult.uri
-            );
+                if (!downloadResult || !downloadResult.uri) {
+                    console.error("Download fehlgeschlagen:", downloadResult);
+                    alert("Bild konnte nicht heruntergeladen werden.");
+                    return;
+                }
+
+                await MediaLibrary.createAssetAsync(downloadResult.uri);
+            } else {
+                await FileSystem.copyAsync({
+                    from: imageUri,
+                    to: localUri,
+                });
+
+                await MediaLibrary.createAssetAsync(localUri);
+            }
+
+            const asset = await MediaLibrary.createAssetAsync(localUri);
             await MediaLibrary.createAlbumAsync("Download", asset, false);
 
             alert("Bild wurde erfolgreich gespeichert!");

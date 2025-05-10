@@ -5,16 +5,14 @@ import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
 import ImageService from "@/lib/Services/ImageService";
 import DogService from "@/lib/Services/DogService";
+import { useImageContext } from "@/lib/Providers/ImageProvider";
 
-export const CameraBottomSheet = ({
-    isGaleryMode = true,
-    reload = false,
-    setReload,
-}) => {
+export const CameraBottomSheet = ({ reload = false, setReload }) => {
     const [dogName, setDogName] = useState("Findus");
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const modalizeRef = useRef<Modalize>(null);
     const [savedImages, setSavedImages] = useState([]);
+    const { isGaleryMode, setIsGaleryMode } = useImageContext();
 
     useEffect(() => {
         ImageService.getSavedImages().then((images) => {
@@ -36,6 +34,11 @@ export const CameraBottomSheet = ({
     }, [reload]);
 
     useEffect(() => {
+        if (isGaleryMode === undefined || isGaleryMode === null) {
+            modalizeRef.current?.open();
+            return;
+        }
+
         if (!isGaleryMode) {
             modalizeRef.current?.close();
         } else {
@@ -105,11 +108,11 @@ export const CameraBottomSheet = ({
                     Deine gespeicherten Bilder von {dogName}.
                 </Text>
                 <View style={{ marginBottom: 50 }}>
-                    {savedImages.length > 0 &&
+                    {savedImages &&
+                        savedImages.length > 0 &&
                         savedImages.map((image, index) => (
-                            <>
+                            <React.Fragment key={index}>
                                 <Image
-                                    key={index}
                                     source={{ uri: image.uri }}
                                     style={styles.image}
                                 />
@@ -118,7 +121,7 @@ export const CameraBottomSheet = ({
                                         ? image.signature
                                         : "Unbekannt"}
                                 </Text>
-                            </>
+                            </React.Fragment>
                         ))}
                 </View>
             </ScrollView>

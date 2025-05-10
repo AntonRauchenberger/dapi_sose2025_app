@@ -3,63 +3,25 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    Text,
     Animated,
     Easing,
-    Image,
 } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import * as Haptics from "expo-haptics";
 import { useState, useRef, useEffect } from "react";
 import LottieView from "lottie-react-native";
 import particles from "@/assets/animations/particles.json";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
 
-export default function CameraButton({ setIsGaleryMode, setImageUri }) {
+export default function CameraButton() {
     const [isLoading, setIsLoading] = useState(false);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
     const particleRef = useRef(null);
-
-    // loads image from server
-    // const getImage = async () => {
-    //     try {
-    //         const downloadRes = await FileSystem.downloadAsync(
-    //             "http://" +
-    //                 secureConstants.SERVER_IP +
-    //                 ":8080/api/data?type=image",
-    //             FileSystem.documentDirectory + "downloaded_image.jpg"
-    //         );
-
-    //         setImageUri(downloadRes.uri); // <- Zeigt das Bild an, z.B. im <Image source={{ uri: imageUri }} />
-    //         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    //         setIsGaleryMode(false);
-    //     } catch (err) {
-    //         console.error("Fehler beim Bildabruf:", err);
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
-    const getImage = () => {
-        // TODO
-
-        const resolved = Image.resolveAssetSource(
-            require("@/assets/images/dog_example.png")
-        ).uri;
-        setImageUri(resolved);
-
-        setIsLoading(false);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        setIsGaleryMode(false);
-    };
+    const router = useRouter();
 
     const handleClick = () => {
-        if (!isLoading) {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            setIsLoading(!isLoading);
-            getImage();
-        }
+        router.push("/CameraRoute/CustomCamera");
     };
 
     useEffect(() => {
