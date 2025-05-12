@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "../Firebase/Firebase";
 import secureConstants from "@/app/secureConsts";
 import { fetch } from "expo/fetch";
+import StatisticsService from "./StatisticsService";
 
 export default class RouteService {
     static simpleHash(input: string): string {
@@ -130,6 +131,12 @@ export default class RouteService {
             };
 
             await RouteService.saveRoute(routeData);
+            if (routeData?.distance && routeData.distance !== "") {
+                await StatisticsService.addDistance(
+                    parseFloat(routeData.distance)
+                );
+            }
+
             return routeData;
         } catch (err) {
             console.error("Fehler beim Stoppen der Route: " + err);

@@ -4,6 +4,8 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { useDogLocation } from "@/lib/Providers/LocationProvider";
 import LocationService from "@/lib/Services/LocationService";
+import StatisticsService from "@/lib/Services/StatisticsService";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -20,6 +22,7 @@ export default function AlarmNotification() {
     const responseListener = useRef<Notifications.EventSubscription>();
     const [lastSendTime, setLastSendTime] = useState<number>(0);
     const { dogLocation } = useDogLocation();
+    const { refreshStatistics } = useStatistics();
 
     useEffect(() => {
         async function handle() {
@@ -40,6 +43,8 @@ export default function AlarmNotification() {
                 ) {
                     await schedulePushNotification(dDistance);
                     setLastSendTime(Date.now());
+                    await StatisticsService.addAlert();
+                    await refreshStatistics();
                 }
             }
         }

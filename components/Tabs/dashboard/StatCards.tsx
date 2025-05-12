@@ -5,8 +5,11 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Foundation from "@expo/vector-icons/Foundation";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
 export default function StatCards() {
+    const { statistics } = useStatistics();
+
     const styles = StyleSheet.create({
         container: {
             backgroundColor: constants.TEXT_COLOR,
@@ -58,14 +61,9 @@ export default function StatCards() {
                     activeOpacity={0.9}
                     onPress={() => router.navigate("/(tabs)/map")}
                 >
-                    <Text style={styles.header}>
-                        Meldungen{" "}
-                        <Text style={styles.description}>
-                            (in den letzten 2 Wochen)
-                        </Text>
-                    </Text>
+                    <Text style={styles.header}>Meldungen </Text>
                     <Text style={styles.value}>
-                        {7}{" "}
+                        {statistics?.alertCount ?? 0}{" "}
                         <View
                             style={{ transform: "translate3d(-2px, 3px, 0px)" }}
                         >
@@ -84,7 +82,7 @@ export default function StatCards() {
                 >
                     <Text style={styles.header}>Gemachte Fotos</Text>
                     <Text style={styles.value}>
-                        {21}{" "}
+                        {statistics?.imageCount ?? 0}{" "}
                         <View
                             style={{ transform: "translate3d(-2px, 3px, 0px)" }}
                         >
@@ -105,7 +103,7 @@ export default function StatCards() {
                 >
                     <Text style={styles.header}>Häufchen-Counter</Text>
                     <Text style={styles.value}>
-                        {20}{" "}
+                        {statistics?.poopCount ?? 0}{" "}
                         <View>
                             <FontAwesome5
                                 name="poop"
@@ -120,14 +118,9 @@ export default function StatCards() {
                     activeOpacity={0.9}
                     onPress={() => router.navigate("/(tabs)/map")}
                 >
-                    <Text style={styles.header}>
-                        Gelaufene Meter{" "}
-                        <Text style={styles.description}>
-                            (in den letzten 2 Wochen)
-                        </Text>
-                    </Text>
+                    <Text style={styles.header}>Gelaufene Meter </Text>
                     <Text style={styles.value}>
-                        {2187}{" "}
+                        {statistics?.distanceCount ?? 0}{" "}
                         <View
                             style={{ transform: "translate3d(-2px, 5px, 0px)" }}
                         >

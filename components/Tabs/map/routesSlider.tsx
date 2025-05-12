@@ -41,6 +41,7 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
             borderWidth: 2,
             borderColor: constants.TEXT_COLOR,
             padding: 10,
+            backgroundColor: constants.BACKGROUND_COLOR,
         },
         headerContainer: {
             borderBottomColor: constants.TEXT_COLOR,
@@ -70,9 +71,10 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
         <View style={{ flex: 1, height: 300 }}>
             {routes && routes.length > 0 ? (
                 <Swiper
-                    autoplay={true}
-                    autoplayTimeout={20}
-                    paginationStyle={{ transform: "translateY(45px)" }}
+                    paginationStyle={{
+                        transform: "translateY(45px)",
+                        display: routes.length > 8 ? "none" : "block",
+                    }}
                     activeDot={
                         <View
                             style={{
@@ -138,13 +140,27 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                                             color: constants.SECCONDARY_COLOR,
                                         }}
                                     >
-                                        Ø Geschwindigkeit:{" "}
+                                        Ø Speed:{" "}
                                         <Text
                                             style={{
                                                 color: constants.TEXT_COLOR,
                                             }}
                                         >
                                             {route.avgSpeed} km/h
+                                        </Text>
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: constants.SECCONDARY_COLOR,
+                                        }}
+                                    >
+                                        Max. Speed:{" "}
+                                        <Text
+                                            style={{
+                                                color: constants.TEXT_COLOR,
+                                            }}
+                                        >
+                                            {route.maxSpeed} km/h
                                         </Text>
                                     </Text>
                                 </View>

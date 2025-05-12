@@ -11,6 +11,8 @@ import { useRouter } from "expo-router";
 import { useImageContext } from "@/lib/Providers/ImageProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import constants from "../consts";
+import StatisticsService from "@/lib/Services/StatisticsService";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
 export default function CustomCamera() {
     const [facing, setFacing] = useState<CameraType>("back");
@@ -18,6 +20,7 @@ export default function CustomCamera() {
     const [permission, requestPermission] = useCameraPermissions();
     const router = useRouter();
     const { setImageUri, setIsGaleryMode, setShowCamera } = useImageContext();
+    const { refreshStatistics } = useStatistics();
 
     useEffect(() => {
         if (!permission) {
@@ -83,6 +86,8 @@ export default function CustomCamera() {
             setImageUri(photo.uri);
             setIsGaleryMode(false);
             setShowCamera(false);
+            await StatisticsService.addImage();
+            await refreshStatistics();
             router.back();
         }
     };

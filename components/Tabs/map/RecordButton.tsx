@@ -21,6 +21,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Dialog from "react-native-dialog";
 import PoopService from "@/lib/Services/PoopService";
 import RouteService from "@/lib/Services/RouteService";
+import StatisticsService from "@/lib/Services/StatisticsService";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
 export default function RecordButton({ setReloadSlider }) {
     const [isReccording, setIsReccording] = useState(false);
@@ -31,6 +33,7 @@ export default function RecordButton({ setReloadSlider }) {
     const [currentRouteId, setCurrentRouteId] = useState<string | null>(null);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const particleRef = useRef(null);
+    const { refreshStatistics } = useStatistics();
 
     const playSound = async () => {
         const { sound } = await Audio.Sound.createAsync(
@@ -54,6 +57,7 @@ export default function RecordButton({ setReloadSlider }) {
         particleRef.current?.play();
         if (currentRouteId) {
             await RouteService.stopRoute(currentRouteId);
+            await refreshStatistics();
             setReloadSlider(true);
         }
         setTimeout(() => {
@@ -63,7 +67,6 @@ export default function RecordButton({ setReloadSlider }) {
     };
 
     const handleClick = () => {
-        // TODO refresh route slider
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         if (isReccording) {
             stopRoute();
@@ -78,6 +81,8 @@ export default function RecordButton({ setReloadSlider }) {
         setPooped(true);
 
         await PoopService.savePoop();
+        await StatisticsService.addPoop();
+        await refreshStatistics();
 
         setTimeout(() => {
             setPooped(false);
