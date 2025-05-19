@@ -142,7 +142,7 @@ export default class StatisticsService {
         }
     }
 
-    // TODO einsetzen beim login
+    // TODO einsetzen beim login und TESTEN
     static async synchronizeStatistics() {
         const { statistics } = useStatistics();
         const user = Firebase.auth?.currentUser;
@@ -165,6 +165,43 @@ export default class StatisticsService {
     }
 
     static async getDiagramData() {
-        // TODO
+        // TODO remove
+        // const userId = Firebase.auth?.currentUser?.uid;
+        // if (!userId) {
+        //     throw new Error("Benutzer nicht authentifiziert.");
+        // }
+        const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+
+        const apiUrl =
+            secureConstants.SERVER_URL +
+            `/api/data?type=distancedevelopment&userId=${userId}`;
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error(
+                "Fehler beim Laden der Diagramm Statistiken: " + errorData.error
+            );
+            alert(
+                "Fehler beim Laden der Diagramm Statistiken. " + errorData.error
+            );
+            return false;
+        }
+
+        const data = await response.json();
+        const convertedData: number[] = data
+            .filter(
+                (item: any) =>
+                    item !== null &&
+                    item !== undefined &&
+                    item !== "" &&
+                    item !== "Infinity" &&
+                    item !== "-Infinity" &&
+                    !isNaN(Number(item))
+            )
+            .map((item: any) => Number(item))
+            .filter((num: number) => Number.isFinite(num));
+        return convertedData;
     }
 }

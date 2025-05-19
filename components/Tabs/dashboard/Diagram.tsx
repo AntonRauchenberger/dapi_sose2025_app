@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LineChart } from "react-native-chart-kit";
-import { StyleSheet, Dimensions, View } from "react-native";
+import { StyleSheet, Dimensions, View, Button } from "react-native";
 import constants from "@/app/consts";
+import StatisticsService from "@/lib/Services/StatisticsService";
 
 export default function Diagram() {
     const screenWidth = Dimensions.get("window").width;
+    const [apiData, setApiData] = useState<number[]>([]);
+
+    const fetchData = async () => {
+        const fetchedData = await StatisticsService.getDiagramData();
+        if (fetchedData) {
+            setApiData(fetchedData);
+        } else {
+            console.error("Fehler beim Abrufen der Diagrammdaten");
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const getLast14Weekdays = () => {
         const today = new Date();
@@ -30,7 +45,7 @@ export default function Diagram() {
         labels: getLast14Weekdays(),
         datasets: [
             {
-                data: [20, 45, 28, 80, 99, 0, 8, 20, 45, 28, 80, 99, 43, 8],
+                data: apiData,
                 strokeWidth: 2,
                 color: (opacity = 1) =>
                     `${
@@ -67,6 +82,7 @@ export default function Diagram() {
 
     return (
         <View style={[styles.container, constants.SHADOW_STYLE]}>
+            <Button onPress={fetchData} title="Refresh" />
             <LineChart
                 data={data}
                 width={screenWidth - 32}
