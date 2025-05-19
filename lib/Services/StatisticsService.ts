@@ -202,6 +202,9 @@ export default class StatisticsService {
             )
             .map((item: any) => Number(item))
             .filter((num: number) => Number.isFinite(num));
+        while (convertedData.length < 14) {
+            convertedData.unshift(0);
+        }
         return convertedData;
     }
 }

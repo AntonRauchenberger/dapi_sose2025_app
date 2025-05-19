@@ -1,20 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { LineChart } from "react-native-chart-kit";
-import { StyleSheet, Dimensions, View, Button } from "react-native";
+import {
+    StyleSheet,
+    Dimensions,
+    View,
+    Button,
+    ActivityIndicator,
+    TouchableOpacity,
+} from "react-native";
 import constants from "@/app/consts";
 import StatisticsService from "@/lib/Services/StatisticsService";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Diagram() {
     const screenWidth = Dimensions.get("window").width;
-    const [apiData, setApiData] = useState<number[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [apiData, setApiData] = useState<number[]>([
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ]);
 
     const fetchData = async () => {
+        setIsLoading(true);
         const fetchedData = await StatisticsService.getDiagramData();
         if (fetchedData) {
             setApiData(fetchedData);
         } else {
             console.error("Fehler beim Abrufen der Diagrammdaten");
         }
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -78,26 +91,61 @@ export default function Diagram() {
         container: {
             borderRadius: 12,
         },
+        refreshButton: {
+            position: "absolute",
+            right: 15,
+            top: -40,
+            backgroundColor: constants.BACKGROUND_COLOR,
+            borderRadius: 50,
+            padding: 2,
+        },
+        loadingContainer: {
+            backgroundColor: constants.BACKGROUND_COLOR,
+            height: 260,
+            width: "97%",
+            margin: "auto",
+            borderRadius: 16,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 8,
+        },
     });
 
     return (
         <View style={[styles.container, constants.SHADOW_STYLE]}>
-            <Button onPress={fetchData} title="Refresh" />
-            <LineChart
-                data={data}
-                width={screenWidth - 32}
-                height={220}
-                chartConfig={chartConfig}
-                bezier
-                style={{
-                    borderRadius: 12,
-                    width: "97%",
-                    margin: "auto",
-                    marginBottom: 8,
-                    borderColor: constants.BACKGROUND_COLOR,
-                    borderWidth: 3,
-                }}
-            />
+            <TouchableOpacity
+                onPress={fetchData}
+                style={styles.refreshButton}
+                activeOpacity={0.7}
+            >
+                <MaterialIcons
+                    name="refresh"
+                    size={28}
+                    color={constants.TEXT_COLOR}
+                />
+            </TouchableOpacity>
+            {apiData && !isLoading ? (
+                <LineChart
+                    data={data}
+                    width={screenWidth - 32}
+                    height={220}
+                    chartConfig={chartConfig}
+                    bezier
+                    style={{
+                        borderRadius: 12,
+                        width: "97%",
+                        margin: "auto",
+                        marginBottom: 8,
+                        borderColor: constants.BACKGROUND_COLOR,
+                        borderWidth: 3,
+                    }}
+                />
+            ) : (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator />
+                </View>
+            )}
         </View>
     );
 }
