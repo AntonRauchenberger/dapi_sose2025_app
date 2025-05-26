@@ -142,6 +142,40 @@ export default class StatisticsService {
         }
     }
 
+    static async subDistance(distance: number) {
+        try {
+            const jsonValue = await AsyncStorage.getItem("statistics");
+            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const distanceCount = parsedValue.distanceCount || 0;
+            const newDistanceCount = distanceCount - distance;
+            const newStatistics = {
+                ...parsedValue,
+                distanceCount: newDistanceCount,
+            };
+
+            // AsyncStorage
+            await AsyncStorage.setItem(
+                "statistics",
+                JSON.stringify(newStatistics)
+            );
+
+            // Firestore
+            // TODO remove comment
+            // const user = Firebase.auth?.currentUser;
+            // if (!user) throw new Error("no user logged in");
+            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
+
+            const userStatisticsRef = doc(
+                Firebase.db,
+                "statistics",
+                secureConstants.ADMIN_USER_ID
+            );
+            await setDoc(userStatisticsRef, newStatistics);
+        } catch (e) {
+            console.error("Fehler beim Speichern:", e);
+        }
+    }
+
     // TODO einsetzen beim login und TESTEN
     static async synchronizeStatistics() {
         const { statistics } = useStatistics();

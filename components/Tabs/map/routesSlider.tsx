@@ -7,6 +7,7 @@ import RouteService from "@/lib/Services/RouteService";
 import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Dialog from "react-native-dialog";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
 export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
     const [isMapFullScreen, setIsMapFullScreen] = useState(false);
@@ -14,6 +15,7 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
     const [showDialog, setShowDialog] = useState(false);
     const [deleteRoute, setDeleteRoute] = useState<any>(null);
     const router = useRouter();
+    const { refreshStatistics } = useStatistics();
 
     useEffect(() => {
         async function handle() {
@@ -330,7 +332,11 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                     color="red"
                     onPress={async () => {
                         setShowDialog(false);
-                        await RouteService.deleteRoute(deleteRoute.routeId);
+                        await RouteService.deleteRoute(
+                            deleteRoute.routeId,
+                            deleteRoute.distance
+                        );
+                        await refreshStatistics();
                         setReloadSlider(true);
                     }}
                 />

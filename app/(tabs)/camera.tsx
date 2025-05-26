@@ -1,7 +1,7 @@
-import { View, StyleSheet, Image, Pressable } from "react-native";
+import { View, StyleSheet, Image, Pressable, Animated } from "react-native";
 import Header from "@/components/Header";
 import constants from "../consts";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CameraButton from "@/components/Tabs/camera/CameraButton";
 import { CameraBottomSheet } from "@/components/Tabs/camera/CameraBottomSheet";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -11,6 +11,8 @@ import * as Haptics from "expo-haptics";
 import Dialog from "react-native-dialog";
 import ImageService from "@/lib/Services/ImageService";
 import { useImageContext } from "@/lib/Providers/ImageProvider";
+import { useRecord } from "@/lib/Providers/RecordProvider";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function Camera() {
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -24,6 +26,25 @@ export default function Camera() {
         showCamera,
         setShowCamera,
     } = useImageContext();
+    const { isRecording } = useRecord();
+    const blinkAnim = useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(blinkAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(blinkAnim, {
+                    toValue: 1,
+                    duration: 800,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
 
     const downloadImage = async () => {
         if (!imageUri) {
@@ -92,7 +113,22 @@ export default function Camera() {
                 backgroundColor: constants.FONT_COLOR,
             }}
         >
-            <Header />
+            {isRecording ? <Header animate={false} /> : <Header />}
+            {isRecording && (
+                <Animated.View
+                    style={{
+                        transform: [{ translateY: 66 }, { translateX: 332 }],
+                        opacity: blinkAnim,
+                        position: "absolute",
+                    }}
+                >
+                    <MaterialCommunityIcons
+                        name="record-rec"
+                        size={26}
+                        color={constants.COMPLEMENTARY_COLOR}
+                    />
+                </Animated.View>
+            )}
             <View style={{ marginTop: isGaleryMode ? 180 : 75 }}>
                 {isGaleryMode || !imageUri ? (
                     <CameraButton

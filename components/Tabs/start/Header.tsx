@@ -1,10 +1,38 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useRef, useEffect } from "react";
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    Animated,
+} from "react-native";
 import constants from "@/app/consts";
 import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useRecord } from "@/lib/Providers/RecordProvider";
 
 export default function Header({ dogName, image }) {
+    const { isRecording } = useRecord();
     const router = useRouter();
+    const blinkAnim = useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(blinkAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(blinkAnim, {
+                    toValue: 1,
+                    duration: 800,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
 
     const styles = StyleSheet.create({
         iconContainer: {
@@ -48,6 +76,20 @@ export default function Header({ dogName, image }) {
                             color={constants.TEXT_COLOR}
                         />
                     </TouchableOpacity>
+                    {isRecording && (
+                        <Animated.View
+                            style={{
+                                transform: [{ translateY: 10 }],
+                                opacity: blinkAnim,
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name="record-rec"
+                                size={26}
+                                color={constants.COMPLEMENTARY_COLOR}
+                            />
+                        </Animated.View>
+                    )}
                 </View>
                 <Text style={styles.text}>{dogName}</Text>
             </View>

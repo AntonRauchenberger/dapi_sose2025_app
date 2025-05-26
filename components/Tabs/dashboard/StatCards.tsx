@@ -130,7 +130,9 @@ export default function StatCards() {
                 >
                     <Text style={styles.header}>Gelaufene Meter </Text>
                     <Text style={styles.value}>
-                        {statistics?.distanceCount ?? 0}{" "}
+                        {statistics?.distanceCount
+                            ? parseFloat(statistics.distanceCount).toFixed(2)
+                            : "0.00"}{" "}
                         <View
                             style={{
                                 transform: [

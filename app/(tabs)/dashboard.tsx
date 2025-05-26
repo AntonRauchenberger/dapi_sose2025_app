@@ -1,11 +1,33 @@
-import React from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import React, { useRef, useEffect } from "react";
+import { Text, View, StyleSheet, ScrollView, Animated } from "react-native";
 import constants from "../consts";
 import StatCards from "@/components/Tabs/dashboard/StatCards";
 import LiveTracker from "@/components/Tabs/dashboard/LiveTracker";
 import Diagram from "@/components/Tabs/dashboard/Diagram";
+import { useRecord } from "@/lib/Providers/RecordProvider";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function Dashboard() {
+    const { isRecording } = useRecord();
+    const blinkAnim = useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(blinkAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(blinkAnim, {
+                    toValue: 1,
+                    duration: 800,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
+
     const styles = StyleSheet.create({
         container: {
             height: 80,
@@ -14,6 +36,7 @@ export default function Dashboard() {
             height: "100%",
             backgroundColor: constants.BACKGROUND_COLOR,
             display: "flex",
+            flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
         },
@@ -44,6 +67,20 @@ export default function Dashboard() {
             <View style={[styles.container, constants.SHADOW_STYLE]}>
                 <View style={styles.background}>
                     <Text style={styles.header}>Dashboard</Text>
+                    {isRecording && (
+                        <Animated.View
+                            style={{
+                                transform: [{ translateY: 15 }],
+                                opacity: blinkAnim,
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name="record-rec"
+                                size={26}
+                                color={constants.COMPLEMENTARY_COLOR}
+                            />
+                        </Animated.View>
+                    )}
                 </View>
             </View>
             <ScrollView style={{ backgroundColor: constants.FONT_COLOR }}>

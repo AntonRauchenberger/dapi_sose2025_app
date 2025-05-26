@@ -23,9 +23,9 @@ import PoopService from "@/lib/Services/PoopService";
 import RouteService from "@/lib/Services/RouteService";
 import StatisticsService from "@/lib/Services/StatisticsService";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
+import { useRecord } from "@/lib/Providers/RecordProvider";
 
 export default function RecordButton({ setReloadSlider }) {
-    const [isReccording, setIsReccording] = useState(false);
     const [finishedRoute, setFinishedRoute] = useState(false);
     const [poopButtonEnabled, setPoopButtonEnabled] = useState(true);
     const [pooped, setPooped] = useState(false);
@@ -34,6 +34,7 @@ export default function RecordButton({ setReloadSlider }) {
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const particleRef = useRef(null);
     const { refreshStatistics } = useStatistics();
+    const { isRecording, setIsRecording } = useRecord();
 
     const playSound = async () => {
         const { sound } = await Audio.Sound.createAsync(
@@ -43,10 +44,10 @@ export default function RecordButton({ setReloadSlider }) {
     };
 
     const startRoute = async () => {
-        setIsReccording(true);
+        setIsRecording(true);
         const routeId = await RouteService.startRoute();
         if (!routeId) {
-            setIsReccording(false);
+            setIsRecording(false);
         } else {
             setCurrentRouteId(routeId);
         }
@@ -61,12 +62,12 @@ export default function RecordButton({ setReloadSlider }) {
             setReloadSlider(true);
         }
         setFinishedRoute(false);
-        setIsReccording(!isReccording);
+        setIsRecording(!isRecording);
     };
 
     const handleClick = () => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        if (isReccording) {
+        if (isRecording) {
             stopRoute();
         } else {
             startRoute();
@@ -89,7 +90,7 @@ export default function RecordButton({ setReloadSlider }) {
     };
 
     useEffect(() => {
-        if (isReccording) {
+        if (isRecording) {
             Animated.loop(
                 Animated.sequence([
                     Animated.timing(scaleAnim, {
@@ -110,7 +111,7 @@ export default function RecordButton({ setReloadSlider }) {
             scaleAnim.stopAnimation();
             scaleAnim.setValue(1);
         }
-    }, [isReccording]);
+    }, [isRecording]);
 
     // checks if poop button can be pressed (once per day)
     useEffect(() => {
@@ -183,7 +184,7 @@ export default function RecordButton({ setReloadSlider }) {
 
     return (
         <View style={styles.container}>
-            {isReccording && (
+            {isRecording && (
                 <TouchableOpacity
                     style={[
                         styles.button,
@@ -241,7 +242,7 @@ export default function RecordButton({ setReloadSlider }) {
                                 size={40}
                                 color={constants.TEXT_COLOR}
                             />
-                        ) : isReccording ? (
+                        ) : isRecording ? (
                             <Animated.View
                                 style={{ transform: [{ scale: scaleAnim }] }}
                             >
@@ -263,7 +264,7 @@ export default function RecordButton({ setReloadSlider }) {
                 <Text style={styles.buttonText}>
                     {finishedRoute
                         ? "Route wurde gespeichert"
-                        : isReccording
+                        : isRecording
                         ? "Route beenden"
                         : "Route starten"}
                 </Text>

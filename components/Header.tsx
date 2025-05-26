@@ -5,7 +5,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useDogLocation } from "@/lib/Providers/LocationProvider";
 import LocationService from "@/lib/Services/LocationService";
 
-export default function Header() {
+export default function Header({ animate = true }: { animate?: boolean }) {
     const fadeAnim = useRef(new Animated.Value(1)).current;
     const { dogLocation } = useDogLocation();
     const [distance, setDistance] = useState<number>(0);
@@ -77,13 +77,22 @@ export default function Header() {
         <View style={styles.container}>
             <View style={styles.background}></View>
             <View style={styles.tracker}>
-                <Animated.View style={{ opacity: fadeAnim }}>
+                {animate ? (
+                    <Animated.View style={{ opacity: fadeAnim }}>
+                        <FontAwesome6
+                            name="map-location-dot"
+                            size={24}
+                            color={constants.FONT_COLOR}
+                        />
+                    </Animated.View>
+                ) : (
                     <FontAwesome6
                         name="map-location-dot"
                         size={24}
                         color={constants.FONT_COLOR}
                     />
-                </Animated.View>
+                )}
+
                 <Text style={styles.trackerText}>
                     <Text style={{ fontWeight: "bold" }}>{distance} km</Text>{" "}
                     von dir entfernt

@@ -95,7 +95,7 @@ export default class RouteService {
         }
     }
 
-    static async deleteRoute(routeId: any) {
+    static async deleteRoute(routeId: any, distance: any) {
         try {
             // Firebase
             const db = Firebase.db;
@@ -146,6 +146,10 @@ export default class RouteService {
                 "savedRoutes",
                 JSON.stringify(updatedRoutes)
             );
+
+            // remove from statistics
+            await StatisticsService.subDistance(parseFloat(distance));
+
             return true;
         } catch (error) {
             console.error("Error deleting route: ", error);
