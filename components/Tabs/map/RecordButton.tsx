@@ -60,9 +60,7 @@ export default function RecordButton({ setReloadSlider }) {
             await refreshStatistics();
             setReloadSlider(true);
         }
-        setTimeout(() => {
-            setFinishedRoute(false);
-        }, 1500);
+        setFinishedRoute(false);
         setIsReccording(!isReccording);
     };
 
@@ -145,7 +143,8 @@ export default function RecordButton({ setReloadSlider }) {
         container: {
             display: "flex",
             flexDirection: "row",
-            width: isReccording ? "60%" : "auto",
+            width: "100%",
+            justifyContent: "center",
         },
         recordButtonContainer: {
             display: "flex",
@@ -177,6 +176,8 @@ export default function RecordButton({ setReloadSlider }) {
             marginTop: 2,
             color: constants.TEXT_COLOR,
             fontWeight: "500",
+            width: 191.5,
+            textAlign: "center",
         },
     });
 
@@ -193,6 +194,8 @@ export default function RecordButton({ setReloadSlider }) {
                             backgroundColor: constants.SECCONDARY_COLOR,
                             borderWidth: 2,
                             opacity: poopButtonEnabled ? 1 : 0.75,
+                            transform: [{ translateX: -85 }],
+                            position: "absolute",
                         },
                     ]}
                     onPress={

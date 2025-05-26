@@ -279,20 +279,26 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                     </Swiper>
                 ) : (
                     <View style={styles.slide}>
-                        <View style={styles.headerContainer}></View>
-                        <View style={styles.content}>
-                            <View>
-                                <Text>
-                                    Keine Routen gefunden.{" "}
-                                    <Text
-                                        style={{
-                                            color: constants.TEXT_COLOR,
-                                        }}
-                                    >
-                                        Bitte starte eine Route.
-                                    </Text>
-                                </Text>
-                            </View>
+                        <View
+                            style={[
+                                styles.content,
+                                {
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                },
+                            ]}
+                        >
+                            <Text
+                                style={{
+                                    color: constants.TEXT_COLOR,
+                                    opacity: 0.7,
+                                    transform: [{ translateY: -6 }],
+                                    textAlign: "center",
+                                }}
+                            >
+                                Keine Routen vorhanden ...
+                            </Text>
                         </View>
                     </View>
                 )}
