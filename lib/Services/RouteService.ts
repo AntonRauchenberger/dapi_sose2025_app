@@ -95,6 +95,64 @@ export default class RouteService {
         }
     }
 
+    static async deleteRoute(routeId: any) {
+        try {
+            // Firebase
+            const db = Firebase.db;
+            // TODO remove comments
+            // const userId = Firebase.auth?.currentUser?.uid;
+            // if (!userId) {
+            //     throw new Error("Benutzer nicht authentifiziert.");
+            // }
+            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+
+            const userRoutesRef = doc(db, "routes", userId);
+            const userRoutesDoc = await getDoc(userRoutesRef);
+
+            userRoutesDoc.data()?.routes?.forEach((route: any) => {
+                if (route.routeId === routeId) {
+                    const updatedRoutes = userRoutesDoc
+                        .data()
+                        ?.routes.filter((r: any) => r.routeId !== routeId);
+                    updateDoc(userRoutesRef, {
+                        routes: updatedRoutes,
+                    });
+                }
+            });
+
+            // AsyncStorage
+            const storedRoutes = await AsyncStorage.getItem("savedRoutes");
+
+            let routes: any[] = [];
+
+            if (storedRoutes) {
+                try {
+                    const parsed = JSON.parse(storedRoutes);
+                    if (Array.isArray(parsed)) {
+                        routes = parsed;
+                    }
+                } catch (e) {
+                    console.warn(
+                        "Konnte gespeicherte Routen nicht parsen. Überschreibe."
+                    );
+                }
+            }
+
+            let updatedRoutes = routes.filter(
+                (route) => route.routeId !== routeId
+            );
+
+            await AsyncStorage.setItem(
+                "savedRoutes",
+                JSON.stringify(updatedRoutes)
+            );
+            return true;
+        } catch (error) {
+            console.error("Error deleting route: ", error);
+            return false;
+        }
+    }
+
     static async stopRoute(routeId: string) {
         try {
             // TODO remove

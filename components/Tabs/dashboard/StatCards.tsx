@@ -65,7 +65,12 @@ export default function StatCards() {
                     <Text style={styles.value}>
                         {statistics?.alertCount ?? 0}{" "}
                         <View
-                            style={{ transform: "translate3d(-2px, 3px, 0px)" }}
+                            style={{
+                                transform: [
+                                    { translateX: -2 },
+                                    { translateY: 3 },
+                                ],
+                            }}
                         >
                             <Ionicons
                                 name="warning"
@@ -84,7 +89,12 @@ export default function StatCards() {
                     <Text style={styles.value}>
                         {statistics?.imageCount ?? 0}{" "}
                         <View
-                            style={{ transform: "translate3d(-2px, 3px, 0px)" }}
+                            style={{
+                                transform: [
+                                    { translateX: -2 },
+                                    { translateY: 3 },
+                                ],
+                            }}
                         >
                             <MaterialIcons
                                 name="camera"
@@ -122,7 +132,12 @@ export default function StatCards() {
                     <Text style={styles.value}>
                         {statistics?.distanceCount ?? 0}{" "}
                         <View
-                            style={{ transform: "translate3d(-2px, 5px, 0px)" }}
+                            style={{
+                                transform: [
+                                    { translateX: -2 },
+                                    { translateY: 5 },
+                                ],
+                            }}
                         >
                             <Foundation
                                 name="guide-dog"

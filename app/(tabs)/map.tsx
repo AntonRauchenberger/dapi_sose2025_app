@@ -237,7 +237,7 @@ export default function Map() {
             </View>
             <Text style={styles.headline}>Gassi-Routen</Text>
             <Text style={styles.descText}>
-                Deine Gassi-Routen der letzten 2 Wochen.
+                Ein Überblick über all deine Gassi-Routen.
             </Text>
             <View
                 style={{
