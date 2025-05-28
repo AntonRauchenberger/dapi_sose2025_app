@@ -8,14 +8,14 @@ import RecordButton from "@/components/Tabs/map/RecordButton";
 import LocationService from "@/lib/Services/LocationService";
 import PoopService from "@/lib/Services/PoopService";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useDogLocation } from "@/lib/Providers/LocationProvider";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
     const [poopMarkers, setPoopMarkers] = useState<any>(null);
-    const { dogLocation } = useDogLocation();
+    const { dogLocation } = useCurrentData();
     const [dogProfile, setDogProfile] = useState<any>(null);
     const [initialRegion, setInitialRegion] = useState<any>(null);
     const [reloadSlider, setReloadSlider] = useState(false);

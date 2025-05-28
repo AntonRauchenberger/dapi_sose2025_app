@@ -9,12 +9,12 @@ import constants from "@/app/consts";
 import { router } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import React, { useEffect, useRef, useState } from "react";
-import { useDogLocation } from "@/lib/Providers/LocationProvider";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 import LocationService from "@/lib/Services/LocationService";
 
 export default function LiveTracker() {
     const fadeAnim = useRef(new Animated.Value(1)).current;
-    const { dogLocation } = useDogLocation();
+    const { dogLocation } = useCurrentData();
     const [distance, setDistance] = useState<number>(0);
 
     useEffect(() => {

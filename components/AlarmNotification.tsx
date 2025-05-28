@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { useDogLocation } from "@/lib/Providers/LocationProvider";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 import LocationService from "@/lib/Services/LocationService";
 import StatisticsService from "@/lib/Services/StatisticsService";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
@@ -21,7 +21,7 @@ export default function AlarmNotification() {
     const notificationListener = useRef<Notifications.EventSubscription>();
     const responseListener = useRef<Notifications.EventSubscription>();
     const [lastSendTime, setLastSendTime] = useState<number>(0);
-    const { dogLocation } = useDogLocation();
+    const { dogLocation } = useCurrentData();
     const { refreshStatistics } = useStatistics();
 
     useEffect(() => {

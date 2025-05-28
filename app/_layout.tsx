@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import constants from "./consts";
 import { SessionProvider } from "@/lib/Authentification/ctx";
 import Firebase from "@/lib/Firebase/Firebase";
-import { DogLocationProvider } from "@/lib/Providers/LocationProvider";
+import { CurrentDataProvider } from "@/lib/Providers/CurrentDataProvider";
 import AlarmNotification from "@/components/AlarmNotification";
 import { ImageProvider } from "@/lib/Providers/ImageProvider";
 import { StatisticsProvider } from "@/lib/Providers/StatisticsProvider";
@@ -19,7 +19,7 @@ export default function RootLayout() {
     return (
         <RecordProvider>
             <StatisticsProvider>
-                <DogLocationProvider>
+                <CurrentDataProvider>
                     <SessionProvider>
                         <ImageProvider>
                             <AlarmNotification />
@@ -85,7 +85,7 @@ export default function RootLayout() {
                             </GestureHandlerRootView>
                         </ImageProvider>
                     </SessionProvider>
-                </DogLocationProvider>
+                </CurrentDataProvider>
             </StatisticsProvider>
         </RecordProvider>
     );
