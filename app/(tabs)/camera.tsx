@@ -13,19 +13,13 @@ import ImageService from "@/lib/Services/ImageService";
 import { useImageContext } from "@/lib/Providers/ImageProvider";
 import { useRecord } from "@/lib/Providers/RecordProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import BackgroundSvg from "@/components/Tabs/camera/BackgroundSvg";
 
 export default function Camera() {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [signature, setSignature] = useState("");
     const [reload, setReload] = useState(false);
-    const {
-        isGaleryMode,
-        setIsGaleryMode,
-        imageUri,
-        setImageUri,
-        showCamera,
-        setShowCamera,
-    } = useImageContext();
+    const { isGaleryMode, setIsGaleryMode, imageUri } = useImageContext();
     const { isRecording } = useRecord();
     const blinkAnim = useRef(new Animated.Value(1)).current;
 
@@ -108,107 +102,114 @@ export default function Camera() {
     });
 
     return (
-        <View
-            style={{
-                backgroundColor: constants.FONT_COLOR,
-            }}
-        >
-            {isRecording ? <Header animate={false} /> : <Header />}
-            {isRecording && (
-                <Animated.View
-                    style={{
-                        transform: [{ translateY: 66 }, { translateX: 332 }],
-                        opacity: blinkAnim,
-                        position: "absolute",
-                    }}
-                >
-                    <MaterialCommunityIcons
-                        name="record-rec"
-                        size={26}
-                        color={constants.COMPLEMENTARY_COLOR}
-                    />
-                </Animated.View>
-            )}
-            <View style={{ marginTop: isGaleryMode ? 180 : 75 }}>
-                {isGaleryMode || !imageUri ? (
-                    <CameraButton
-                        setIsGaleryMode={setIsGaleryMode}
-                        setImageUri={setImageUri}
-                        setShowCamera={setShowCamera}
-                    />
-                ) : (
-                    <View>
-                        <Image
-                            source={{ uri: imageUri }}
-                            style={styles.image}
-                        />
-                        <View style={styles.buttonsContainer}>
-                            <Pressable
-                                style={styles.button}
-                                onPress={() => handleClicks("delete")}
-                            >
-                                <MaterialIcons
-                                    name="delete"
-                                    size={30}
-                                    color={constants.TEXT_COLOR}
-                                />
-                            </Pressable>
-                            <Pressable
-                                style={styles.button}
-                                onPress={() => handleClicks("save")}
-                            >
-                                <AntDesign
-                                    name="plus"
-                                    size={35}
-                                    color={constants.TEXT_COLOR}
-                                />
-                            </Pressable>
-                            <Pressable
-                                style={styles.button}
-                                onPress={() => handleClicks("download")}
-                            >
-                                <Feather
-                                    name="download"
-                                    size={30}
-                                    color={constants.TEXT_COLOR}
-                                />
-                            </Pressable>
-                        </View>
-                    </View>
-                )}
-            </View>
-            <CameraBottomSheet
-                isGaleryMode={isGaleryMode}
-                reload={reload}
-                setReload={setReload}
+        <View style={{ flex: 1 }}>
+            <BackgroundSvg
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    zIndex: -1,
+                }}
             />
-            <Dialog.Container visible={dialogVisible}>
-                <Dialog.Title>Bild-Unterschrift</Dialog.Title>
-                <Dialog.Description>
-                    Wie würdest du dieses Bild beschreiben?
-                </Dialog.Description>
-                <Dialog.Input
-                    placeholder="Bild-Unterschrift"
-                    value={signature}
-                    onChangeText={setSignature}
-                />
-                <Dialog.Button
-                    label="Abbrechen"
-                    onPress={() => {
-                        setDialogVisible(false);
-                    }}
-                />
-                <Dialog.Button
-                    label="Speichern"
-                    onPress={() => {
-                        Haptics.notificationAsync(
-                            Haptics.NotificationFeedbackType.Success
-                        );
-                        setDialogVisible(false);
-                        saveImage(signature);
-                    }}
-                />
-            </Dialog.Container>
+            <View
+                style={{
+                    flex: 1,
+                }}
+            >
+                {isRecording ? <Header animate={false} /> : <Header />}
+                {isRecording && (
+                    <Animated.View
+                        style={{
+                            transform: [
+                                { translateY: 66 },
+                                { translateX: 332 },
+                            ],
+                            opacity: blinkAnim,
+                            position: "absolute",
+                        }}
+                    >
+                        <MaterialCommunityIcons
+                            name="record-rec"
+                            size={26}
+                            color={constants.COMPLEMENTARY_COLOR}
+                        />
+                    </Animated.View>
+                )}
+                <View style={{ marginTop: isGaleryMode ? 180 : 75 }}>
+                    {isGaleryMode || !imageUri ? (
+                        <CameraButton />
+                    ) : (
+                        <View>
+                            <Image
+                                source={{ uri: imageUri }}
+                                style={styles.image}
+                            />
+                            <View style={styles.buttonsContainer}>
+                                <Pressable
+                                    style={styles.button}
+                                    onPress={() => handleClicks("delete")}
+                                >
+                                    <MaterialIcons
+                                        name="delete"
+                                        size={30}
+                                        color={constants.TEXT_COLOR}
+                                    />
+                                </Pressable>
+                                <Pressable
+                                    style={styles.button}
+                                    onPress={() => handleClicks("save")}
+                                >
+                                    <AntDesign
+                                        name="plus"
+                                        size={35}
+                                        color={constants.TEXT_COLOR}
+                                    />
+                                </Pressable>
+                                <Pressable
+                                    style={styles.button}
+                                    onPress={() => handleClicks("download")}
+                                >
+                                    <Feather
+                                        name="download"
+                                        size={30}
+                                        color={constants.TEXT_COLOR}
+                                    />
+                                </Pressable>
+                            </View>
+                        </View>
+                    )}
+                </View>
+                <CameraBottomSheet reload={reload} setReload={setReload} />
+                <Dialog.Container visible={dialogVisible}>
+                    <Dialog.Title>Bild-Unterschrift</Dialog.Title>
+                    <Dialog.Description>
+                        Wie würdest du dieses Bild beschreiben?
+                    </Dialog.Description>
+                    <Dialog.Input
+                        placeholder="Bild-Unterschrift"
+                        value={signature}
+                        onChangeText={setSignature}
+                    />
+                    <Dialog.Button
+                        label="Abbrechen"
+                        onPress={() => {
+                            setDialogVisible(false);
+                        }}
+                    />
+                    <Dialog.Button
+                        label="Speichern"
+                        onPress={() => {
+                            Haptics.notificationAsync(
+                                Haptics.NotificationFeedbackType.Success
+                            );
+                            setDialogVisible(false);
+                            saveImage(signature);
+                        }}
+                    />
+                </Dialog.Container>
+            </View>
         </View>
     );
 }
