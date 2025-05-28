@@ -11,9 +11,12 @@ import constants from "@/app/consts";
 import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRecord } from "@/lib/Providers/RecordProvider";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Header({ dogName, image }) {
     const { isRecording } = useRecord();
+    const { currentData } = useCurrentData();
     const router = useRouter();
     const blinkAnim = useRef(new Animated.Value(1)).current;
 
@@ -60,6 +63,17 @@ export default function Header({ dogName, image }) {
             marginBottom: 8,
             transform: "translateY(-40px)",
         },
+        batteryContainer: {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+        },
+        batteryValue: {
+            color: constants.TEXT_COLOR,
+            fontSize: 11,
+            opacity: 0.8,
+            transform: [{ translateX: -2 }],
+        },
     });
 
     return (
@@ -76,6 +90,16 @@ export default function Header({ dogName, image }) {
                             color={constants.TEXT_COLOR}
                         />
                     </TouchableOpacity>
+                    <View style={styles.batteryContainer}>
+                        <MaterialIcons
+                            name="battery-full"
+                            size={18}
+                            color={constants.TEXT_COLOR}
+                        />
+                        <Text style={styles.batteryValue}>
+                            {currentData?.battery}%
+                        </Text>
+                    </View>
                     {isRecording && (
                         <Animated.View
                             style={{
