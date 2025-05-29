@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 import constants from "@/app/consts";
-import MapView, { Polyline } from "react-native-maps";
 import RouteService from "@/lib/Services/RouteService";
 import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Dialog from "react-native-dialog";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
-    const [isMapFullScreen, setIsMapFullScreen] = useState(false);
     const [routes, setRoutes] = useState<any>();
     const [showDialog, setShowDialog] = useState(false);
     const [deleteRoute, setDeleteRoute] = useState<any>(null);
@@ -44,25 +44,11 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
             width: "97%",
             margin: "auto",
             borderRadius: 15,
-            borderWidth: 2,
-            borderColor: constants.TEXT_COLOR,
+            borderWidth: 1,
+            borderColor: "rgba(255, 255, 255, 0.2)",
             padding: 10,
-            backgroundColor: constants.BACKGROUND_COLOR,
-        },
-        headerContainer: {
-            borderBottomColor: constants.TEXT_COLOR,
-            borderBottomWidth: 2,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingBottom: 5,
-        },
-        header: {
-            color: constants.TEXT_COLOR,
-            fontSize: 20,
-            fontWeight: "600",
-            marginBottom: 5,
+            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(10px)",
         },
         content: {
             flex: 1,
@@ -70,26 +56,106 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
             justifyContent: "space-between",
             marginTop: 5,
         },
-        map: {
-            width: 120,
-            height: 108,
-            overflow: "hidden",
+        routeHeader: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 5,
+        },
+        routeTitleWrapper: {
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+        },
+        routeIcon: {
+            width: 20,
+            height: 20,
             borderRadius: 10,
+            backgroundColor: constants.TEXT_COLOR,
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        routeIconText: {
+            color: "white",
+            fontSize: 12,
+            fontWeight: "bold",
+        },
+        routeTitleText: {
+            fontSize: 18,
+            fontWeight: "600",
+            color: constants.TEXT_COLOR,
+        },
+        statsGrid: {
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            rowGap: 5,
+            columnGap: 5,
+            marginBottom: 5,
+        },
+        statItem: {
+            width: "47%",
+            backgroundColor: "rgba(255,255,255,0.3)",
+            borderRadius: 12,
+            padding: 10,
+            alignItems: "center",
+        },
+        statValue: {
+            fontSize: 13,
+            fontWeight: "700",
+            color: "#4a3a4a",
+            marginBottom: 4,
+        },
+        statLabel: {
+            fontSize: 11,
+            color: "#8a7a8a",
+            textTransform: "uppercase",
+            letterSpacing: 0.5,
+            fontWeight: "500",
+        },
+        routeActions: {
+            flexDirection: "row",
+            gap: 8,
+            marginTop: 5,
+            justifyContent: "space-between",
+        },
+        actionBtn: {
+            backgroundColor: "#0c6914",
+            padding: 7,
+            borderRadius: 9,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            transform: [{ translateY: -3 }, { translateX: 3 }],
+            width: 38,
         },
         deleteButton: {
-            backgroundColor: constants.COMPLEMENTARY_COLOR,
+            backgroundColor: constants.BACKGROUND_COLOR,
             padding: 7,
             borderRadius: 9,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             transform: [{ translateY: -3 }],
+            width: 38,
+        },
+        actionBtnPrimary: {
+            backgroundColor: "#6a5a6a",
+            borderWidth: 0,
+        },
+        actionBtnText: {
+            fontSize: 13,
+            fontWeight: "500",
+            color: "#5a4a5a",
+        },
+        actionBtnPrimaryText: {
+            color: "white",
         },
     });
 
     return (
         <>
-            <View style={{ flex: 1, height: 300 }}>
+            <View style={{ flex: 1, height: 600 }}>
                 {routes && routes.length > 0 ? (
                     <Swiper
                         paginationStyle={{
@@ -113,129 +179,26 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                     >
                         {routes.map((route: any, index: any) => (
                             <View key={index} style={styles.slide}>
-                                <View style={styles.headerContainer}>
-                                    <Text style={styles.header}>
-                                        Route #{index + 1} (
-                                        {new Date(
-                                            route.startDate
-                                        ).toLocaleDateString("de-DE", {
-                                            day: "2-digit",
-                                            month: "long",
-                                            year: "numeric",
-                                        })}
-                                        )
-                                    </Text>
-                                    <TouchableOpacity
-                                        style={styles.deleteButton}
-                                        activeOpacity={0.8}
-                                        onPress={() => {
-                                            setDeleteRoute(route);
-                                            setShowDialog(true);
-                                        }}
-                                    >
-                                        <AntDesign
-                                            name="delete"
-                                            size={23}
-                                            color={constants.TEXT_COLOR}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.content}>
-                                    <View>
-                                        <Text
-                                            style={{
-                                                color: constants.SECCONDARY_COLOR,
-                                            }}
-                                        >
-                                            Länge:{" "}
-                                            <Text
-                                                style={{
-                                                    color: constants.TEXT_COLOR,
-                                                }}
-                                            >
-                                                {route.distance &&
-                                                route.disabled !== "" ? (
-                                                    route.distance + " km"
-                                                ) : (
-                                                    <Text
-                                                        style={{ opacity: 0.5 }}
-                                                    >
-                                                        Unbekannt
-                                                    </Text>
-                                                )}
+                                <View style={styles.routeHeader}>
+                                    <View style={styles.routeTitleWrapper}>
+                                        <View style={styles.routeIcon}>
+                                            <Text style={styles.routeIconText}>
+                                                {index + 1}
                                             </Text>
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: constants.SECCONDARY_COLOR,
-                                            }}
-                                        >
-                                            Dauer:{" "}
-                                            <Text
-                                                style={{
-                                                    color: constants.TEXT_COLOR,
-                                                }}
-                                            >
-                                                {route.duration &&
-                                                route.duration !== "" ? (
-                                                    route.duration + " min"
-                                                ) : (
-                                                    <Text
-                                                        style={{ opacity: 0.5 }}
-                                                    >
-                                                        Unbekannt
-                                                    </Text>
-                                                )}
-                                            </Text>
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: constants.SECCONDARY_COLOR,
-                                            }}
-                                        >
-                                            Ø Speed:{" "}
-                                            <Text
-                                                style={{
-                                                    color: constants.TEXT_COLOR,
-                                                }}
-                                            >
-                                                {route.avgSpeed &&
-                                                route.avgSpeed !== "" ? (
-                                                    route.avgSpeed + " km/h"
-                                                ) : (
-                                                    <Text
-                                                        style={{ opacity: 0.5 }}
-                                                    >
-                                                        Unbekannt
-                                                    </Text>
-                                                )}
-                                            </Text>
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: constants.SECCONDARY_COLOR,
-                                            }}
-                                        >
-                                            Max. Speed:{" "}
-                                            <Text
-                                                style={{
-                                                    color: constants.TEXT_COLOR,
-                                                }}
-                                            >
-                                                {route.maxSpeed &&
-                                                route.maxSpeed !== "" ? (
-                                                    route.maxSpeed + " km/h"
-                                                ) : (
-                                                    <Text
-                                                        style={{ opacity: 0.5 }}
-                                                    >
-                                                        Unbekannt
-                                                    </Text>
-                                                )}
-                                            </Text>
+                                        </View>
+                                        <Text style={styles.routeTitleText}>
+                                            Route am{" "}
+                                            {new Date(
+                                                route.startDate
+                                            ).toLocaleDateString("de-DE", {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric",
+                                            })}
                                         </Text>
                                     </View>
                                     <TouchableOpacity
+                                        style={styles.actionBtn}
                                         onPress={() =>
                                             router.push({
                                                 pathname:
@@ -246,35 +209,89 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                                                 },
                                             })
                                         }
-                                        disabled={isMapFullScreen}
                                     >
-                                        <MapView
-                                            style={styles.map}
-                                            initialRegion={{
-                                                latitude:
-                                                    route.gpsList[0].latitude,
-                                                longitude:
-                                                    route.gpsList[0].longitude,
-                                                latitudeDelta: 0.0922,
-                                                longitudeDelta: 0.0421,
-                                            }}
-                                        >
-                                            <Polyline
-                                                coordinates={route.gpsList.map(
-                                                    (point: any) => ({
-                                                        latitude:
-                                                            point.latitude,
-                                                        longitude:
-                                                            point.longitude,
-                                                    })
-                                                )}
-                                                strokeColor={
-                                                    constants.COMPLEMENTARY_COLOR
-                                                }
-                                                strokeWidth={3}
-                                            />
-                                        </MapView>
+                                        <FontAwesome5
+                                            name="map-marker-alt"
+                                            size={21}
+                                            color={constants.FONT_COLOR}
+                                        />
                                     </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.deleteButton}
+                                        activeOpacity={0.8}
+                                        onPress={() => {
+                                            setDeleteRoute(route);
+                                            setShowDialog(true);
+                                        }}
+                                    >
+                                        <MaterialIcons
+                                            name="delete"
+                                            size={23}
+                                            color={constants.TEXT_COLOR}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.statsGrid}>
+                                    <View style={styles.statItem}>
+                                        <Text style={styles.statValue}>
+                                            {route.distance &&
+                                            route.distance !== "" ? (
+                                                route.distance + " km"
+                                            ) : (
+                                                <Text style={{ opacity: 0.5 }}>
+                                                    Unbekannt
+                                                </Text>
+                                            )}
+                                        </Text>
+                                        <Text style={styles.statLabel}>
+                                            LÄNGE
+                                        </Text>
+                                    </View>
+                                    <View style={styles.statItem}>
+                                        <Text style={styles.statValue}>
+                                            {route.avgSpeed &&
+                                            route.avgSpeed !== "" ? (
+                                                route.avgSpeed + " km/h"
+                                            ) : (
+                                                <Text style={{ opacity: 0.5 }}>
+                                                    Unbekannt
+                                                </Text>
+                                            )}
+                                        </Text>
+                                        <Text style={styles.statLabel}>
+                                            Ø GESCHW.
+                                        </Text>
+                                    </View>
+                                    <View style={styles.statItem}>
+                                        <Text style={styles.statValue}>
+                                            {route.maxSpeed &&
+                                            route.maxSpeed !== "" ? (
+                                                route.maxSpeed + " km/h"
+                                            ) : (
+                                                <Text style={{ opacity: 0.5 }}>
+                                                    Unbekannt
+                                                </Text>
+                                            )}
+                                        </Text>
+                                        <Text style={styles.statLabel}>
+                                            MAX. GESCHW.
+                                        </Text>
+                                    </View>
+                                    <View style={styles.statItem}>
+                                        <Text style={styles.statValue}>
+                                            {route.duration &&
+                                            route.duration !== "" ? (
+                                                route.duration + " min"
+                                            ) : (
+                                                <Text style={{ opacity: 0.5 }}>
+                                                    Unbekannt
+                                                </Text>
+                                            )}
+                                        </Text>
+                                        <Text style={styles.statLabel}>
+                                            DAUER
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
                         ))}
