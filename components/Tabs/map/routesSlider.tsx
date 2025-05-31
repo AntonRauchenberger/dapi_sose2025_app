@@ -45,9 +45,9 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
             margin: "auto",
             borderRadius: 15,
             borderWidth: 1,
-            borderColor: "rgba(255, 255, 255, 0.2)",
+            borderColor: "rgba(225, 220, 220, 0.4)",
             padding: 10,
-            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            backgroundColor: "rgba(210, 204, 204, 0.4)",
             backdropFilter: "blur(10px)",
         },
         content: {
@@ -94,8 +94,8 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
             marginBottom: 5,
         },
         statItem: {
-            width: "47%",
-            backgroundColor: "rgba(255,255,255,0.3)",
+            width: "49%",
+            backgroundColor: "#b9dfeb",
             borderRadius: 12,
             padding: 10,
             alignItems: "center",
@@ -130,7 +130,7 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
             width: 38,
         },
         deleteButton: {
-            backgroundColor: constants.BACKGROUND_COLOR,
+            backgroundColor: "red",
             padding: 7,
             borderRadius: 9,
             display: "flex",
@@ -227,7 +227,7 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                                         <MaterialIcons
                                             name="delete"
                                             size={23}
-                                            color={constants.TEXT_COLOR}
+                                            color={constants.FONT_COLOR}
                                         />
                                     </TouchableOpacity>
                                 </View>
