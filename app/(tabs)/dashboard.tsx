@@ -1,15 +1,50 @@
-import React, { useRef, useEffect } from "react";
-import { Text, View, StyleSheet, ScrollView, Animated } from "react-native";
+import React, { useRef, useEffect, useState } from "react";
+import {
+    Text,
+    View,
+    StyleSheet,
+    ScrollView,
+    Animated,
+    RefreshControl,
+} from "react-native";
 import constants from "../consts";
 import StatCards from "@/components/Tabs/dashboard/StatCards";
 import LiveTracker from "@/components/Tabs/dashboard/LiveTracker";
 import Diagram from "@/components/Tabs/dashboard/Diagram";
 import { useRecord } from "@/lib/Providers/RecordProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MoodMeter from "@/components/Tabs/dashboard/MoodMeter";
+import StatisticsService from "@/lib/Services/StatisticsService";
 
 export default function Dashboard() {
     const { isRecording } = useRecord();
     const blinkAnim = useRef(new Animated.Value(1)).current;
+    const [refreshing, setRefreshing] = useState(false);
+    const [diagramData, setDiagramData] = useState<number[]>([
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ]);
+    const [activityStats, setActivityStats] = useState();
+
+    const fetchData = async () => {
+        setRefreshing(true);
+        const fetchedDiagramData = await StatisticsService.getDiagramData();
+        if (fetchedDiagramData) {
+            setDiagramData(fetchedDiagramData);
+        } else {
+            console.error("Fehler beim Abrufen der Diagrammdaten");
+        }
+        const fetchedActivityStats = await StatisticsService.getActivityStats();
+        if (fetchedActivityStats) {
+            setActivityStats(fetchedActivityStats);
+        } else {
+            console.error("Fehler beim Abrufen des Aktivitäts-Status");
+        }
+        setRefreshing(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     useEffect(() => {
         Animated.loop(
@@ -27,6 +62,12 @@ export default function Dashboard() {
             ])
         ).start();
     }, []);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        fetchData();
+        setRefreshing(false);
+    };
 
     const styles = StyleSheet.create({
         container: {
@@ -83,12 +124,25 @@ export default function Dashboard() {
                     )}
                 </View>
             </View>
-            <ScrollView style={{ backgroundColor: constants.FONT_COLOR }}>
+            <ScrollView
+                style={{ backgroundColor: constants.FONT_COLOR }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
                 <Text style={styles.headline}>Aktueller Überblick</Text>
                 <Text style={styles.descText}>
                     Infos zu Meldungen, Aktivitäten & mehr.
                 </Text>
                 <StatCards />
+                <Text style={styles.headline}>Mood-Meter</Text>
+                <Text style={styles.descText}>
+                    Wie geht es deinem Hund in den letzten 7 Tagen?
+                </Text>
+                <MoodMeter activityStats={activityStats} />
                 <Text style={styles.headline}>Live-Tracker</Text>
                 <Text style={styles.descText}>
                     Distanz zwischen dir und deinem Hund.
@@ -98,7 +152,7 @@ export default function Dashboard() {
                 <Text style={styles.descText}>
                     Wie weit ihr in den letzten 14 Tagen gelaufen seid.
                 </Text>
-                <Diagram />
+                <Diagram diagramData={diagramData} isLoading={refreshing} />
             </ScrollView>
         </>
     );

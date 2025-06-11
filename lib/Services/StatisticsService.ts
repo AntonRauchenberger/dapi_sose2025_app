@@ -217,9 +217,6 @@ export default class StatisticsService {
             console.error(
                 "Fehler beim Laden der Diagramm Statistiken: " + errorData.error
             );
-            alert(
-                "Fehler beim Laden der Diagramm Statistiken. " + errorData.error
-            );
             return false;
         }
 
@@ -240,5 +237,38 @@ export default class StatisticsService {
             convertedData.unshift(0);
         }
         return convertedData;
+    }
+
+    static async getActivityStats() {
+        // TODO remove
+        // const userId = Firebase.auth?.currentUser?.uid;
+        // if (!userId) {
+        //     throw new Error("Benutzer nicht authentifiziert.");
+        // }
+        const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+
+        const apiUrl =
+            secureConstants.SERVER_URL +
+            `/api/data?type=currentactivitystate&userId=${userId}`;
+
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error(
+                "Fehler beim Laden des Aktivitätsstatus: " + errorData.error
+            );
+            return false;
+        }
+
+        const data = await response.json();
+        if (data?.restingTime) {
+            data.restingTime = +(data.restingTime / 60).toFixed(1); // convert to hours
+        }
+        if (data?.status) {
+            data.status =
+                data.status.charAt(0).toUpperCase() + data.status.slice(1);
+        }
+        return data;
     }
 }

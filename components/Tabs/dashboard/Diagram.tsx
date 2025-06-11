@@ -1,38 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { LineChart } from "react-native-chart-kit";
-import {
-    StyleSheet,
-    Dimensions,
-    View,
-    Button,
-    ActivityIndicator,
-    TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Dimensions, View, ActivityIndicator } from "react-native";
 import constants from "@/app/consts";
-import StatisticsService from "@/lib/Services/StatisticsService";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-export default function Diagram() {
+type DiagramProps = {
+    diagramData: number[];
+    isLoading: boolean;
+};
+
+export default function Diagram({ diagramData, isLoading }: DiagramProps) {
     const screenWidth = Dimensions.get("window").width;
-    const [isLoading, setIsLoading] = useState(false);
-    const [apiData, setApiData] = useState<number[]>([
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    ]);
-
-    const fetchData = async () => {
-        setIsLoading(true);
-        const fetchedData = await StatisticsService.getDiagramData();
-        if (fetchedData) {
-            setApiData(fetchedData);
-        } else {
-            console.error("Fehler beim Abrufen der Diagrammdaten");
-        }
-        setIsLoading(false);
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     const getLast14Weekdays = () => {
         const today = new Date();
@@ -58,7 +35,7 @@ export default function Diagram() {
         labels: getLast14Weekdays(),
         datasets: [
             {
-                data: apiData,
+                data: diagramData,
                 strokeWidth: 2,
                 color: (opacity = 1) =>
                     `${
@@ -114,18 +91,7 @@ export default function Diagram() {
 
     return (
         <View style={[styles.container, constants.SHADOW_STYLE]}>
-            <TouchableOpacity
-                onPress={fetchData}
-                style={styles.refreshButton}
-                activeOpacity={0.7}
-            >
-                <MaterialIcons
-                    name="refresh"
-                    size={28}
-                    color={constants.TEXT_COLOR}
-                />
-            </TouchableOpacity>
-            {apiData && !isLoading ? (
+            {diagramData && !isLoading ? (
                 <LineChart
                     data={data}
                     width={screenWidth - 32}

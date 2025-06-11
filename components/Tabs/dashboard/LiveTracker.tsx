@@ -150,7 +150,7 @@ export default function Header() {
     });
 
     return (
-        <View style={styles.tracker}>
+        <View style={[styles.tracker, constants.SHADOW_STYLE]}>
             <View style={styles.gpsContainer}>
                 <View style={styles.mapIconContainer}>
                     <FontAwesome5
