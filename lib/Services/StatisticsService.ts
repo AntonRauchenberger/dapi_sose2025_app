@@ -7,7 +7,11 @@ import { useStatistics } from "../Providers/StatisticsProvider";
 export default class StatisticsService {
     static async getStatistics() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            if (jsonValue === "") {
+                StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+            }
             return jsonValue != null ? JSON.parse(jsonValue) : {};
         } catch (e) {
             console.error("Fehler beim Laden:", e);
@@ -30,16 +34,10 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
 
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -61,16 +59,10 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
 
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -92,16 +84,10 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
 
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -126,16 +112,10 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
 
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -160,25 +140,17 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
 
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
         }
     }
 
-    // TODO einsetzen beim login und TESTEN
     static async synchronizeStatistics() {
-        const { statistics } = useStatistics();
         const user = Firebase.auth?.currentUser;
         if (!user) throw new Error("no user logged in");
         const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
@@ -199,12 +171,10 @@ export default class StatisticsService {
     }
 
     static async getDiagramData() {
-        // TODO remove
-        // const userId = Firebase.auth?.currentUser?.uid;
-        // if (!userId) {
-        //     throw new Error("Benutzer nicht authentifiziert.");
-        // }
-        const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+        const userId = Firebase.auth?.currentUser?.uid;
+        if (!userId) {
+            throw new Error("Benutzer nicht authentifiziert.");
+        }
 
         const apiUrl =
             secureConstants.SERVER_URL +
@@ -240,12 +210,10 @@ export default class StatisticsService {
     }
 
     static async getActivityStats() {
-        // TODO remove
-        // const userId = Firebase.auth?.currentUser?.uid;
-        // if (!userId) {
-        //     throw new Error("Benutzer nicht authentifiziert.");
-        // }
-        const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+        const userId = Firebase.auth?.currentUser?.uid;
+        if (!userId) {
+            throw new Error("Benutzer nicht authentifiziert.");
+        }
 
         const apiUrl =
             secureConstants.SERVER_URL +

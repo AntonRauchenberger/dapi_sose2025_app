@@ -19,12 +19,10 @@ export default class RouteService {
     // starts a new route tracking
     static async startRoute() {
         try {
-            // TODO remove
-            // const userId = Firebase.auth?.currentUser?.uid;
-            // if (!userId) {
-            //     throw new Error("Benutzer nicht authentifiziert.");
-            // }
-            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
 
             const routeId = RouteService.simpleHash(
                 new Date().toISOString() + userId
@@ -56,12 +54,10 @@ export default class RouteService {
         try {
             // Firebase
             const db = Firebase.db;
-            // TODO remove comments
-            // const userId = Firebase.auth?.currentUser?.uid;
-            // if (!userId) {
-            //     throw new Error("Benutzer nicht authentifiziert.");
-            // }
-            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
 
             const userRoutesRef = doc(db, "routes", userId);
             await updateDoc(userRoutesRef, {
@@ -99,12 +95,10 @@ export default class RouteService {
         try {
             // Firebase
             const db = Firebase.db;
-            // TODO remove comments
-            // const userId = Firebase.auth?.currentUser?.uid;
-            // if (!userId) {
-            //     throw new Error("Benutzer nicht authentifiziert.");
-            // }
-            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
 
             const userRoutesRef = doc(db, "routes", userId);
             const userRoutesDoc = await getDoc(userRoutesRef);
@@ -159,12 +153,10 @@ export default class RouteService {
 
     static async stopRoute(routeId: string) {
         try {
-            // TODO remove
-            // const userId = Firebase.auth?.currentUser?.uid;
-            // if (!userId) {
-            //     throw new Error("Benutzer nicht authentifiziert.");
-            // }
-            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
 
             const apiUrl =
                 secureConstants.SERVER_URL +
@@ -208,8 +200,7 @@ export default class RouteService {
     }
 
     static async getRoutes() {
-        const storedRoutes = await AsyncStorage.getItem("savedRoutes");
-
+        let storedRoutes = await AsyncStorage.getItem("savedRoutes");
         let routes: any[] = [];
 
         if (storedRoutes) {
@@ -221,6 +212,24 @@ export default class RouteService {
             } catch (e) {
                 console.warn(
                     "Konnte gespeicherte Routen nicht parsen. Überschreibe."
+                );
+            }
+        }
+
+        // fallback to firestore
+        if (routes.length === 0) {
+            const user = Firebase.auth?.currentUser;
+            if (!user) throw new Error("no user logged in");
+
+            const userDocRef = doc(Firebase.db, "routes", user.uid);
+            const docSnap = await getDoc(userDocRef);
+
+            const firestoreRoutes = docSnap.data()?.routes;
+            if (Array.isArray(firestoreRoutes)) {
+                routes = firestoreRoutes;
+                await AsyncStorage.setItem(
+                    "savedRoutes",
+                    JSON.stringify(routes)
                 );
             }
         }

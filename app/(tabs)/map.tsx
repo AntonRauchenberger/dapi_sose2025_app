@@ -187,7 +187,8 @@ export default function Map() {
                                     </View>
                                 </Marker>
                             )}
-                            {poopMarkers &&
+                            {poopMarkers !== null &&
+                                poopMarkers !== undefined &&
                                 poopMarkers.map(
                                     (location: any, index: number) => {
                                         if (

@@ -11,16 +11,18 @@ import {
 import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NoteService from "@/lib/Services/NoteService";
+import Firebase from "@/lib/Firebase/Firebase";
 
 export const NotesBottomSheet = ({ isGaleryMode = true, dogName }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [notes, setNotes] = useState<string | null>();
+    const [notes, setNotes] = useState<any>();
     const modalizeRef = useRef<Modalize>(null);
 
     const handleNotesInput = async (input: string) => {
         setNotes(input);
         try {
-            await AsyncStorage.setItem("@dogNotes", input);
+            await NoteService.saveNotes(Firebase, input);
         } catch (e) {
             console.error("Fehler beim Speichern der Notizen:", e);
         }
@@ -29,7 +31,7 @@ export const NotesBottomSheet = ({ isGaleryMode = true, dogName }) => {
     useEffect(() => {
         const loadNotes = async () => {
             try {
-                const savedNotes = await AsyncStorage.getItem("@dogNotes");
+                const savedNotes = await NoteService.getNotes(Firebase);
                 if (savedNotes !== null) {
                     setNotes(savedNotes);
                 }

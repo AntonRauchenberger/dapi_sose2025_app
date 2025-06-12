@@ -6,8 +6,12 @@ import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 export default class PoopService {
     static async getPoopMarkerList() {
         try {
-            const jsonValue = await AsyncStorage.getItem("poopMarkerList");
-            return jsonValue != null ? JSON.parse(jsonValue) : [];
+            let jsonValue: any = await AsyncStorage.getItem("poopMarkerList");
+            if (jsonValue === "") {
+                await PoopService.synchronizePoopData();
+                jsonValue = AsyncStorage.getItem("poopMarkerList");
+            }
+            return jsonValue ? JSON.parse(jsonValue) : [];
         } catch (e) {
             console.error("Fehler beim Laden:", e);
             return [];
@@ -41,25 +45,20 @@ export default class PoopService {
 
     static async synchronizePoopData() {
         try {
-            // Aktuellen User holen
             const user = Firebase.auth?.currentUser;
             if (!user) throw new Error("no user logged in");
 
-            // Dokumentreferenz in Firestore
             const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
             const docSnap = await getDoc(userPoopRef);
 
-            // Prüfen, ob Daten vorhanden sind
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 const markers = data.markers || [];
 
-                // In AsyncStorage speichern
                 await AsyncStorage.setItem(
                     "poopMarkerList",
                     JSON.stringify(markers)
                 );
-                console.log("Synchronisierung abgeschlossen.");
             } else {
                 console.log("Kein Marker-Dokument gefunden.");
             }

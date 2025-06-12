@@ -1,7 +1,6 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "../Firebase/Firebase";
-import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 
@@ -91,7 +90,7 @@ export default class ImageService {
         try {
             // First tryo to load images from AsyncStorage
             const storedImages = await AsyncStorage.getItem("savedImages");
-            if (storedImages) {
+            if (storedImages !== "") {
                 return JSON.parse(storedImages);
             }
 
@@ -119,9 +118,5 @@ export default class ImageService {
             console.error("Fehler beim Laden der gespeicherten Bilder:", error);
             return [];
         }
-    }
-
-    static async getImageFromServer() {
-        // TODO
     }
 }

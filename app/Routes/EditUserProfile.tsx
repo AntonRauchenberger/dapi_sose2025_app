@@ -15,14 +15,14 @@ import constants from "../consts";
 import { useRouter } from "expo-router";
 import Dialog from "react-native-dialog";
 import * as Haptics from "expo-haptics";
-import { useSession } from "@/lib/Authentification/ctx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AuthentificationService from "@/lib/Services/AuthentificationService";
+import Firebase from "@/lib/Firebase/Firebase";
 
 export default function EditUserProfile() {
     const router = useRouter();
-    const { signOut } = useSession();
     const [profile, setProfile] = useState({
         name: "",
         email: "",
@@ -170,7 +170,7 @@ export default function EditUserProfile() {
                             Haptics.NotificationFeedbackType.Success
                         );
                         setDialogVisible(false);
-                        signOut();
+                        AuthentificationService.signout(Firebase);
                         router.navigate("/start");
                     }}
                 />
