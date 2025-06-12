@@ -140,7 +140,7 @@ export default function Dashboard() {
                 <StatCards />
                 <Text style={styles.headline}>Mood-Meter</Text>
                 <Text style={styles.descText}>
-                    Wie geht es deinem Hund in den letzten 7 Tagen?
+                    Wie geht es deinem Hund zur Zeit?
                 </Text>
                 <MoodMeter activityStats={activityStats} />
                 <Text style={styles.headline}>Live-Tracker</Text>

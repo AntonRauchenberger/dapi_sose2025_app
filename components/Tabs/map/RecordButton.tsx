@@ -25,7 +25,7 @@ import StatisticsService from "@/lib/Services/StatisticsService";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 import { useRecord } from "@/lib/Providers/RecordProvider";
 
-export default function RecordButton({ setReloadSlider }) {
+export default function RecordButton({ setReloadSlider, loadData }) {
     const [finishedRoute, setFinishedRoute] = useState(false);
     const [poopButtonEnabled, setPoopButtonEnabled] = useState(true);
     const [pooped, setPooped] = useState(false);
@@ -75,13 +75,13 @@ export default function RecordButton({ setReloadSlider }) {
     };
 
     const handlePoopButton = async () => {
-        // TODO refresh map
         playSound();
         setPooped(true);
 
         await PoopService.savePoop();
         await StatisticsService.addPoop();
         await refreshStatistics();
+        await loadData();
 
         setTimeout(() => {
             setPooped(false);

@@ -1,7 +1,7 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "../Firebase/Firebase";
-import LocationService from "./LocationService";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
 export default class PoopService {
     static async getPoopMarkerList() {
@@ -32,9 +32,9 @@ export default class PoopService {
             }
         };
 
-        const currentLocation = await LocationService.getCurrentUserLocation();
+        const { dogLocation } = useCurrentData();
         const poopMarkerList = await PoopService.getPoopMarkerList();
-        poopMarkerList.push(currentLocation);
+        poopMarkerList.push(dogLocation);
         await savePoopMarkerList(poopMarkerList);
         await AsyncStorage.setItem("lastPoopTime", Date.now().toString());
     }

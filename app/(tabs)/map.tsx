@@ -20,19 +20,19 @@ export default function Map() {
     const [initialRegion, setInitialRegion] = useState<any>(null);
     const [reloadSlider, setReloadSlider] = useState(false);
 
+    const loadData = async () => {
+        const dProfile = await AsyncStorage.getItem("dogProfile");
+        setDogProfile(JSON.parse(dProfile || "{}"));
+
+        const uLocation = await LocationService.getCurrentUserLocation();
+        setUserLocation(uLocation);
+
+        const pMarkers = await PoopService.getPoopMarkerList();
+        setPoopMarkers(pMarkers);
+    };
+
     useEffect(() => {
-        async function handle() {
-            const dProfile = await AsyncStorage.getItem("dogProfile");
-            setDogProfile(JSON.parse(dProfile || "{}"));
-
-            const uLocation = await LocationService.getCurrentUserLocation();
-            setUserLocation(uLocation);
-
-            const pMarkers = await PoopService.getPoopMarkerList();
-            setPoopMarkers(pMarkers);
-        }
-
-        handle();
+        loadData();
     }, []);
 
     useEffect(() => {
@@ -259,7 +259,10 @@ export default function Map() {
                     marginTop: 21,
                 }}
             >
-                <RecordButton setReloadSlider={setReloadSlider} />
+                <RecordButton
+                    setReloadSlider={setReloadSlider}
+                    loadData={loadData}
+                />
             </View>
         </View>
     );
