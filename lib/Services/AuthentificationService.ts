@@ -6,6 +6,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DogService from "../Services/DogService";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import NoteService from "./NoteService";
 
 export default class AuthentificationService {
     static async saveName(Firebase: any, name: string) {
@@ -67,6 +68,14 @@ export default class AuthentificationService {
         }
     }
 
+    private static async fetchData(Firebase: any, user: any, userName: any) {
+        await AsyncStorage.setItem(
+            "userProfile",
+            JSON.stringify({ email: user.email, name: userName })
+        );
+        await NoteService.getNotes(Firebase);
+    }
+
     static async login(Firebase: any, email: any, password: any) {
         try {
             const userCredential = await signInWithEmailAndPassword(
@@ -80,9 +89,10 @@ export default class AuthentificationService {
                 const userName = await AuthentificationService.getName(
                     Firebase
                 );
-                await AsyncStorage.setItem(
-                    "userProfile",
-                    JSON.stringify({ email: user.email, name: userName })
+                await AuthentificationService.fetchData(
+                    Firebase,
+                    user,
+                    userName
                 );
                 return true;
             } else {

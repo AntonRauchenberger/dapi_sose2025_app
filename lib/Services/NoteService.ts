@@ -8,7 +8,7 @@ export default class NoteService {
             if (!user) throw new Error("no user logged in");
 
             const userDocRef = doc(Firebase.db, "notes", user.uid);
-            setDoc(userDocRef, notes);
+            await setDoc(userDocRef, { note: notes });
             await AsyncStorage.setItem("@dogNotes", notes);
         } catch (error) {
             console.error("Error saving dog data: ", error);
@@ -21,7 +21,7 @@ export default class NoteService {
             const notes = await AsyncStorage.getItem("@dogNotes");
 
             // get from db if not in async storage
-            if (notes === "") {
+            if (!notes || notes === "") {
                 const user = Firebase.auth?.currentUser;
                 if (!user) throw new Error("no user logged in");
 
@@ -29,12 +29,10 @@ export default class NoteService {
                 const docSnap = await getDoc(userDocRef);
 
                 if (docSnap.exists()) {
-                    const notes = docSnap.data();
-                    await AsyncStorage.setItem(
-                        "@dogNotes",
-                        JSON.stringify(notes)
-                    );
-                    return notes;
+                    const data = docSnap.data();
+                    const note = data.note || "";
+                    await AsyncStorage.setItem("@dogNotes", note);
+                    return note;
                 } else {
                     console.warn("No notes found for this user.");
                     return "";

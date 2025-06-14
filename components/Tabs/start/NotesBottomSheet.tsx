@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Modalize } from "react-native-modalize";
 import * as Haptics from "expo-haptics";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import NoteService from "@/lib/Services/NoteService";
 import Firebase from "@/lib/Firebase/Firebase";
 
