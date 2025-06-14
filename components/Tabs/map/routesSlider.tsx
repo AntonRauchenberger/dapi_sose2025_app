@@ -4,7 +4,6 @@ import Swiper from "react-native-swiper";
 import constants from "@/app/consts";
 import RouteService from "@/lib/Services/RouteService";
 import { useRouter } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import Dialog from "react-native-dialog";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -160,7 +159,7 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
                     <Swiper
                         paginationStyle={{
                             transform: "translateY(45px)",
-                            display: routes.length > 8 ? "none" : "block",
+                            display: "none",
                         }}
                         activeDot={
                             <View

@@ -6,41 +6,50 @@ import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 export default class PoopService {
     static async getPoopMarkerList() {
         try {
-            let jsonValue: any = await AsyncStorage.getItem("poopMarkerList");
-            if (jsonValue === "") {
+            const user = Firebase.auth?.currentUser;
+            if (user) {
                 await PoopService.synchronizePoopData();
-                jsonValue = AsyncStorage.getItem("poopMarkerList");
             }
-            return jsonValue ? JSON.parse(jsonValue) : [];
+            const jsonValue = await AsyncStorage.getItem("poopMarkerList");
+            return jsonValue != null ? JSON.parse(jsonValue) : {};
         } catch (e) {
             console.error("Fehler beim Laden:", e);
             return [];
         }
     }
 
-    static async savePoop() {
-        const savePoopMarkerList = async (list: []) => {
-            try {
-                const jsonValue = JSON.stringify(list);
+    static async savePoop(dogLocation: any) {
+        try {
+            const savePoopMarkerList = async (list: []) => {
+                try {
+                    const jsonValue = JSON.stringify(list);
+                    console.log(list);
+                    console.log(jsonValue);
 
-                // firestore
-                const user = Firebase.auth?.currentUser;
-                if (!user) throw new Error("no user logged in");
-                const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-                await setDoc(userPoopRef, { markers: list });
+                    // firestore
+                    const user = Firebase.auth?.currentUser;
+                    if (!user) throw new Error("no user logged in");
+                    const userPoopRef = doc(
+                        Firebase.db,
+                        "poopMarkers",
+                        user.uid
+                    );
+                    await setDoc(userPoopRef, { markers: list });
 
-                // async storage
-                await AsyncStorage.setItem("poopMarkerList", jsonValue);
-            } catch (e) {
-                console.error("Fehler beim Speichern:", e);
-            }
-        };
+                    // async storage
+                    await AsyncStorage.setItem("poopMarkerList", jsonValue);
+                } catch (e) {
+                    console.error("Fehler beim Speichern:", e);
+                }
+            };
 
-        const { dogLocation } = useCurrentData();
-        const poopMarkerList = await PoopService.getPoopMarkerList();
-        poopMarkerList.push(dogLocation);
-        await savePoopMarkerList(poopMarkerList);
-        await AsyncStorage.setItem("lastPoopTime", Date.now().toString());
+            let poopMarkerList = await PoopService.getPoopMarkerList();
+            poopMarkerList.push(dogLocation);
+            await savePoopMarkerList(poopMarkerList);
+            await AsyncStorage.setItem("lastPoopTime", Date.now().toString());
+        } catch (error) {
+            console.error("Fehler beim speichern des Poops:", error);
+        }
     }
 
     static async synchronizePoopData() {
@@ -53,14 +62,16 @@ export default class PoopService {
 
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                const markers = data.markers || [];
-
                 await AsyncStorage.setItem(
                     "poopMarkerList",
-                    JSON.stringify(markers)
+                    JSON.stringify(data?.markers || {})
                 );
             } else {
                 console.log("Kein Marker-Dokument gefunden.");
+                await AsyncStorage.setItem(
+                    "poopMarkerList",
+                    JSON.stringify({})
+                );
             }
         } catch (e) {
             console.error("Firestore Fehler:", e);

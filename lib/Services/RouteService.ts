@@ -200,40 +200,45 @@ export default class RouteService {
     }
 
     static async getRoutes() {
-        let storedRoutes = await AsyncStorage.getItem("savedRoutes");
-        let routes: any[] = [];
+        try {
+            let storedRoutes = await AsyncStorage.getItem("savedRoutes");
+            let routes: any[] = [];
 
-        if (storedRoutes) {
-            try {
-                const parsed = JSON.parse(storedRoutes);
-                if (Array.isArray(parsed)) {
-                    routes = parsed;
+            if (storedRoutes && storedRoutes !== "") {
+                try {
+                    const parsed = JSON.parse(storedRoutes);
+                    if (Array.isArray(parsed)) {
+                        routes = parsed;
+                    }
+                } catch (e) {
+                    console.warn(
+                        "Konnte gespeicherte Routen nicht parsen. Überschreibe."
+                    );
                 }
-            } catch (e) {
-                console.warn(
-                    "Konnte gespeicherte Routen nicht parsen. Überschreibe."
-                );
             }
-        }
 
-        // fallback to firestore
-        if (routes.length === 0) {
-            const user = Firebase.auth?.currentUser;
-            if (!user) throw new Error("no user logged in");
+            // fallback to firestore
+            if (routes.length === 0) {
+                const user = Firebase.auth?.currentUser;
+                if (!user) throw new Error("no user logged in");
 
-            const userDocRef = doc(Firebase.db, "routes", user.uid);
-            const docSnap = await getDoc(userDocRef);
+                const userDocRef = doc(Firebase.db, "routes", user.uid);
+                const docSnap = await getDoc(userDocRef);
 
-            const firestoreRoutes = docSnap.data()?.routes;
-            if (Array.isArray(firestoreRoutes)) {
-                routes = firestoreRoutes;
-                await AsyncStorage.setItem(
-                    "savedRoutes",
-                    JSON.stringify(routes)
-                );
+                const firestoreRoutes = docSnap.data()?.routes;
+                if (Array.isArray(firestoreRoutes)) {
+                    routes = firestoreRoutes;
+                    await AsyncStorage.setItem(
+                        "savedRoutes",
+                        JSON.stringify(routes)
+                    );
+                }
             }
-        }
 
-        return routes;
+            return routes;
+        } catch (error) {
+            console.error("Fehler beim Holen der Routen: " + error);
+            return [];
+        }
     }
 }

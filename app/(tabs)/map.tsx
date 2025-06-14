@@ -55,6 +55,10 @@ export default function Map() {
         }
     }, [userLocation]);
 
+    useEffect(() => {
+        console.log(poopMarkers);
+    }, [poopMarkers]);
+
     const styles = StyleSheet.create({
         headline: {
             fontSize: 19,
@@ -128,7 +132,9 @@ export default function Map() {
     return (
         <View style={{ backgroundColor: constants.FONT_COLOR }}>
             <Header />
-            <Text style={styles.headline}>Hunde-Tracker</Text>
+            <Text style={[styles.headline, { marginTop: 8 }]}>
+                Hunde-Tracker
+            </Text>
             <Text style={styles.descText}>
                 Der Standort deines Hundes und dein Eigener.
             </Text>
@@ -257,7 +263,7 @@ export default function Map() {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: 21,
+                    marginTop: 7,
                 }}
             >
                 <RecordButton

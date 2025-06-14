@@ -88,7 +88,6 @@ export default class ImageService {
         try {
             // First tryo to load images from AsyncStorage
             const storedImages = await AsyncStorage.getItem("savedImages");
-            console.log(storedImages);
             if (storedImages && storedImages !== "") {
                 return JSON.parse(storedImages);
             }
