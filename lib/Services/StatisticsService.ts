@@ -21,8 +21,18 @@ export default class StatisticsService {
 
     static async addAlert() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const alertCount = parsedValue.alertCount || 0;
             const newAlertCount = alertCount + 1;
             const newStatistics = { ...parsedValue, alertCount: newAlertCount };
@@ -34,9 +44,6 @@ export default class StatisticsService {
             );
 
             // Firestore
-            const user = Firebase.auth?.currentUser;
-            if (!user) throw new Error("no user logged in");
-
             const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
@@ -46,8 +53,18 @@ export default class StatisticsService {
 
     static async addPoop() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const poopCount = parsedValue.poopCount || 0;
             const newPoopCount = poopCount + 1;
             const newStatistics = { ...parsedValue, poopCount: newPoopCount };
@@ -59,9 +76,6 @@ export default class StatisticsService {
             );
 
             // Firestore
-            const user = Firebase.auth?.currentUser;
-            if (!user) throw new Error("no user logged in");
-
             const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
@@ -71,8 +85,18 @@ export default class StatisticsService {
 
     static async addImage() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const imageCount = parsedValue.imageCount || 0;
             const newImageCount = imageCount + 1;
             const newStatistics = { ...parsedValue, imageCount: newImageCount };
@@ -84,9 +108,6 @@ export default class StatisticsService {
             );
 
             // Firestore
-            const user = Firebase.auth?.currentUser;
-            if (!user) throw new Error("no user logged in");
-
             const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
@@ -96,8 +117,18 @@ export default class StatisticsService {
 
     static async addDistance(distance: number) {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const distanceCount = parsedValue.distanceCount || 0;
             const newDistanceCount = distanceCount + distance;
             const newStatistics = {
@@ -112,9 +143,6 @@ export default class StatisticsService {
             );
 
             // Firestore
-            const user = Firebase.auth?.currentUser;
-            if (!user) throw new Error("no user logged in");
-
             const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
@@ -124,8 +152,18 @@ export default class StatisticsService {
 
     static async subDistance(distance: number) {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const distanceCount = parsedValue.distanceCount || 0;
             const newDistanceCount = distanceCount - distance;
             const newStatistics = {
@@ -140,9 +178,6 @@ export default class StatisticsService {
             );
 
             // Firestore
-            const user = Firebase.auth?.currentUser;
-            if (!user) throw new Error("no user logged in");
-
             const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {

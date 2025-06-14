@@ -79,7 +79,6 @@ export default function RecordButton({ setReloadSlider, loadData }) {
     const handlePoopButton = async () => {
         playSound();
         setPooped(true);
-        console.log("saving poop");
         await PoopService.savePoop(dogLocation);
         await StatisticsService.addPoop();
         await refreshStatistics();

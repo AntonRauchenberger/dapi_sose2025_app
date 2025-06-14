@@ -23,8 +23,6 @@ export default class PoopService {
             const savePoopMarkerList = async (list: []) => {
                 try {
                     const jsonValue = JSON.stringify(list);
-                    console.log(list);
-                    console.log(jsonValue);
 
                     // firestore
                     const user = Firebase.auth?.currentUser;

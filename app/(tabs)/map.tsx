@@ -55,10 +55,6 @@ export default function Map() {
         }
     }, [userLocation]);
 
-    useEffect(() => {
-        console.log(poopMarkers);
-    }, [poopMarkers]);
-
     const styles = StyleSheet.create({
         headline: {
             fontSize: 19,
