@@ -1,7 +1,6 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "../Firebase/Firebase";
-import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 
@@ -18,6 +17,7 @@ export default class ImageService {
                 imageUri.split("/").pop()?.split("?")[0] || "bild.jpg";
             const localUri = FileSystem.documentDirectory + fileName;
 
+            let asset;
             if (imageUri.startsWith("http")) {
                 const downloadResult = await FileSystem.downloadAsync(
                     imageUri,
@@ -30,20 +30,17 @@ export default class ImageService {
                     return;
                 }
 
-                await MediaLibrary.createAssetAsync(downloadResult.uri);
+                asset = await MediaLibrary.createAssetAsync(downloadResult.uri);
             } else {
                 await FileSystem.copyAsync({
                     from: imageUri,
                     to: localUri,
                 });
 
-                await MediaLibrary.createAssetAsync(localUri);
+                asset = await MediaLibrary.createAssetAsync(localUri);
             }
 
-            const asset = await MediaLibrary.createAssetAsync(localUri);
             await MediaLibrary.createAlbumAsync("Download", asset, false);
-
-            alert("Bild wurde erfolgreich gespeichert!");
         } catch (error) {
             console.error("Fehler beim Speichern:", error);
             alert("Download fehlgeschlagen.");
@@ -91,7 +88,7 @@ export default class ImageService {
         try {
             // First tryo to load images from AsyncStorage
             const storedImages = await AsyncStorage.getItem("savedImages");
-            if (storedImages) {
+            if (storedImages && storedImages !== "") {
                 return JSON.parse(storedImages);
             }
 
@@ -119,9 +116,5 @@ export default class ImageService {
             console.error("Fehler beim Laden der gespeicherten Bilder:", error);
             return [];
         }
-    }
-
-    static async getImageFromServer() {
-        // TODO
     }
 }

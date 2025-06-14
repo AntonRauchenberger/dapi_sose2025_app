@@ -128,7 +128,9 @@ export default function Map() {
     return (
         <View style={{ backgroundColor: constants.FONT_COLOR }}>
             <Header />
-            <Text style={styles.headline}>Hunde-Tracker</Text>
+            <Text style={[styles.headline, { marginTop: 8 }]}>
+                Hunde-Tracker
+            </Text>
             <Text style={styles.descText}>
                 Der Standort deines Hundes und dein Eigener.
             </Text>
@@ -187,7 +189,8 @@ export default function Map() {
                                     </View>
                                 </Marker>
                             )}
-                            {poopMarkers &&
+                            {poopMarkers !== null &&
+                                poopMarkers !== undefined &&
                                 poopMarkers.map(
                                     (location: any, index: number) => {
                                         if (
@@ -256,7 +259,7 @@ export default function Map() {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: 21,
+                    marginTop: 7,
                 }}
             >
                 <RecordButton

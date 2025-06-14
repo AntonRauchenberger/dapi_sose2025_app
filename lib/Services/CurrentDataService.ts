@@ -1,16 +1,15 @@
 import secureConstants from "@/app/secureConsts";
 import { fetch } from "expo/fetch";
+import Firebase from "../Firebase/Firebase";
 
 export default class CurrentDataService {
     // gets current dog location from the server
     static async getCurrentDogData() {
         try {
-            // TODO remove
-            // const userId = Firebase.auth?.currentUser?.uid;
-            // if (!userId) {
-            //     throw new Error("Benutzer nicht authentifiziert.");
-            // }
-            const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+            const userId = Firebase.auth?.currentUser?.uid;
+            if (!userId) {
+                throw new Error("Benutzer nicht authentifiziert.");
+            }
             const apiUrl =
                 secureConstants.SERVER_URL +
                 `/api/data?type=currentdata&userId=${userId}`;

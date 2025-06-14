@@ -7,6 +7,10 @@ import { useStatistics } from "../Providers/StatisticsProvider";
 export default class StatisticsService {
     static async getStatistics() {
         try {
+            const user = Firebase.auth?.currentUser;
+            if (user) {
+                await StatisticsService.synchronizeStatistics();
+            }
             const jsonValue = await AsyncStorage.getItem("statistics");
             return jsonValue != null ? JSON.parse(jsonValue) : {};
         } catch (e) {
@@ -17,8 +21,18 @@ export default class StatisticsService {
 
     static async addAlert() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const alertCount = parsedValue.alertCount || 0;
             const newAlertCount = alertCount + 1;
             const newStatistics = { ...parsedValue, alertCount: newAlertCount };
@@ -30,16 +44,7 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -48,8 +53,18 @@ export default class StatisticsService {
 
     static async addPoop() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const poopCount = parsedValue.poopCount || 0;
             const newPoopCount = poopCount + 1;
             const newStatistics = { ...parsedValue, poopCount: newPoopCount };
@@ -61,16 +76,7 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -79,8 +85,18 @@ export default class StatisticsService {
 
     static async addImage() {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const imageCount = parsedValue.imageCount || 0;
             const newImageCount = imageCount + 1;
             const newStatistics = { ...parsedValue, imageCount: newImageCount };
@@ -92,16 +108,7 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -110,8 +117,18 @@ export default class StatisticsService {
 
     static async addDistance(distance: number) {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const distanceCount = parsedValue.distanceCount || 0;
             const newDistanceCount = distanceCount + distance;
             const newStatistics = {
@@ -126,16 +143,7 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
@@ -144,8 +152,18 @@ export default class StatisticsService {
 
     static async subDistance(distance: number) {
         try {
-            const jsonValue = await AsyncStorage.getItem("statistics");
-            const parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            const user = Firebase.auth?.currentUser;
+            if (!user) return;
+
+            let jsonValue = await AsyncStorage.getItem("statistics");
+            let parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+            if (!parsedValue || Object.keys(parsedValue).length === 0) {
+                await StatisticsService.synchronizeStatistics();
+                jsonValue = await AsyncStorage.getItem("statistics");
+                parsedValue = jsonValue != null ? JSON.parse(jsonValue) : {};
+            }
+
             const distanceCount = parsedValue.distanceCount || 0;
             const newDistanceCount = distanceCount - distance;
             const newStatistics = {
@@ -160,38 +178,25 @@ export default class StatisticsService {
             );
 
             // Firestore
-            // TODO remove comment
-            // const user = Firebase.auth?.currentUser;
-            // if (!user) throw new Error("no user logged in");
-            // const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-
-            const userStatisticsRef = doc(
-                Firebase.db,
-                "statistics",
-                secureConstants.ADMIN_USER_ID
-            );
+            const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
             await setDoc(userStatisticsRef, newStatistics);
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
         }
     }
 
-    // TODO einsetzen beim login und TESTEN
     static async synchronizeStatistics() {
-        const { statistics } = useStatistics();
         const user = Firebase.auth?.currentUser;
-        if (!user) throw new Error("no user logged in");
+        if (!user) return;
         const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
 
         const docSnap = await getDoc(userStatisticsRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            const statisticsData = data.statistics || {};
-
             // In AsyncStorage speichern
             await AsyncStorage.setItem(
                 "statistics",
-                JSON.stringify(statisticsData)
+                JSON.stringify(data || {})
             );
         } else {
             await AsyncStorage.setItem("statistics", JSON.stringify({}));
@@ -199,12 +204,10 @@ export default class StatisticsService {
     }
 
     static async getDiagramData() {
-        // TODO remove
-        // const userId = Firebase.auth?.currentUser?.uid;
-        // if (!userId) {
-        //     throw new Error("Benutzer nicht authentifiziert.");
-        // }
-        const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+        const userId = Firebase.auth?.currentUser?.uid;
+        if (!userId) {
+            throw new Error("Benutzer nicht authentifiziert.");
+        }
 
         const apiUrl =
             secureConstants.SERVER_URL +
@@ -240,12 +243,10 @@ export default class StatisticsService {
     }
 
     static async getActivityStats() {
-        // TODO remove
-        // const userId = Firebase.auth?.currentUser?.uid;
-        // if (!userId) {
-        //     throw new Error("Benutzer nicht authentifiziert.");
-        // }
-        const userId = "jEGrvfPcYMMuuMgMVCZeOhaSTz03";
+        const userId = Firebase.auth?.currentUser?.uid;
+        if (!userId) {
+            throw new Error("Benutzer nicht authentifiziert.");
+        }
 
         const apiUrl =
             secureConstants.SERVER_URL +

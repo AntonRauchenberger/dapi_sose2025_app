@@ -44,7 +44,7 @@ export default class DogService {
     static async getDogName() {
         try {
             const dogProfile = await AsyncStorage.getItem("dogProfile");
-            if (dogProfile) {
+            if (dogProfile !== "") {
                 const parsedProfile = JSON.parse(dogProfile);
                 return parsedProfile.name || "Unknown Dog";
             } else {

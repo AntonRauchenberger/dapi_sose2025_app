@@ -15,6 +15,7 @@ import { useRecord } from "@/lib/Providers/RecordProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MoodMeter from "@/components/Tabs/dashboard/MoodMeter";
 import StatisticsService from "@/lib/Services/StatisticsService";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
 export default function Dashboard() {
     const { isRecording } = useRecord();
@@ -24,6 +25,7 @@ export default function Dashboard() {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]);
     const [activityStats, setActivityStats] = useState();
+    const { refreshStatistics } = useStatistics();
 
     const fetchData = async () => {
         setRefreshing(true);
@@ -39,6 +41,7 @@ export default function Dashboard() {
         } else {
             console.error("Fehler beim Abrufen des Aktivitäts-Status");
         }
+        await refreshStatistics();
         setRefreshing(false);
     };
 

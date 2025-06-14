@@ -24,6 +24,7 @@ import RouteService from "@/lib/Services/RouteService";
 import StatisticsService from "@/lib/Services/StatisticsService";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 import { useRecord } from "@/lib/Providers/RecordProvider";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
 export default function RecordButton({ setReloadSlider, loadData }) {
     const [finishedRoute, setFinishedRoute] = useState(false);
@@ -35,6 +36,7 @@ export default function RecordButton({ setReloadSlider, loadData }) {
     const particleRef = useRef(null);
     const { refreshStatistics } = useStatistics();
     const { isRecording, setIsRecording } = useRecord();
+    const { dogLocation } = useCurrentData();
 
     const playSound = async () => {
         const { sound } = await Audio.Sound.createAsync(
@@ -77,8 +79,7 @@ export default function RecordButton({ setReloadSlider, loadData }) {
     const handlePoopButton = async () => {
         playSound();
         setPooped(true);
-
-        await PoopService.savePoop();
+        await PoopService.savePoop(dogLocation);
         await StatisticsService.addPoop();
         await refreshStatistics();
         await loadData();
@@ -118,7 +119,7 @@ export default function RecordButton({ setReloadSlider, loadData }) {
         const handle = async () => {
             try {
                 const lastPoopTime = await AsyncStorage.getItem("lastPoopTime");
-                if (lastPoopTime) {
+                if (lastPoopTime && lastPoopTime !== "") {
                     const lastPoop = parseInt(lastPoopTime, 10);
                     const now = Date.now();
                     const diff = now - lastPoop;
@@ -137,8 +138,10 @@ export default function RecordButton({ setReloadSlider, loadData }) {
             }
         };
 
-        handle();
-    }, []);
+        if (isRecording) {
+            handle();
+        }
+    }, [isRecording]);
 
     const styles = StyleSheet.create({
         container: {

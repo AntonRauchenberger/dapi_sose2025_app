@@ -4,18 +4,23 @@ import Swiper from "react-native-swiper";
 import constants from "@/app/consts";
 import RouteService from "@/lib/Services/RouteService";
 import { useRouter } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import Dialog from "react-native-dialog";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
 export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
     const [routes, setRoutes] = useState<any>();
     const [showDialog, setShowDialog] = useState(false);
     const [deleteRoute, setDeleteRoute] = useState<any>(null);
+    const { isLoading } = useCurrentData();
     const router = useRouter();
     const { refreshStatistics } = useStatistics();
+    const swiperKey =
+        routes && routes.length > 0
+            ? routes.map((r: any) => r.routeId).join(",")
+            : "0";
 
     useEffect(() => {
         async function handle() {
@@ -156,12 +161,47 @@ export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
     return (
         <>
             <View style={{ flex: 1, height: 600 }}>
-                {routes && routes.length > 0 ? (
+                {routes && routes.length > 0 && swiperKey != "0" ? (
                     <Swiper
+                        key={swiperKey}
                         paginationStyle={{
                             transform: "translateY(45px)",
-                            display: routes.length > 8 ? "none" : "block",
+                            display: "none",
                         }}
+                        showsButtons={true}
+                        scrollEnabled={!isLoading}
+                        nextButton={
+                            <View
+                                style={{
+                                    borderRadius: 20,
+                                    padding: 8,
+                                    marginRight: 10,
+                                    transform: [{ translateY: 110 }],
+                                }}
+                            >
+                                <MaterialIcons
+                                    name="arrow-forward-ios"
+                                    size={22}
+                                    color={constants.TEXT_COLOR}
+                                />
+                            </View>
+                        }
+                        prevButton={
+                            <View
+                                style={{
+                                    borderRadius: 20,
+                                    padding: 8,
+                                    marginLeft: 10,
+                                    transform: [{ translateY: 110 }],
+                                }}
+                            >
+                                <MaterialIcons
+                                    name="arrow-back-ios"
+                                    size={22}
+                                    color={constants.TEXT_COLOR}
+                                />
+                            </View>
+                        }
                         activeDot={
                             <View
                                 style={{
