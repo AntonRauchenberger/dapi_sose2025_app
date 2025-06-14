@@ -1,9 +1,14 @@
 import React from "react";
 import { LineChart } from "react-native-chart-kit";
-import { StyleSheet, Dimensions, View } from "react-native";
+import { StyleSheet, Dimensions, View, ActivityIndicator } from "react-native";
 import constants from "@/app/consts";
 
-export default function Diagram() {
+type DiagramProps = {
+    diagramData: number[];
+    isLoading: boolean;
+};
+
+export default function Diagram({ diagramData, isLoading }: DiagramProps) {
     const screenWidth = Dimensions.get("window").width;
 
     const getLast14Weekdays = () => {
@@ -30,7 +35,7 @@ export default function Diagram() {
         labels: getLast14Weekdays(),
         datasets: [
             {
-                data: [20, 45, 28, 80, 99, 0, 8, 20, 45, 28, 80, 99, 43, 8],
+                data: diagramData,
                 strokeWidth: 2,
                 color: (opacity = 1) =>
                     `${
@@ -63,25 +68,50 @@ export default function Diagram() {
         container: {
             borderRadius: 12,
         },
+        refreshButton: {
+            position: "absolute",
+            right: 15,
+            top: -40,
+            backgroundColor: constants.BACKGROUND_COLOR,
+            borderRadius: 50,
+            padding: 2,
+        },
+        loadingContainer: {
+            backgroundColor: constants.BACKGROUND_COLOR,
+            height: 260,
+            width: "97%",
+            margin: "auto",
+            borderRadius: 16,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 8,
+        },
     });
 
     return (
         <View style={[styles.container, constants.SHADOW_STYLE]}>
-            <LineChart
-                data={data}
-                width={screenWidth - 32}
-                height={220}
-                chartConfig={chartConfig}
-                bezier
-                style={{
-                    borderRadius: 12,
-                    width: "97%",
-                    margin: "auto",
-                    marginBottom: 8,
-                    borderColor: constants.BACKGROUND_COLOR,
-                    borderWidth: 3,
-                }}
-            />
+            {diagramData && !isLoading ? (
+                <LineChart
+                    data={data}
+                    width={screenWidth - 32}
+                    height={220}
+                    chartConfig={chartConfig}
+                    bezier
+                    style={{
+                        borderRadius: 12,
+                        width: "97%",
+                        margin: "auto",
+                        marginBottom: 8,
+                        borderColor: constants.BACKGROUND_COLOR,
+                        borderWidth: 3,
+                    }}
+                />
+            ) : (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator />
+                </View>
+            )}
         </View>
     );
 }

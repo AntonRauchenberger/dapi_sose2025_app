@@ -18,19 +18,25 @@ import particles from "@/assets/animations/particles.json";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Location from "expo-location";
-import Firebase from "@/lib/Firebase/Firebase";
-import { doc, setDoc } from "firebase/firestore";
 import Dialog from "react-native-dialog";
+import PoopService from "@/lib/Services/PoopService";
+import RouteService from "@/lib/Services/RouteService";
+import StatisticsService from "@/lib/Services/StatisticsService";
+import { useStatistics } from "@/lib/Providers/StatisticsProvider";
+import { useRecord } from "@/lib/Providers/RecordProvider";
+import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
-export default function RecordButton() {
-    const [isReccording, setIsReccording] = useState(false);
+export default function RecordButton({ setReloadSlider, loadData }) {
     const [finishedRoute, setFinishedRoute] = useState(false);
     const [poopButtonEnabled, setPoopButtonEnabled] = useState(true);
     const [pooped, setPooped] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
+    const [currentRouteId, setCurrentRouteId] = useState<string | null>(null);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const particleRef = useRef(null);
+    const { refreshStatistics } = useStatistics();
+    const { isRecording, setIsRecording } = useRecord();
+    const { dogLocation } = useCurrentData();
 
     const playSound = async () => {
         const { sound } = await Audio.Sound.createAsync(
@@ -39,74 +45,44 @@ export default function RecordButton() {
         await sound.playAsync();
     };
 
-    const saveRoute = () => {
-        // TODO
+    const startRoute = async () => {
+        setIsRecording(true);
+        const routeId = await RouteService.startRoute();
+        if (!routeId) {
+            setIsRecording(false);
+        } else {
+            setCurrentRouteId(routeId);
+        }
     };
 
-    const savePoop = async () => {
-        async function getCurrentLocation() {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                return;
-            }
-            const location = await Location.getCurrentPositionAsync({});
-            return {
-                latitude: location?.coords?.latitude,
-                longitude: location?.coords?.longitude,
-            };
+    const stopRoute = async () => {
+        setFinishedRoute(true);
+        particleRef.current?.play();
+        if (currentRouteId) {
+            await RouteService.stopRoute(currentRouteId);
+            await refreshStatistics();
+            setReloadSlider(true);
         }
-        const savePoopMarkerList = async (list: []) => {
-            try {
-                const jsonValue = JSON.stringify(list);
-
-                // firestore
-                const user = Firebase.auth?.currentUser;
-                if (!user) throw new Error("no user logged in");
-                const userPoopRef = doc(Firebase.db, "poopMarkers", user.uid);
-                await setDoc(userPoopRef, list);
-
-                // async storage
-                await AsyncStorage.setItem("poopMarkerList", jsonValue);
-            } catch (e) {
-                console.error("Fehler beim Speichern:", e);
-            }
-        };
-        const getPoopMarkerList = async () => {
-            try {
-                const jsonValue = await AsyncStorage.getItem("poopMarkerList");
-                return jsonValue != null ? JSON.parse(jsonValue) : [];
-            } catch (e) {
-                console.error("Fehler beim Laden:", e);
-                return [];
-            }
-        };
-
-        const currentLocation = await getCurrentLocation();
-        const poopMarkerList = await getPoopMarkerList();
-        poopMarkerList.push(currentLocation);
-        await savePoopMarkerList(poopMarkerList);
+        setFinishedRoute(false);
+        setIsRecording(!isRecording);
     };
 
     const handleClick = () => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        setIsReccording(!isReccording);
-        if (isReccording) {
-            setFinishedRoute(true);
-            particleRef.current?.play();
-            saveRoute();
-            setTimeout(() => {
-                setFinishedRoute(false);
-            }, 1500);
+        if (isRecording) {
+            stopRoute();
+        } else {
+            startRoute();
         }
     };
 
     const handlePoopButton = async () => {
         playSound();
         setPooped(true);
-
-        savePoop();
-        await savePoop();
-        await AsyncStorage.setItem("lastPoopTime", Date.now().toString());
+        await PoopService.savePoop(dogLocation);
+        await StatisticsService.addPoop();
+        await refreshStatistics();
+        await loadData();
 
         setTimeout(() => {
             setPooped(false);
@@ -115,7 +91,7 @@ export default function RecordButton() {
     };
 
     useEffect(() => {
-        if (isReccording) {
+        if (isRecording) {
             Animated.loop(
                 Animated.sequence([
                     Animated.timing(scaleAnim, {
@@ -136,14 +112,14 @@ export default function RecordButton() {
             scaleAnim.stopAnimation();
             scaleAnim.setValue(1);
         }
-    }, [isReccording]);
+    }, [isRecording]);
 
     // checks if poop button can be pressed (once per day)
     useEffect(() => {
         const handle = async () => {
             try {
                 const lastPoopTime = await AsyncStorage.getItem("lastPoopTime");
-                if (lastPoopTime) {
+                if (lastPoopTime && lastPoopTime !== "") {
                     const lastPoop = parseInt(lastPoopTime, 10);
                     const now = Date.now();
                     const diff = now - lastPoop;
@@ -162,14 +138,17 @@ export default function RecordButton() {
             }
         };
 
-        handle();
-    }, []);
+        if (isRecording) {
+            handle();
+        }
+    }, [isRecording]);
 
     const styles = StyleSheet.create({
         container: {
             display: "flex",
             flexDirection: "row",
-            width: isReccording ? "60%" : "auto",
+            width: "100%",
+            justifyContent: "center",
         },
         recordButtonContainer: {
             display: "flex",
@@ -201,12 +180,14 @@ export default function RecordButton() {
             marginTop: 2,
             color: constants.TEXT_COLOR,
             fontWeight: "500",
+            width: 191.5,
+            textAlign: "center",
         },
     });
 
     return (
         <View style={styles.container}>
-            {isReccording && (
+            {isRecording && (
                 <TouchableOpacity
                     style={[
                         styles.button,
@@ -217,6 +198,8 @@ export default function RecordButton() {
                             backgroundColor: constants.SECCONDARY_COLOR,
                             borderWidth: 2,
                             opacity: poopButtonEnabled ? 1 : 0.75,
+                            transform: [{ translateX: -85 }],
+                            position: "absolute",
                         },
                     ]}
                     onPress={
@@ -262,7 +245,7 @@ export default function RecordButton() {
                                 size={40}
                                 color={constants.TEXT_COLOR}
                             />
-                        ) : isReccording ? (
+                        ) : isRecording ? (
                             <Animated.View
                                 style={{ transform: [{ scale: scaleAnim }] }}
                             >
@@ -284,7 +267,7 @@ export default function RecordButton() {
                 <Text style={styles.buttonText}>
                     {finishedRoute
                         ? "Route wurde gespeichert"
-                        : isReccording
+                        : isRecording
                         ? "Route beenden"
                         : "Route starten"}
                 </Text>

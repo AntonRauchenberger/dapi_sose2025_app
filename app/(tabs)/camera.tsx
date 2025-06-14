@@ -1,7 +1,7 @@
-import { View, StyleSheet, Image, Pressable } from "react-native";
+import { View, StyleSheet, Image, Pressable, Animated } from "react-native";
 import Header from "@/components/Header";
 import constants from "../consts";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CameraButton from "@/components/Tabs/camera/CameraButton";
 import { CameraBottomSheet } from "@/components/Tabs/camera/CameraBottomSheet";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -9,21 +9,55 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import Dialog from "react-native-dialog";
+import ImageService from "@/lib/Services/ImageService";
+import { useImageContext } from "@/lib/Providers/ImageProvider";
+import { useRecord } from "@/lib/Providers/RecordProvider";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import BackgroundSvg from "@/components/Tabs/camera/BackgroundSvg";
 
 export default function Camera() {
-    const [isGaleryMode, setIsGaleryMode] = useState(true);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [signature, setSignature] = useState("");
+    const [reload, setReload] = useState(false);
+    const { isGaleryMode, setIsGaleryMode, imageUri } = useImageContext();
+    const { isRecording } = useRecord();
+    const blinkAnim = useRef(new Animated.Value(1)).current;
 
-    const downloadImage = () => {
-        // TODO
+    useEffect(() => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(blinkAnim, {
+                    toValue: 0,
+                    duration: 500,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(blinkAnim, {
+                    toValue: 1,
+                    duration: 800,
+                    useNativeDriver: true,
+                }),
+            ])
+        ).start();
+    }, []);
+
+    const downloadImage = async () => {
+        if (!imageUri) {
+            alert("Kein Bild zum Herunterladen vorhanden.");
+            return;
+        }
+        await ImageService.downloadImage(imageUri);
         setIsGaleryMode(true);
     };
 
-    const saveImage = (signature: string) => {
-        // TODO
-        console.log("Signatur:", signature);
+    const saveImage = async (signature: string) => {
+        if (!imageUri) {
+            alert("Kein Bild zum Speichern vorhanden.");
+            return;
+        }
+        await ImageService.saveImage(imageUri, signature);
         setIsGaleryMode(true);
+        setSignature("");
+        setReload(true);
     };
 
     const handleClicks = (type: string) => {
@@ -68,84 +102,114 @@ export default function Camera() {
     });
 
     return (
-        <View
-            style={{
-                backgroundColor: constants.FONT_COLOR,
-            }}
-        >
-            <Header />
-            <View style={{ marginTop: isGaleryMode ? 180 : 75 }}>
-                {isGaleryMode ? (
-                    <CameraButton setIsGaleryMode={setIsGaleryMode} />
-                ) : (
-                    <View>
-                        <Image
-                            source={require("../../assets/images/dog_example.jpg")}
-                            style={styles.image}
+        <View style={{ flex: 1 }}>
+            <BackgroundSvg
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    zIndex: -1,
+                }}
+            />
+            <View
+                style={{
+                    flex: 1,
+                }}
+            >
+                {isRecording ? <Header animate={false} /> : <Header />}
+                {isRecording && (
+                    <Animated.View
+                        style={{
+                            transform: [
+                                { translateY: 66 },
+                                { translateX: 332 },
+                            ],
+                            opacity: blinkAnim,
+                            position: "absolute",
+                        }}
+                    >
+                        <MaterialCommunityIcons
+                            name="record-rec"
+                            size={26}
+                            color={constants.COMPLEMENTARY_COLOR}
                         />
-                        <View style={styles.buttonsContainer}>
-                            <Pressable
-                                style={styles.button}
-                                onPress={() => handleClicks("delete")}
-                            >
-                                <MaterialIcons
-                                    name="delete"
-                                    size={30}
-                                    color={constants.TEXT_COLOR}
-                                />
-                            </Pressable>
-                            <Pressable
-                                style={styles.button}
-                                onPress={() => handleClicks("save")}
-                            >
-                                <AntDesign
-                                    name="plus"
-                                    size={35}
-                                    color={constants.TEXT_COLOR}
-                                />
-                            </Pressable>
-                            <Pressable
-                                style={styles.button}
-                                onPress={() => handleClicks("download")}
-                            >
-                                <Feather
-                                    name="download"
-                                    size={30}
-                                    color={constants.TEXT_COLOR}
-                                />
-                            </Pressable>
-                        </View>
-                    </View>
+                    </Animated.View>
                 )}
+                <View style={{ marginTop: isGaleryMode ? 180 : 75 }}>
+                    {isGaleryMode || !imageUri ? (
+                        <CameraButton />
+                    ) : (
+                        <View>
+                            <Image
+                                source={{ uri: imageUri }}
+                                style={styles.image}
+                            />
+                            <View style={styles.buttonsContainer}>
+                                <Pressable
+                                    style={styles.button}
+                                    onPress={() => handleClicks("delete")}
+                                >
+                                    <MaterialIcons
+                                        name="delete"
+                                        size={30}
+                                        color={constants.TEXT_COLOR}
+                                    />
+                                </Pressable>
+                                <Pressable
+                                    style={styles.button}
+                                    onPress={() => handleClicks("save")}
+                                >
+                                    <AntDesign
+                                        name="plus"
+                                        size={35}
+                                        color={constants.TEXT_COLOR}
+                                    />
+                                </Pressable>
+                                <Pressable
+                                    style={styles.button}
+                                    onPress={() => handleClicks("download")}
+                                >
+                                    <Feather
+                                        name="download"
+                                        size={30}
+                                        color={constants.TEXT_COLOR}
+                                    />
+                                </Pressable>
+                            </View>
+                        </View>
+                    )}
+                </View>
+                <CameraBottomSheet reload={reload} setReload={setReload} />
+                <Dialog.Container visible={dialogVisible}>
+                    <Dialog.Title>Bild-Unterschrift</Dialog.Title>
+                    <Dialog.Description>
+                        Wie würdest du dieses Bild beschreiben?
+                    </Dialog.Description>
+                    <Dialog.Input
+                        placeholder="Bild-Unterschrift"
+                        value={signature}
+                        onChangeText={setSignature}
+                    />
+                    <Dialog.Button
+                        label="Abbrechen"
+                        onPress={() => {
+                            setDialogVisible(false);
+                        }}
+                    />
+                    <Dialog.Button
+                        label="Speichern"
+                        onPress={() => {
+                            Haptics.notificationAsync(
+                                Haptics.NotificationFeedbackType.Success
+                            );
+                            setDialogVisible(false);
+                            saveImage(signature);
+                        }}
+                    />
+                </Dialog.Container>
             </View>
-            <CameraBottomSheet isGaleryMode={isGaleryMode} />
-            <Dialog.Container visible={dialogVisible}>
-                <Dialog.Title>Bild-Unterschrift</Dialog.Title>
-                <Dialog.Description>
-                    Wie würdest du dieses Bild beschreiben?
-                </Dialog.Description>
-                <Dialog.Input
-                    placeholder="Bild-Unterschrift"
-                    value={signature}
-                    onChangeText={setSignature}
-                />
-                <Dialog.Button
-                    label="Abbrechen"
-                    onPress={() => {
-                        setDialogVisible(false);
-                    }}
-                />
-                <Dialog.Button
-                    label="Speichern"
-                    onPress={() => {
-                        Haptics.notificationAsync(
-                            Haptics.NotificationFeedbackType.Success
-                        );
-                        setDialogVisible(false);
-                        saveImage(signature);
-                    }}
-                />
-            </Dialog.Container>
         </View>
     );
 }

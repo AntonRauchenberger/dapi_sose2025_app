@@ -3,38 +3,25 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    Text,
     Animated,
     Easing,
 } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import * as Haptics from "expo-haptics";
 import { useState, useRef, useEffect } from "react";
 import LottieView from "lottie-react-native";
 import particles from "@/assets/animations/particles.json";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
 
-export default function CameraButton({ setIsGaleryMode }) {
+export default function CameraButton() {
     const [isLoading, setIsLoading] = useState(false);
     const scaleAnim = useRef(new Animated.Value(1)).current;
     const rotateAnim = useRef(new Animated.Value(0)).current;
     const particleRef = useRef(null);
-
-    const getImage = () => {
-        // TODO
-        setTimeout(() => {
-            setIsLoading(false);
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            setIsGaleryMode(false);
-        }, 2000);
-    };
+    const router = useRouter();
 
     const handleClick = () => {
-        if (!isLoading) {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            setIsLoading(!isLoading);
-            getImage();
-        }
+        router.push("/CameraRoute/CustomCamera");
     };
 
     useEffect(() => {

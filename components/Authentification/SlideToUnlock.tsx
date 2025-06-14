@@ -1,13 +1,21 @@
 import constants from "@/app/consts";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { View, Text, Animated, PanResponder, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
 
-export default function SlideToUnlock({ setUnlocked }) {
+export default function SlideToUnlock({ onUnlock }) {
     const panX = useRef(new Animated.Value(0)).current;
 
     const SLIDER_WIDTH = 300;
     const THUMB_SIZE = 60;
+
+    // Reset Slider on mount/unmount
+    useEffect(() => {
+        panX.setValue(0);
+        return () => {
+            panX.setValue(0);
+        };
+    }, [panX]);
 
     const panResponder = useRef(
         PanResponder.create({
@@ -30,7 +38,14 @@ export default function SlideToUnlock({ setUnlocked }) {
                         Haptics.notificationAsync(
                             Haptics.NotificationFeedbackType.Success
                         );
-                        setUnlocked(true);
+                        onUnlock?.();
+                        // Weiche Rück-Animation
+                        Animated.spring(panX, {
+                            toValue: 0,
+                            useNativeDriver: false,
+                            friction: 6,
+                            tension: 80,
+                        }).start();
                     });
                 } else {
                     Animated.spring(panX, {
