@@ -6,7 +6,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DogService from "../Services/DogService";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { useSession } from "../Authentification/ctx";
 
 export default class AuthentificationService {
     static async saveName(Firebase: any, name: string) {
@@ -108,8 +107,7 @@ export default class AuthentificationService {
     static async signout(Firebase: any): Promise<boolean> {
         try {
             await signOut(Firebase.auth);
-            await this.dumpAsyncStorage();
-            useSession().signOut();
+            await AuthentificationService.dumpAsyncStorage();
             return true;
         } catch (error) {
             console.log("Error logging out: ", error);

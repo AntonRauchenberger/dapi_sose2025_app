@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 import constants from "./consts";
 import SlideToUnlock from "@/components/Authentification/SlideToUnlock";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useRouter } from "expo-router";
 
 export default function Start() {
     const [unlocked, setUnlocked] = useState(false);
+    const router = useRouter();
+
+    const handleUnlock = () => {
+        router.navigate("/signIn");
+    };
 
     useEffect(() => {
         if (unlocked) {
@@ -59,7 +65,7 @@ export default function Start() {
                 Behalte deinen Hund im Blick, teile schöne Momente und bleibe
                 immer verbunden.
             </Text>
-            <SlideToUnlock setUnlocked={setUnlocked} />
+            <SlideToUnlock onUnlock={handleUnlock} />
         </View>
     );
 }

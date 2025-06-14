@@ -7,11 +7,11 @@ import { useStatistics } from "../Providers/StatisticsProvider";
 export default class StatisticsService {
     static async getStatistics() {
         try {
-            let jsonValue = await AsyncStorage.getItem("statistics");
-            if (jsonValue === "") {
-                StatisticsService.synchronizeStatistics();
-                jsonValue = await AsyncStorage.getItem("statistics");
+            const user = Firebase.auth?.currentUser;
+            if (user) {
+                await StatisticsService.synchronizeStatistics();
             }
+            const jsonValue = await AsyncStorage.getItem("statistics");
             return jsonValue != null ? JSON.parse(jsonValue) : {};
         } catch (e) {
             console.error("Fehler beim Laden:", e);
@@ -152,18 +152,16 @@ export default class StatisticsService {
 
     static async synchronizeStatistics() {
         const user = Firebase.auth?.currentUser;
-        if (!user) throw new Error("no user logged in");
+        if (!user) return;
         const userStatisticsRef = doc(Firebase.db, "statistics", user.uid);
 
         const docSnap = await getDoc(userStatisticsRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            const statisticsData = data.statistics || {};
-
             // In AsyncStorage speichern
             await AsyncStorage.setItem(
                 "statistics",
-                JSON.stringify(statisticsData)
+                JSON.stringify(data || {})
             );
         } else {
             await AsyncStorage.setItem("statistics", JSON.stringify({}));

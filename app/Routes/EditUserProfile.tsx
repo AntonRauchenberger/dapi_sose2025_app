@@ -20,9 +20,11 @@ import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AuthentificationService from "@/lib/Services/AuthentificationService";
 import Firebase from "@/lib/Firebase/Firebase";
+import { useSession } from "@/lib/Authentification/ctx";
 
 export default function EditUserProfile() {
     const router = useRouter();
+    const { signOut } = useSession();
     const [profile, setProfile] = useState({
         name: "",
         email: "",
@@ -171,6 +173,7 @@ export default function EditUserProfile() {
                         );
                         setDialogVisible(false);
                         AuthentificationService.signout(Firebase);
+                        signOut();
                         router.navigate("/start");
                     }}
                 />
