@@ -11,7 +11,7 @@ export default class PoopService {
                 await PoopService.synchronizePoopData();
             }
             const jsonValue = await AsyncStorage.getItem("poopMarkerList");
-            return jsonValue != null ? JSON.parse(jsonValue) : {};
+            return jsonValue != null ? JSON.parse(jsonValue) : [];
         } catch (e) {
             console.error("Fehler beim Laden:", e);
             return [];
@@ -62,13 +62,13 @@ export default class PoopService {
                 const data = docSnap.data();
                 await AsyncStorage.setItem(
                     "poopMarkerList",
-                    JSON.stringify(data?.markers || {})
+                    JSON.stringify(data?.markers || [])
                 );
             } else {
                 console.log("Kein Marker-Dokument gefunden.");
                 await AsyncStorage.setItem(
                     "poopMarkerList",
-                    JSON.stringify({})
+                    JSON.stringify([])
                 );
             }
         } catch (e) {

@@ -119,7 +119,7 @@ export default function RecordButton({ setReloadSlider, loadData }) {
         const handle = async () => {
             try {
                 const lastPoopTime = await AsyncStorage.getItem("lastPoopTime");
-                if (lastPoopTime) {
+                if (lastPoopTime && lastPoopTime !== "") {
                     const lastPoop = parseInt(lastPoopTime, 10);
                     const now = Date.now();
                     const diff = now - lastPoop;

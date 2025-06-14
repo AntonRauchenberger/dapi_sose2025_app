@@ -112,6 +112,7 @@ export default class AuthentificationService {
         await AsyncStorage.setItem("savedRoutes", "");
         await AsyncStorage.setItem("statistics", "");
         await AsyncStorage.setItem("@dogNotes", "");
+        await AsyncStorage.setItem("lastPoopTime", "");
     }
 
     static async signout(Firebase: any): Promise<boolean> {

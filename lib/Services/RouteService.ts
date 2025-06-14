@@ -60,9 +60,17 @@ export default class RouteService {
             }
 
             const userRoutesRef = doc(db, "routes", userId);
-            await updateDoc(userRoutesRef, {
-                routes: arrayUnion(routeData),
-            });
+            const userRoutesDoc = await getDoc(userRoutesRef);
+
+            if (userRoutesDoc.exists()) {
+                await updateDoc(userRoutesRef, {
+                    routes: arrayUnion(routeData),
+                });
+            } else {
+                await setDoc(userRoutesRef, {
+                    routes: [routeData],
+                });
+            }
 
             // AsyncStorage
             const storedRoutes = await AsyncStorage.getItem("savedRoutes");
