@@ -10,6 +10,9 @@ type RecordContextType = {
     setIsRecording: any;
 };
 
+/**
+ * Context-Provider für Aufnahme-Status (isRecording) und zugehörigen Setter in der App.
+ */
 const RecordContext = createContext<RecordContextType | undefined>(undefined);
 
 export function useRecord() {

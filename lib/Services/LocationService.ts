@@ -1,5 +1,8 @@
 import * as Location from "expo-location";
 
+/**
+ * Service-Klasse für Standortermittlung und Distanzberechnung zwischen zwei Koordinaten.
+ */
 export default class LocationService {
     static async getCurrentUserLocation() {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -13,7 +16,7 @@ export default class LocationService {
         };
     }
 
-    // returns the distance between two locations in km
+    // Berechnet die Distanz in Kilometern zwischen zwei Koordinaten.
     static getDistanceBetweenLocations(
         location1: { latitude: number; longitude: number },
         location2: { latitude: number; longitude: number }

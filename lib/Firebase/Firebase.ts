@@ -2,6 +2,10 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, initializeAuth } from "firebase/auth";
 import firebaseConfig from "./firebaseConfig";
+
+/**
+ * Firebase-Initialisierungsklasse für App, Firestore und Authentifizierung.
+ */
 export default class Firebase {
     static db: any;
     static auth: any;

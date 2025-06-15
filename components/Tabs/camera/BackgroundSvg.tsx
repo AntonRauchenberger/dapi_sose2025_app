@@ -2,6 +2,9 @@ import * as React from "react";
 import Svg, { Defs, Pattern, Rect } from "react-native-svg";
 import constants from "@/app/consts";
 
+/**
+ * SVG-Hintergrund mit diagonalen Streifen in App-Farben für die Kamera-Seite.
+ */
 export default function BackgroundSvg(props: any) {
     return (
         <Svg viewBox="0 0 400 600" width="100%" height="100%" {...props}>

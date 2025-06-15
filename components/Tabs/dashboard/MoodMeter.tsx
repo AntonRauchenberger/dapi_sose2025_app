@@ -12,6 +12,9 @@ type MoodMeterProps = {
     activityStats: any;
 };
 
+/**
+ * MoodMeter-Komponente zur Anzeige des Aktivitätsstatus und -levels basierend auf Aktivitätsdaten.
+ */
 export default function MoodMeter({ activityStats }: MoodMeterProps) {
     const [activityLevel, setActivityLevel] = useState("Mittel");
 

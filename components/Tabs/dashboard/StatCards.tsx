@@ -7,6 +7,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Foundation from "@expo/vector-icons/Foundation";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
+/**
+ * Statistikkarten-Komponente zur Anzeige von Meldungen, Fotos, Poop-Counter und gelaufenen Metern.
+ */
 export default function StatCards() {
     const { statistics } = useStatistics();
 

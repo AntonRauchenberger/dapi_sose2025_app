@@ -1,5 +1,8 @@
 import { createContext, useContext, useState } from "react";
 
+/**
+ * Context-Provider für Bild-URI, Galerie-Modus und Kamera-Status in der App.
+ */
 const ImageContext = createContext(null);
 
 export function ImageProvider({ children }) {

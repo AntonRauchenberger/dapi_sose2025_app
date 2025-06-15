@@ -9,6 +9,9 @@ import { useRecord } from "@/lib/Providers/RecordProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 
+/**
+ * Live-Tracker-Komponente zur Anzeige von Hundedistanz, Akku und Status in Echtzeit.
+ */
 export default function Header() {
     const fadeAnim = useRef(new Animated.Value(1)).current;
     const { dogLocation, currentData } = useCurrentData();

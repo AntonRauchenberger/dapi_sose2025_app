@@ -26,6 +26,9 @@ type CurrentDataContextType = {
     refreshCurrentData: () => Promise<void>;
 };
 
+/**
+ * Context-Provider für aktuelle Hundedaten (Position, Akku, Status) mit Auto-Refresh.
+ */
 const CurrentDataContext = createContext<CurrentDataContextType | undefined>(
     undefined
 );

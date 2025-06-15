@@ -22,6 +22,9 @@ import AuthentificationService from "@/lib/Services/AuthentificationService";
 import Firebase from "@/lib/Firebase/Firebase";
 import { useSession } from "@/lib/Authentification/ctx";
 
+/**
+ * Seite zum Bearbeiten des Nutzerprofils mit Profilanzeige und Logout-Dialog.
+ */
 export default function EditUserProfile() {
     const router = useRouter();
     const { signOut } = useSession();

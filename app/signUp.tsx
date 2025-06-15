@@ -2,6 +2,9 @@ import { Text, View, StyleSheet } from "react-native";
 import constants from "./consts";
 import SignUpSlider from "@/components/Authentification/SignUpSlider";
 
+/**
+ * Registrierungsseite mit Slider-Komponente für die Nutzeranmeldung.
+ */
 export default function SignUp() {
     const styles = StyleSheet.create({
         wrapper: {

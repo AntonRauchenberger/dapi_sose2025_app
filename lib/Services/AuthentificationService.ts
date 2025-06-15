@@ -8,6 +8,9 @@ import DogService from "../Services/DogService";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import NoteService from "./NoteService";
 
+/**
+ * Service-Klasse für Authentifizierung, Nutzerverwaltung und lokale Datenspeicherung.
+ */
 export default class AuthentificationService {
     static async saveName(Firebase: any, name: string) {
         try {
@@ -68,6 +71,7 @@ export default class AuthentificationService {
         }
     }
 
+    // Lädt Profildaten und Notizen des Nutzers in den lokalen Speicher.
     private static async fetchData(Firebase: any, user: any, userName: any) {
         await AsyncStorage.setItem(
             "userProfile",
@@ -104,6 +108,7 @@ export default class AuthentificationService {
         }
     }
 
+    // Leert alle relevanten Einträge im lokalen AsyncStorage.
     private static async dumpAsyncStorage() {
         await AsyncStorage.setItem("userProfile", "");
         await AsyncStorage.setItem("dogProfile", "");

@@ -24,6 +24,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
+/**
+ * Seite zum Bearbeiten des Hundeprofils mit Bildauswahl und Eingabefeldern.
+ */
 export default function EditDogProfile() {
     const router = useRouter();
     const [inEdit, setInEdit] = useState(false);

@@ -1,6 +1,9 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+/**
+ * Service-Klasse zum Speichern, Laden und Abrufen von Hundedaten für den aktuellen Nutzer.
+ */
 export default class DogService {
     static async saveDogProfile(Firebase: any, dogData: any) {
         try {

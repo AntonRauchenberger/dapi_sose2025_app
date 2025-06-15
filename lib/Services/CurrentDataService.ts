@@ -2,8 +2,11 @@ import secureConstants from "@/app/secureConsts";
 import { fetch } from "expo/fetch";
 import Firebase from "../Firebase/Firebase";
 
+/**
+ * Service-Klasse zum Abrufen der aktuellen Hundedaten (Position, Status, Akku) vom Server.
+ */
 export default class CurrentDataService {
-    // gets current dog location from the server
+    // Holt aktuelle Hundedaten (Position, Status, Akku) vom Server für den eingeloggten Nutzer.
     static async getCurrentDogData() {
         try {
             const userId = Firebase.auth?.currentUser?.uid;

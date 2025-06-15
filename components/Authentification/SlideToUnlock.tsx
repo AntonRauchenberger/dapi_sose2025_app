@@ -3,6 +3,9 @@ import React, { useRef, useEffect } from "react";
 import { View, Text, Animated, PanResponder, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
 
+/**
+ * Slide-to-Unlock-Komponente für den Einstieg in die App mit animiertem Schieberegler.
+ */
 export default function SlideToUnlock({ onUnlock }) {
     const panX = useRef(new Animated.Value(0)).current;
 

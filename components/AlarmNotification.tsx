@@ -16,7 +16,9 @@ Notifications.setNotificationHandler({
     }),
 });
 
-// handles push notifications (https://docs.expo.dev/versions/latest/sdk/notifications/)
+/**
+ * Komponente zur Überwachung der Hundeposition und Auslösung von Push-Benachrichtigungen bei Entfernung.
+ */
 export default function AlarmNotification() {
     const notificationListener = useRef<Notifications.EventSubscription>();
     const responseListener = useRef<Notifications.EventSubscription>();

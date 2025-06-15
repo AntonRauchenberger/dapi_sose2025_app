@@ -5,6 +5,9 @@ import { Redirect, Stack } from "expo-router";
 import { useSession } from "@/lib/Authentification/ctx";
 import { ActivityIndicator, Text, View } from "react-native";
 
+/**
+ * Tab-Navigationslayout für die Hauptbereiche der App mit Authentifizierungs-Check.
+ */
 export default function TabsLayout() {
     const { session, isLoading } = useSession();
 

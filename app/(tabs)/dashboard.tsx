@@ -17,6 +17,9 @@ import MoodMeter from "@/components/Tabs/dashboard/MoodMeter";
 import StatisticsService from "@/lib/Services/StatisticsService";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
+/**
+ * Dashboard-Seite mit Statistiken, Mood-Meter, Live-Tracker und Diagramm sowie Pull-to-Refresh.
+ */
 export default function Dashboard() {
     const { isRecording } = useRecord();
     const blinkAnim = useRef(new Animated.Value(1)).current;

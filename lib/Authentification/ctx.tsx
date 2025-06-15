@@ -1,6 +1,9 @@
 import { useContext, createContext, type PropsWithChildren } from "react";
 import { useStorageState } from "./useStorageState";
 
+/**
+ * Authentifizierungs-Context mit Session-Management und Provider für Login/Logout.
+ */
 const AuthContext = createContext<{
     signIn: () => void;
     signOut: () => void;

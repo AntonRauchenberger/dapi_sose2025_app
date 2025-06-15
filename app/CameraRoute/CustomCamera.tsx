@@ -14,6 +14,9 @@ import constants from "../consts";
 import StatisticsService from "@/lib/Services/StatisticsService";
 import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 
+/**
+ * Individuelle Kamera-Komponente mit Bildaufnahme, Kamerawechsel und Statistik-Update.
+ */
 export default function CustomCamera() {
     const [facing, setFacing] = useState<CameraType>("back");
     const cameraRef = useRef(null);

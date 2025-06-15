@@ -3,6 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Firebase from "../Firebase/Firebase";
 import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
+/**
+ * Service-Klasse zum Speichern, Laden und Synchronisieren von Poop-Markern für den aktuellen Nutzer.
+ */
 export default class PoopService {
     static async getPoopMarkerList() {
         try {
@@ -50,6 +53,7 @@ export default class PoopService {
         }
     }
 
+    // Synchronisiert die Poop-Marker-Liste aus Firestore in den lokalen AsyncStorage.
     static async synchronizePoopData() {
         try {
             const user = Firebase.auth?.currentUser;

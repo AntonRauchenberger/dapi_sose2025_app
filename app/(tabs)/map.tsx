@@ -12,6 +12,9 @@ import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
+/**
+ * Karten-Seite mit Hunde- und Nutzerstandort, Poop-Markern, Routenslider und Aufnahmefunktion.
+ */
 export default function Map() {
     const [userLocation, setUserLocation] = useState<any>(null);
     const [poopMarkers, setPoopMarkers] = useState<any>(null);

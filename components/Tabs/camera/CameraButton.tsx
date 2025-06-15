@@ -13,6 +13,9 @@ import particles from "@/assets/animations/particles.json";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
 
+/**
+ * Kamera-Button mit Animation und Navigation zur individuellen Kamera-Seite.
+ */
 export default function CameraButton() {
     const [isLoading, setIsLoading] = useState(false);
     const scaleAnim = useRef(new Animated.Value(1)).current;

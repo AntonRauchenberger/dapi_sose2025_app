@@ -13,6 +13,9 @@ import * as Haptics from "expo-haptics";
 import NoteService from "@/lib/Services/NoteService";
 import Firebase from "@/lib/Firebase/Firebase";
 
+/**
+ * BottomSheet-Komponente zur Anzeige und Bearbeitung von Notizen auf der Startseite.
+ */
 export const NotesBottomSheet = ({ isGaleryMode = true, dogName }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [notes, setNotes] = useState<any>();

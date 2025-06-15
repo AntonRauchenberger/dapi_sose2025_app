@@ -13,6 +13,9 @@ type StatisticsContextType = {
     refreshStatistics: () => Promise<void>;
 };
 
+/**
+ * Context-Provider für Statistikdaten, Ladezustand und Refresh-Funktion in der App.
+ */
 const StatisticsContext = createContext<StatisticsContextType | undefined>(
     undefined
 );

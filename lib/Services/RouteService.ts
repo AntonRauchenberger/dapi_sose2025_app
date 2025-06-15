@@ -5,7 +5,11 @@ import secureConstants from "@/app/secureConsts";
 import { fetch } from "expo/fetch";
 import StatisticsService from "./StatisticsService";
 
+/**
+ * Service-Klasse zum Starten, Stoppen, Speichern, Laden und Löschen von Routen für den aktuellen Nutzer.
+ */
 export default class RouteService {
+    // Erstellt einen einfachen Hash aus einem String (z.B. für routeId).
     static simpleHash(input: string): string {
         let hash = 0;
         for (let i = 0; i < input.length; i++) {

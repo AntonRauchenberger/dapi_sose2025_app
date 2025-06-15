@@ -6,6 +6,9 @@ import SlideToUnlock from "@/components/Authentification/SlideToUnlock";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 
+/**
+ * Startseite mit Slide-to-Unlock für den Einstieg in die App.
+ */
 export default function Start() {
     const [unlocked, setUnlocked] = useState(false);
     const router = useRouter();

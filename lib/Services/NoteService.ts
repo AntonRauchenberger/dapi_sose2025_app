@@ -1,6 +1,9 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+/**
+ * Service-Klasse zum Speichern und Laden von Notizen für den aktuellen Nutzer.
+ */
 export default class NoteService {
     static async saveNotes(Firebase: any, notes: any) {
         try {

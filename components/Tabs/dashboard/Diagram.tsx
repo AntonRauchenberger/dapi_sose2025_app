@@ -8,6 +8,9 @@ type DiagramProps = {
     isLoading: boolean;
 };
 
+/**
+ * Diagramm-Komponente mit Liniendiagramm zur Anzeige von Streckendaten.
+ */
 export default function Diagram({ diagramData, isLoading }: DiagramProps) {
     const screenWidth = Dimensions.get("window").width;
 

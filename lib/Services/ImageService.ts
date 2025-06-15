@@ -4,7 +4,11 @@ import Firebase from "../Firebase/Firebase";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 
+/**
+ * Service-Klasse zum Speichern, Laden und Herunterladen von Bildern für den aktuellen Nutzer.
+ */
 export default class ImageService {
+    // Lädt ein Bild herunter und speichert es in der Galerie des Geräts.
     static async downloadImage(imageUri: string) {
         try {
             const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -47,6 +51,7 @@ export default class ImageService {
         }
     }
 
+    // Speichert ein Bild mit Signatur lokal und in Firestore.
     static async saveImage(imageUri: string, signature: string) {
         try {
             // AsyncStorage

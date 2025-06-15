@@ -23,6 +23,9 @@ import Dialog from "react-native-dialog";
 import Firebase from "@/lib/Firebase/Firebase";
 import AuthentificationService from "@/lib/Services/AuthentificationService";
 
+/**
+ * Slider-Komponente für die Nutzerregistrierung mit mehrstufigem Formular und Bildauswahl.
+ */
 export default function SignUpSlider() {
     const { signIn } = useSession();
     const [showDialog, setShowDialog] = useState(false);

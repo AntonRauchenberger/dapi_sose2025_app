@@ -15,6 +15,9 @@ import { useRecord } from "@/lib/Providers/RecordProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import BackgroundSvg from "@/components/Tabs/camera/BackgroundSvg";
 
+/**
+ * Kamera-Seite mit Header, Bildaufnahme, Galerie, Bildaktionen und animiertem Aufnahme-Indikator.
+ */
 export default function Camera() {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [signature, setSignature] = useState("");

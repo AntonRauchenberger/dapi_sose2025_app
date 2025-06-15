@@ -7,6 +7,9 @@ import ImageService from "@/lib/Services/ImageService";
 import DogService from "@/lib/Services/DogService";
 import { useImageContext } from "@/lib/Providers/ImageProvider";
 
+/**
+ * BottomSheet-Komponente zur Anzeige und Verwaltung gespeicherter Bilder in der Kamera-Ansicht.
+ */
 export const CameraBottomSheet = ({ reload = false, setReload }) => {
     const [dogName, setDogName] = useState("Findus");
     const [modalIsOpen, setModalIsOpen] = useState(false);

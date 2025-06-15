@@ -10,6 +10,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
+/**
+ * Slider-Komponente zur Anzeige, Navigation und Verwaltung gespeicherter Routen.
+ */
 export default function RoutesSlider({ reloadSlider, setReloadSlider }) {
     const [routes, setRoutes] = useState<any>();
     const [showDialog, setShowDialog] = useState(false);

@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
+// Hook für asynchronen State mit Ladeindikator
 function useAsyncState<T>(
     initialValue: [boolean, T | null] = [true, null]
 ): UseStateHook<T> {
@@ -16,6 +17,7 @@ function useAsyncState<T>(
     ) as UseStateHook<T>;
 }
 
+// Speichert oder entfernt einen Wert im SecureStore (mobil) oder LocalStorage (Web)
 export async function setStorageItemAsync(key: string, value: string | null) {
     if (Platform.OS === "web") {
         try {
@@ -36,6 +38,7 @@ export async function setStorageItemAsync(key: string, value: string | null) {
     }
 }
 
+// React-Hook für synchronisierten Zugriff auf einen gespeicherten Wert
 export function useStorageState(key: string): UseStateHook<string> {
     // Public
     const [state, setState] = useAsyncState<string>();

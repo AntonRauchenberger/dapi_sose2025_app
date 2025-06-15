@@ -8,6 +8,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRecord } from "@/lib/Providers/RecordProvider";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
+/**
+ * Header-Komponente mit Standortanzeige, Distanz, Akku, Status und Aufnahme-Indikator.
+ */
 export default function Header() {
     const fadeAnim = useRef(new Animated.Value(1)).current;
     const { dogLocation, currentData } = useCurrentData();

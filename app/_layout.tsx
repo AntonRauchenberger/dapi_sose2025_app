@@ -13,6 +13,9 @@ import { RecordProvider } from "@/lib/Providers/RecordProvider";
 
 LogBox.ignoreAllLogs(true);
 
+/**
+ * Root-Layout der App mit globalen Providern, Stack-Navigation und StatusBar.
+ */
 export default function RootLayout() {
     Firebase.init();
 

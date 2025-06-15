@@ -7,6 +7,9 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+/**
+ * Startseite mit Steckbrief des Hundes und Notizfunktion.
+ */
 export default function Index() {
     const router = useRouter();
     const [profile, setProfile] = useState({

@@ -14,6 +14,9 @@ import { useRecord } from "@/lib/Providers/RecordProvider";
 import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
+/**
+ * Header-Komponente für die Startseite mit Hundename, Profilbild, Batterieanzeige und Profilnavigation.
+ */
 export default function Header({ dogName, image }) {
     const { isRecording } = useRecord();
     const { currentData } = useCurrentData();

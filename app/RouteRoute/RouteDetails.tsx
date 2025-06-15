@@ -4,6 +4,9 @@ import { View, Text } from "react-native";
 import MapView, { Polyline, Marker } from "react-native-maps";
 import constants from "../consts";
 
+/**
+ * Detailseite für eine Route mit Kartenansicht, Streckenverlauf und Start/Ende-Markern.
+ */
 export default function CustomCamera() {
     const { routeData } = useLocalSearchParams();
 

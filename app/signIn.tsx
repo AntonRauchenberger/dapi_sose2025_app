@@ -17,6 +17,9 @@ import Firebase from "@/lib/Firebase/Firebase";
 import AuthentificationService from "@/lib/Services/AuthentificationService";
 import DogService from "@/lib/Services/DogService";
 
+/**
+ * Login-Seite mit E-Mail/Passwort-Authentifizierung, Fehlerdialogen und Weiterleitung.
+ */
 export default function SignIn() {
     const { signIn } = useSession();
     const [email, setEmail] = useState("");

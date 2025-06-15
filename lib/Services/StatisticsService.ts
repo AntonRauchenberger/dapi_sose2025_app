@@ -4,6 +4,9 @@ import Firebase from "../Firebase/Firebase";
 import secureConstants from "@/app/secureConsts";
 import { useStatistics } from "../Providers/StatisticsProvider";
 
+/**
+ * Service-Klasse zum Laden, Speichern, Synchronisieren und Auswerten von Statistikdaten für den aktuellen Nutzer.
+ */
 export default class StatisticsService {
     static async getStatistics() {
         try {
@@ -185,6 +188,7 @@ export default class StatisticsService {
         }
     }
 
+    // Synchronisiert die Statistikdaten aus Firestore in den lokalen AsyncStorage.
     static async synchronizeStatistics() {
         const user = Firebase.auth?.currentUser;
         if (!user) return;
@@ -203,6 +207,7 @@ export default class StatisticsService {
         }
     }
 
+    // Lädt die Diagrammdaten (Distanzentwicklung) vom Server.
     static async getDiagramData() {
         const userId = Firebase.auth?.currentUser?.uid;
         if (!userId) {
@@ -242,6 +247,7 @@ export default class StatisticsService {
         return convertedData;
     }
 
+    // Lädt die aktuellen Aktivitätsstatistiken vom Server und formatiert sie.
     static async getActivityStats() {
         const userId = Firebase.auth?.currentUser?.uid;
         if (!userId) {

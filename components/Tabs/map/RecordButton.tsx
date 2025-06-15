@@ -26,6 +26,9 @@ import { useStatistics } from "@/lib/Providers/StatisticsProvider";
 import { useRecord } from "@/lib/Providers/RecordProvider";
 import { useCurrentData } from "@/lib/Providers/CurrentDataProvider";
 
+/**
+ * Record-Button-Komponente zum Starten/Stoppen der Routenaufnahme und Poop-Button mit Tageslimit.
+ */
 export default function RecordButton({ setReloadSlider, loadData }) {
     const [finishedRoute, setFinishedRoute] = useState(false);
     const [poopButtonEnabled, setPoopButtonEnabled] = useState(true);
